@@ -1,7 +1,7 @@
 #ifndef UART_H
 #define UART_H
 
-#include "bytesmanip.h"
+#include "bitman.h"
 
 #define _4800_UBBRH 0x00
 #define _4800_UBBRL 0xCF
@@ -27,19 +27,41 @@
 #define _115200_UBBRL 0x08
 #define _115200_UBBR concat_bytes(_115200_UBBRH, _115200_UBBRL) 
 
+void uart_init (int BAUDRATE_H, int BAUDRATE_L)
+{
+	UBRRH = BAUDRATE_H;
+	UBRRL = BAUDRATE_L;
+
+	UCSRB|= (1<<TXEN)|(1<<RXEN);
+    UCSRC|= (1<<URSEL)|(1<<UCSZ0)|(1<<UCSZ1);
+}
 
 char	uart_read_byte()
 {
-	while(bit_is_clear(UCSRA, RXC));
+	while(!(UCSRA & (1<<RXC)))
+   {
+      //Do nothing
+   }
 
-	return UDR;
+   //Now USART has got data from host
+   //and is available is buffer
+
+   return UDR;
 }
-
+	
 void	uart_write_byte(char data)
 {
-	while(bit_is_clear(UCSRA, RXC));
+	while(!(UCSRA & (1<<UDRE)));
 
-	UDR = data;
+   //Now write the data to USART buffer
+
+   UDR=data;
+}
+
+void	uart_write_string(char* s)
+{
+	while (*s)
+		uart_write_byte(*s++);
 }
 
 #endif // UART_H
