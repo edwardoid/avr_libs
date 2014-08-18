@@ -5,6 +5,7 @@ DUDE_MC=atmega8
 CC_MC=atmega8
 AVR_DEF=__AVR_ATmega8__
 HEX_FILE=firmware.hex
+ELF_FILE=firmware.elf
 LOW_F=0xFF
 HIGH_F=0xC9
 SRC_DIR=./
@@ -15,21 +16,25 @@ W_LEVEL=-Wall
 CLOCK_F=16000000UL
 SRC_FILES:=$(wildcard $(SRC_DIR)*.c)
 OBJ_FILES:=$(patsubst $(SRC_DIR), $(OBJ_DIR),$(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRC_FILES)))
-ELF_FILES:=$(patsubst $(SRC_DIR), $(OBJ_DIR),$(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.elf,$(SRC_FILES)))
 DEFILES:=$(patsubst $(SRC_DIR), $(DEP_DIR),$(patsubst $(SRC_DIR)%.c,$(DEP_DIR)%.o,$(SRC_FILES)))
-
+CFLAGS= -Wl,-u,vfprintf -lprintf_flt -lm 
 
 PHONY: all
 all: flash
 
 
 .PHONY: compile
-compile: $(ELF_FILES)
-	$(OBJ_CP) -j .text -j .data $(ELF_FILES) $(HEX_FILE)
+compile: elf
+	$(OBJ_CP) -j .text -j .data $(ELF_FILE) $(HEX_FILE)
 
-$(OBJ_DIR)%.elf: $(SRC_DIR)%.c
-	$(CC) $(OPT_LEVEL) $(W_LEVEL) -mmcu=$(CC_MC) $< -DF_CPU=$(CLOCK_F) -D$(AVR_DEF) -o $@ 
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+	$(CC) $(OPT_LEVEL) $(W_LEVEL) -mmcu=$(CC_MC) -c $< -DF_CPU=$(CLOCK_F) -D$(AVR_DEF) $(CFLAGS) -o $@ 
 
+	
+.PHONY: elf
+elf: $(OBJ_FILES)
+	$(CC) $(OPT_LEVEL) $(W_LEVEL) -mmcu=$(CC_MC) $(OBJ_FILES) -DF_CPU=$(CLOCK_F) -D$(AVR_DEF) $(CFLAGS) -o $(ELF_FILE)	
+	
 $(DEP_DIR)%.dep: $(SRC_DIR)%.c
 	$(CC) -MM $< -MT "$@ $(patsubst $(DEP_DIR)%.dep,$(OBJ_DIR)%o,$@)" -mmcu=$(CC_MC) -DF_CPU=$(CLOCK_F) -D$(AR_DEF) -o $@
 
