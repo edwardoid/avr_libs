@@ -27,41 +27,16 @@
 #define _115200_UBBRL 0x08
 #define _115200_UBBR concat_bytes(_115200_UBBRH, _115200_UBBRL) 
 
-void uart_init (int BAUDRATE_H, int BAUDRATE_L)
-{
-	UBRRH = BAUDRATE_H;
-	UBRRL = BAUDRATE_L;
+void	uart_init (int BAUDRATE_H, int BAUDRATE_L);
 
-	UCSRB|= (1<<TXEN)|(1<<RXEN);
-    UCSRC|= (1<<URSEL)|(1<<UCSZ0)|(1<<UCSZ1);
-}
-
-char	uart_read_byte()
-{
-	while(!(UCSRA & (1<<RXC)))
-   {
-      //Do nothing
-   }
-
-   //Now USART has got data from host
-   //and is available is buffer
-
-   return UDR;
-}
+char	uart_read_byte();
 	
-void	uart_write_byte(char data)
-{
-	while(!(UCSRA & (1<<UDRE)));
+void	uart_write_byte(char data);
 
-   //Now write the data to USART buffer
+void	uart_write_string(const char* s);
 
-   UDR=data;
-}
+void	uart_write_num(int num);
 
-void	uart_write_string(char* s)
-{
-	while (*s)
-		uart_write_byte(*s++);
-}
+void	uart_write_string_line(const char* s);
 
 #endif // UART_H
