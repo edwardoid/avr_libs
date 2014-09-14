@@ -7,3 +7,4 @@
 #define check_bit(dst, bit) (dst & _BV(bit))
 #define toggle_bit(dst, bit) (dst ^= _BV(bit))
 #define concat_bytes(high, low) (((high) << 8) | (low))
+#define test_bit(src, num) ((src) && _BV(num))

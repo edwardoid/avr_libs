@@ -1,6 +1,6 @@
 #include "1wire.h"
 
-#include "time_utils.h"
+#include "time_utils_delays.h"
 #include <avr/interrupt.h>
 #include "bitman.h"
 

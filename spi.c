@@ -112,7 +112,7 @@ void spi_set_mode(uint8_t mode)
 	}
 }
 
-uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, volatile uint8_t* ss_ddr, uint8_t clk, uint8_t mode)
+uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, ddr_ptr_t ss_ddr, uint8_t clk, uint8_t mode)
 {
 	if((ss_pins == NULL || ss_ddr == NULL) && count != 1)
 		return -1;
@@ -147,25 +147,24 @@ uint8_t	spi_init_as_slave(uint8_t clk, uint8_t mode)
 	clear_bit(SPI_DDR, SPI_MOSI);
 	set_bit(SPI_DDR, SPI_MISO);
 	clear_bit(SPI_DDR, SPI_SS);
-	
 	clear_bit(SPCR, MSTR);
-	
 	clk = spi_set_clock(clk);
-	spi_set_mode(mode);
+	//spi_set_mode(mode);
 	set_bit(SPCR, SPE);
 	return 0;
 }
 
 
-void spi_write_byte_ss(char data, uint8_t ss_pin, volatile uint8_t* ss_port)
+void spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port)
 {
 	clear_bit(*ss_port, ss_pin);
-	SPCR = data;
+	SPDR = data;
 	while(!(SPSR & (1<<SPIF)));
 	set_bit(*ss_port, ss_pin);
+
 }
 
-void spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, volatile uint8_t* ss_port)
+void spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port)
 {
 	uint8_t i = 0;
 	for(; i < sz; ++i)

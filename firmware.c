@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include "time_utils_delays.h"
 #include "pwm.h"
+#include "spi.h"
+#include <stdlib.h>
 //#include "time_utils_counters.h"
 
 #define WORKING		0x00
@@ -38,7 +40,7 @@ int main()
 	uart_init(_9600_UBBRH, _9600_UBBRL);
 
 	uart_write_string_line("Starting....");
-	
+	/*
     set_bit(DDRB, PB1);
     set_bit(DDRB, PB2);
    
@@ -58,7 +60,24 @@ int main()
             dir = 1;
         else if(i == 3)
             dir = -1;
-        _delay_ms(5);     
+        _delay_ms(1000);     
     }
+	
+	*/
+	
+	if(0 != spi_init_as_master(SPI_DIV_CLK_8, SPI_MODE_1))
+	{
+		uart_write_string_line("Can't init SPI");
+	}
+	while(1)
+	{
+		int i = 0;
+		for(i = 0; i < 10; ++i)
+		{
+			uart_write_byte('a' + i);
+			spi_write_byte('a' + i);
+			tu_delay_ms(500);
+		}
+	}
 	return 0;
 }
