@@ -5,20 +5,11 @@
 #include "bitman.h"
 #include <stdint.h>
 
-uint16_t  adc_read(uint8_t pin)
-{
-	ADMUX |= pin;
-	set_bit(ADMUX, REFS0);
-	clear_bit(ADMUX, ADLAR);
-	
-	ADCSRA |= _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0);	
-	set_bit(ADCSRA, ADEN);
-	set_bit(ADCSRA, ADSC);
-	
-	while(ADCSRA & _BV(ADSC));
+#define ADC_SRC_AREF	1
+#define ADC_SRC_AVCC	2
+#define ADC_SRC_INT		3
 
-	uint16_t v = ADCL;	
-	return (ADCH << 8) + v;;
-}
+void		adc_select_source(uint8_t source);
+uint16_t 	adc_read(uint8_t pin);
 
 #endif // ADC_H
