@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <inttypes.h>
 #include <util/delay.h>
+#include <avr/eeprom.h>
 #include "uart.h"
 #include "bitman.h"
 #include "1wire.h"
@@ -9,7 +10,7 @@
 #include "pwm.h"
 #include "spi.h"
 #include <stdlib.h>
-//#include "time_utils_counters.h"
+#include "time_utils_counters.h"
 
 #define WORKING		0x00
 #define SETIING_MAX	0x01
@@ -17,7 +18,7 @@
 
 double get_temp_sensor(ow_conf* cfg, uint8_t num)
 {
-	if(!ow_reset())
+	if(!ow_reset(cfg))
 	{
 		uart_write_string_line("Initial reset failed!");
 		return 999.999;
@@ -27,11 +28,10 @@ double get_temp_sensor(ow_conf* cfg, uint8_t num)
 		
 	if(!ow_search(addr, cfg))
 	{
-		uart_write_string_line(cfg->msg);
 		return 999.999;
 	}
 	
-	return ow_read_temperature_ds18x2x(addr);
+	return ow_read_temperature_ds18x2x(cfg, addr);
 }
 
 int main()
@@ -63,7 +63,6 @@ int main()
         _delay_ms(1000);     
     }
 	
-	*/
 	
 	if(0 != spi_init_as_master(SPI_DIV_CLK_8, SPI_MODE_1))
 	{
@@ -79,5 +78,15 @@ int main()
 			tu_delay_ms(500);
 		}
 	}
+	*/
+
+	tu_counters_init();
+	while(1)
+	{
+		uart_write_num(tu_millis());
+		tu_delay_ms(1000);
+		uart_write_byte('\n');
+	}
+	
 	return 0;
 }
