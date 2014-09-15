@@ -4,17 +4,17 @@
 #include <avr/interrupt.h>
 #include "bitman.h"
 
-#define ow_set_ow_as_input() clear_bit(OW_DDR, OW_PB)
-#define ow_set_ow_as_output() set_bit(OW_DDR, OW_PB)
-#define ow_read_ow_wire() test_bit(OW_PIN, OW_PB)
-#define ow_write_ow_1() set_bit(OW_PORT, OW_PB)
-#define ow_write_ow_0() clear_bit(OW_PORT, OW_PB)
+#define ow_set_ow_as_input(cfg) clear_bit(* (cfg->ddr), cfg->pin_num)
+#define ow_set_ow_as_output(cfg) set_bit(* (cfg->ddr), cfg->pin_num)
+#define ow_read_ow_wire(cfg) test_bit(* (cfg->pin), cfg->pin_num)
+#define ow_write_ow_1(cfg) set_bit(* (cfg->port), cfg->pin_num)
+#define ow_write_ow_0(cfg) clear_bit(* (cfg->port), cfg->pin_num)
 
 #include "uart.h"
 
 void ow_init(ow_conf* cfg)
 {
-	ow_set_ow_as_input();
+	ow_set_ow_as_input(cfg);
 	ow_reset_search(cfg);
 }
 
@@ -45,114 +45,112 @@ void ow_init_config(ow_conf* cfg)
 	{
 		cfg->ROM_NO[i] = 0;
 	}
-	
-	cfg->msg = 0;
 }
 
-uint8_t	ow_reset()
+uint8_t	ow_reset(ow_conf* cfg)
 {
 	uint8_t r = 0;
-	ow_write_ow_0();
-	ow_set_ow_as_output();
+	ow_write_ow_0(cfg);
+	ow_set_ow_as_output(cfg);
 	tu_delay_us(480);
-	ow_set_ow_as_input();
-	r = ow_read_ow_wire();
+	ow_set_ow_as_input(cfg);
+	r = ow_read_ow_wire(cfg);
 	tu_delay_us(420);
 	return !r;
 }
 
-void	ow_write_bit(uint8_t v)
+void	ow_write_bit(ow_conf* cfg, uint8_t v)
 {
-	ow_write_ow_0();
-	ow_set_ow_as_output();
+	ow_write_ow_0(cfg);
+	ow_set_ow_as_output(cfg);
 	tu_delay_us(1);
 	if(v)
-		ow_set_ow_as_input();
+		ow_set_ow_as_input(cfg);
 	tu_delay_us(60);
-	ow_set_ow_as_input();
+	ow_set_ow_as_input(cfg);
 }
 
-void	ow_write_ex(uint8_t v, uint8_t pwr)
+void	ow_write_ex(ow_conf* cfg, uint8_t v, uint8_t pwr)
 {
 	uint8_t i = 8;
 	while(i--)
 	{
-		ow_write_bit(v & 0x01);
+		ow_write_bit(cfg, v & 0x01);
 		v >>= 1;
 	}
 	
 	if(!pwr)
 	{
 		cli();
-		ow_set_ow_as_input();
-		ow_write_ow_0();
+		ow_set_ow_as_input(cfg);
+		ow_write_ow_0(cfg);
 	
 		sei();
 	}
 }
 
-void ow_write_bytes(const uint8_t *buf, uint16_t count)
+void ow_write_bytes(ow_conf* cfg, const uint8_t *buf, uint16_t count)
 {
 	uint16_t i = 0;
 	for ( ; i < count ; i++)
-		ow_write(buf[i]);
+		ow_write(cfg, buf[i]);
 }
 
-uint8_t ow_read_bit(void)
+uint8_t ow_read_bit(ow_conf* cfg)
 {
 	uint8_t b = 0;
-	ow_write_ow_0();
-	ow_set_ow_as_output();
+	ow_write_ow_0(cfg);
+	ow_set_ow_as_output(cfg);
 	tu_delay_us(1);
 	
-	ow_set_ow_as_input();
+	ow_set_ow_as_input(cfg);
 	tu_delay_us(14);
 	
-	if(ow_read_ow_wire())
+	if(ow_read_ow_wire(cfg))
 		b = 1;
 	tu_delay_us(45);
 	return b;
 }
 
-uint8_t ow_read() {
+uint8_t ow_read(ow_conf* cfg) {
 	
     uint8_t bitMask = 0xFF;
     uint8_t r = 0;
 
     for (bitMask = 0x01; bitMask; bitMask <<= 1)
 	{
-		if (ow_read_bit())
+		if (ow_read_bit(cfg))
 			r |= bitMask;
     }
     return r;
 }
 
-void ow_read_bytes(uint8_t *buf, uint16_t count)
+void ow_read_bytes(ow_conf* cfg, uint8_t *buf, uint16_t count)
 {
 	uint16_t i = 0;
 	for ( ; i < count ; i++)
-		buf[i] = ow_read();
+		buf[i] = ow_read(cfg);
 }
 
-void ow_select(const uint8_t rom[8])
+void ow_select(ow_conf* cfg, const uint8_t rom[8])
 {
     uint8_t i = 0;
 
-    ow_write(OW_SELECT_ROM_CMD);           // Choose ROM
+    ow_write(cfg, OW_SELECT_ROM_CMD);           // Choose ROM
 
     for (; i < 8; i++)
-		ow_write(rom[i]);
+		ow_write(cfg, rom[i]);
 }
 
-void ow_skip()
+void ow_skip(ow_conf* cfg)
 {
-    ow_write(OW_SKIP_ROM_CMD);           // Skip ROM
+    ow_write(cfg, OW_SKIP_ROM_CMD);           // Skip ROM
 }
 
-void ow_depower()
+void ow_depower(ow_conf* cfg)
 {
 	cli();
-	ow_set_ow_as_input();
+	ow_set_ow_as_input(cfg);
 	sei();
 }
 
@@ -188,25 +186,24 @@ uint8_t ow_search(uint8_t *newAddr, ow_conf* cfg)
 	if (! (cfg->LastDeviceFlag))
 	{
 		// 1-Wire reset
-		if (!ow_reset())
+		if (!ow_reset(cfg))
 		{
 			// reset the search
 			cfg->LastDiscrepancy = 0;
 			cfg->LastDeviceFlag = OW_FALSE;
 			cfg->LastFamilyDiscrepancy = 0;
-			cfg->msg = "Reset failed!";
 			return OW_FALSE;
 		}
 
 		// issue the search command
-		ow_write(OW_SEARCH_ROM_CMD);
+		ow_write(cfg, OW_SEARCH_ROM_CMD);
 
 		// loop to do the search
 		do
 		{
 			// read a bit and its complement
-			id_bit = ow_read_bit();
-			cmp_id_bit = ow_read_bit();
+			id_bit = ow_read_bit(cfg);
+			cmp_id_bit = ow_read_bit(cfg);
 
 			// check for no devices on 1-wire
 			if ((id_bit == 1) && (cmp_id_bit == 1))
@@ -243,7 +240,7 @@ uint8_t ow_search(uint8_t *newAddr, ow_conf* cfg)
 					cfg->ROM_NO[rom_byte_number] &= ~rom_byte_mask;
 
 				// serial number search direction write bit
-				ow_write_bit(search_direction);
+				ow_write_bit(cfg, search_direction);
 				// increment the byte counter id_bit_number
 				// and shift the mask rom_byte_mask
 				id_bit_number++;
@@ -276,7 +273,6 @@ uint8_t ow_search(uint8_t *newAddr, ow_conf* cfg)
 	// if no device found then reset counters so next 'search' will be like a first
 	if (!search_result || !(cfg->ROM_NO[0]))
 	{
-		cfg->msg = "No devices on the bus";
 		cfg->LastDiscrepancy = 0;
 		cfg->LastDeviceFlag = OW_FALSE;
 		cfg->LastFamilyDiscrepancy = 0;
@@ -289,26 +285,26 @@ uint8_t ow_search(uint8_t *newAddr, ow_conf* cfg)
 	return search_result;
 }
 
-uint8_t	ow_read_scratchpad(const uint8_t* rom, uint8_t* data, uint8_t count)
+uint8_t	ow_read_scratchpad(ow_conf* cfg, const uint8_t* rom, uint8_t* data, uint8_t count)
 {
-	if(!ow_reset())
+	if(!ow_reset(cfg))
 	{
 		return OW_FALSE;
 	}
 	
-	ow_select(rom);
-	ow_write(OW_READ_SCRATCHPAD_CMD);
+	ow_select(cfg, rom);
+	ow_write(cfg, OW_READ_SCRATCHPAD_CMD);
 	
 	uint8_t i = 0;
 	for(; i < count; ++i)
 	{
-		data[i] = ow_read();
+		data[i] = ow_read(cfg);
 	}
 	
 	return OW_TRUE;
 }
 
-double ow_read_temperature_ds18x2x(const uint8_t* rom)
+double ow_read_temperature_ds18x2x(ow_conf* cfg, const uint8_t* rom)
 {
 	if(ow_crc8(rom, 7) != rom[7])
 	{
@@ -316,20 +312,20 @@ double ow_read_temperature_ds18x2x(const uint8_t* rom)
 		return -999.999;
 	}
 		
-	if(!ow_reset())
+	if(!ow_reset(cfg))
 	{
 		return -999.999;
 	}
 	
-	ow_select(rom);
-	ow_write_ex(OW_START_TEMP_CONV_CMD, 1);
+	ow_select(cfg, rom);
+	ow_write_ex(cfg, OW_START_TEMP_CONV_CMD, 1);
 	
 	tu_delay_ms(600);
 	
 	
 	uint8_t data[12];
 	
-	if(OW_FALSE == ow_read_scratchpad(rom, data, 9))
+	if(OW_FALSE == ow_read_scratchpad(cfg, rom, data, 9))
 	{
 		return -999.999;
 	}

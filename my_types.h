@@ -1,6 +1,8 @@
 #ifndef MY_TYPES_H
 #define MY_TYPES_H
 
+#include <stdint.h>
+
 typedef char    byte;
 typedef volatile uint8_t* ddr_ptr_t;
 typedef volatile uint8_t* port_ptr_t;

@@ -2,7 +2,7 @@
 #define UART_H
 
 #include "bitman.h"
-
+#include "my_types.h"
 #define _4800_UBBRH 0x00
 #define _4800_UBBRL 0xCF
 #define _4800_UBBR concat_bytes(_4800_UBBRH, _4800_UBBRL) 
