@@ -7,7 +7,6 @@
 #define tu_delay_ms(num) tu_delay_cycles(num / ( 8 * ( 1 / (F_CPU / 1000.   ))))
 
 #include <inttypes.h>
-
-inline __attribute__((gnu_inline)) void tu_delay_cycles(uint32_t cycles);
+void tu_delay_cycles(uint32_t cycles);
 
 #endif // TIME_UTILS_H

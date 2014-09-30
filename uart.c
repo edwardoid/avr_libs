@@ -42,9 +42,17 @@ void	uart_write_string(const char* s)
 void	uart_write_num(int num)
 {
 	char str[32] = {};
-	sprintf(str, "%d", num);
+	sprintf(str, "%d\n", num);
 	uart_write_string(str);
 }
+
+void	uart_write_u32num(uint32_t num)
+{
+	char str[32] = {};
+	sprintf(str, "%lu", num);
+	uart_write_string(str);
+}
+
 
 void	uart_write_num_hex(int num)
 {
@@ -58,4 +66,5 @@ void	uart_write_string_line(const char* s)
 	while (*s)
 		uart_write_byte(*s++);
 	uart_write_byte('\n');
+	uart_write_byte('\0');
 }

@@ -3,6 +3,9 @@
 
 #include "bitman.h"
 #include "my_types.h"
+#include <stdint.h>
+
+
 #define _4800_UBBRH 0x00
 #define _4800_UBBRL 0xCF
 #define _4800_UBBR concat_bytes(_4800_UBBRH, _4800_UBBRL) 
@@ -36,6 +39,8 @@ void	uart_write_byte(char data);
 void	uart_write_string(const char* s);
 
 void	uart_write_num(int num);
+
+void	uart_write_u32num(uint32_t num);
 
 void	uart_write_string_line(const char* s);
 
