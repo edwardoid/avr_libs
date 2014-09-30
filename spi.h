@@ -37,7 +37,7 @@ uint8_t spi_set_clock(uint8_t clk);
 
 uint8_t	spi_init_as_slave(uint8_t clk, uint8_t mode);
 
-void spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port);
+char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port);
 #define spi_write_byte(data) spi_write_byte_ss( (data), SPI_SS, & SPI_PORT);
 
 void spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port);

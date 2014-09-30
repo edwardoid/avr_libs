@@ -144,8 +144,8 @@ uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, ddr_ptr_t ss_ddr,
 	if((ss_pins == NULL || ss_ddr == NULL) && count != 1)
 		return -1;
 	
-	set_bit(SPI_DDR, SPI_SCK);
-	set_bit(SPI_DDR, SPI_MOSI);
+	set_as_output(SPI_DDR, SPI_SCK);
+	set_as_output(SPI_DDR, SPI_MOSI);
 	set_as_input(SPI_DDR, SPI_MISO);
 	if(count == 1 && ss_pins == NULL && ss_ddr == NULL)
 	{
@@ -165,14 +165,8 @@ uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, ddr_ptr_t ss_ddr,
 		return clk;
 	spi_set_mode(mode);
 
-#ifdef SPI_USE_BUFFER
-	tu_counters_init();
-	memset((void*)spi_buffer, SPI_BUFFER_LEN, 0x0);
-	set_bit(SPCR, SPIE);
-	sei();
-#endif // SPI_BUFFER_LEN
-
 	set_bit(SPCR, SPE); // enable SPI
+	
 	return 0;
 }
 
@@ -202,18 +196,27 @@ uint8_t	spi_init_as_slave(uint8_t clk, uint8_t mode)
 }
 
 
-void spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port)
+char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port)
 {
-	if(test_bit(SPCR, MSTR) && ss_port != NULL)
+	int is_master = test_bit(SPCR, MSTR);
+	
+	if( is_master != 0 && ss_port != NULL)
 		clear_bit(*ss_port, ss_pin);
+	else
+		while(test_bit(SPI_PORT, SPI_SS)); // wait for master
+		
 	SPDR = data;
 	
-	while(!(SPSR & (1<<SPIF)));
+	while(!(test_bit(SPSR, SPIF)));
 	
 	data = SPDR;
 	
-	if(test_bit(SPCR, MSTR) && ss_port != NULL)
+	if(is_master != 0  && ss_port != NULL)
+	{
 		set_bit(*ss_port, ss_pin);
+	}
+	
+	return data;
 }
 
 void spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port)
@@ -250,6 +253,8 @@ char spi_read()
 #ifdef SPI_USE_BUFFER
 ISR (SPI_STC_vect)
 {
+	if(test_bit(SPSR, MSTR))
+		return;
 	if(spi_write_cursor == NULL)
 	{
 		spi_write_cursor = spi_buffer;

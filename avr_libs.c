@@ -44,14 +44,14 @@ int main()
 
 	uart_write_string_line("Starting....");
 #ifdef MASTER_CODE
-	uart_read_byte();
 	char i = 5;
+	
+	if(0 != spi_init_as_master(SPI_DIV_CLK_128, SPI_MODE_0))
+		uart_write_string_line("SPI initialization failed");
+
 	while(1)
 	{
-			if(0 != spi_init_as_master(SPI_DIV_CLK_128, SPI_MODE_0))
-			uart_write_string_line("SPI initialization failed");
-
-		uart_write_string_line("Writing");
+		//uart_write_string_line("Writing");
 		spi_write_byte(i + 10);
 		tu_delay_ms(1000);
 		++i;
