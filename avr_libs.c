@@ -1,3 +1,22 @@
+/*
+	avr_libs
+	Copyright (C) 2014  Edward Sargsyan
+
+	avr_libs is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	avr_libs is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
 #include <avr/io.h>
 #include <inttypes.h>
 #include <util/delay.h>
@@ -36,7 +55,20 @@ double get_temp_sensor(ow_conf* cfg, uint8_t num)
 	return ow_read_temperature_ds18x2x(cfg, addr);
 }
 
+int main()
+{
+	uart_init(_9600_UBBRH, _9600_UBBRL);
 
+	uart_write_string_line("Starting....");
+
+	while(1)
+	{
+		sd_init(&SPI_DDR, &SPI_PORT, SPI_SS);
+		tu_delay_ms(1000);
+	}
+}
+
+#ifdef SPI_TEST
 #define  MASTER_CODE 
 int main()
 {
@@ -73,3 +105,5 @@ int main()
 #endif
 	return 0;
 }
+
+#endif // SPI_TEST

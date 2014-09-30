@@ -1,3 +1,21 @@
+/*
+	avr_libs
+	Copyright (C) 2014  Edward Sargsyan
+
+	avr_libs is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	avr_libs is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #ifndef SPI_H
 #define SPI_H
 
@@ -45,5 +63,9 @@ void spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port);
 #define spi_write(buff, sz) spi_write_ss( buff, sz, SPI_SS, & SPI_PORT);
 
 char spi_read();
+
+#define spi_enabeld() test_bit(SPSR, SPE)
+#define spi_is_master() test_bit(SPSR, MSTR)
+#define spi_is_slave() !(test_bit(SPSR, MSTR))
 
 #endif // SPI_H
