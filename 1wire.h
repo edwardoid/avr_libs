@@ -83,7 +83,7 @@ typedef struct
 	uint8_t ROM_NO[8];
 	ddr_ptr_t	ddr;
 	port_ptr_t	port;
-	pin_ptr_t	pin;
+	uint8_t*	pin;
 	uint8_t		pin_num;
 } ow_conf;
 													

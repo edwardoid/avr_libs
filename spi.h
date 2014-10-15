@@ -20,6 +20,7 @@
 #define SPI_H
 
 #include <stdint.h>
+#include <avr/io.h>
 #include "my_types.h"
 
 #define SPI_DDR		DDRB
@@ -50,13 +51,15 @@
 uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, volatile ddr_ptr_t ss_ddr, uint8_t clk, uint8_t mode);
 #define spi_init_as_master(clk, mode) spi_init_as_master_ex(NULL, 1, NULL, clk, mode)
 
+void	spi_set_master_bit_first(uint8_t val);
+
 void	spi_set_mode(uint8_t mode);
 uint8_t spi_set_clock(uint8_t clk);
 
 uint8_t	spi_init_as_slave(uint8_t clk, uint8_t mode);
 
 char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port);
-#define spi_write_byte(data) spi_write_byte_ss( (data), SPI_SS, & SPI_PORT);
+#define spi_write_byte(data) spi_write_byte_ss( (data), SPI_SS, & SPI_PORT)
 
 void spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port);
 

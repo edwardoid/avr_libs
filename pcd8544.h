@@ -16,21 +16,30 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
+#ifndef PCD8544_H
+#define PCD8544_H
 
-#include <stdint.h>
+#define PCD8544_WIDTH	84
+#define PCD8544_HEIGHT	48
 
-typedef char    byte;
-typedef volatile uint8_t* ddr_ptr_t;
-typedef volatile uint8_t* port_ptr_t;
-typedef volatile uint8_t* register_ptr_t;
+#define PCD8544_BLACK 1
+#define PCD8544_WHITE 0
+
+#include "my_types.h"
 
 typedef struct
 {
-	ddr_ptr_t	ddr;
-	port_ptr_t	port;
-	uint8_t		pin;
-} pin_cfg_t;
+	pin_cfg_t	ss;
+	pin_cfg_t	dc;
+	pin_cfg_t	rst;
+} pcd8544_cfg_t;
 
-#endif // MY_TYPES_H
+void pcd8544_init(	pcd8544_cfg_t* cfg, uint8_t bias, uint8_t contrast);
+void pcd8544_set_contrast(uint8_t contrast);
+void pcd8544_fill(uint8_t c);
+#define pcd8544_clear() pcd8544_fill(0)
+void pcd8544_set_pixel(int16_t x, int16_t y, uint16_t color);
+void pcd8544_draw_line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t color);
+void pcd8544_draw_text(int16_t x, int16_t y, const char* str);
+
+#endif /* PCD8544_H */

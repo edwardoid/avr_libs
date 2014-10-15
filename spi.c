@@ -189,6 +189,14 @@ uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, ddr_ptr_t ss_ddr,
 	return 0;
 }
 
+void spi_set_master_bit_first(uint8_t val)
+{
+	if(val)
+		set_bit(SPDR, DORD);
+	else
+		clear_bit(SPDR, DORD);
+}
+
 uint8_t	spi_init_as_slave(uint8_t clk, uint8_t mode)
 {
 	set_bit(DDRD, PD6);
@@ -220,7 +228,7 @@ char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port)
 	int is_master = test_bit(SPCR, MSTR);
 	
 	if( is_master != 0 && ss_port != NULL)
-		clear_bit(*ss_port, ss_pin);
+		set_low(*ss_port, ss_pin);
 	else
 		while(test_bit(SPI_PORT, SPI_SS)); // wait for master
 		
@@ -232,7 +240,7 @@ char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port)
 	
 	if(is_master != 0  && ss_port != NULL)
 	{
-		set_bit(*ss_port, ss_pin);
+		set_high(*ss_port, ss_pin);
 	}
 	
 	return data;
