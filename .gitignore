@@ -23,3 +23,6 @@
 *.hex
 # Temporaty files
 *~
+#AtmelStudio
+Debug*
+Release*
