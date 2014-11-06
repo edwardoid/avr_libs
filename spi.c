@@ -18,6 +18,9 @@
 
 
 #include "spi.h"
+
+#ifdef F_SPI
+
 #include "bitman.h"
 #include <avr/io.h>
 #include <stdlib.h>
@@ -297,3 +300,5 @@ ISR (SPI_STC_vect)
 }
 
 #endif
+
+#endif // F_SPI

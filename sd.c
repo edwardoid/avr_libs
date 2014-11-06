@@ -17,6 +17,9 @@
 */
 
 #include "sd.h"
+
+#ifdef F_SD
+
 #include <stdlib.h>
 
 int8_t sd_send_command(uint8_t cmd, uint32_t args,port_ptr_t port, uint8_t pin, char* resp)
@@ -72,8 +75,9 @@ int8_t sd_init(ddr_ptr_t ddr, port_ptr_t port, uint8_t pin)
 	}
 	
 	char r = 0x00;
-	uint32_t op_now = tu_millis();
 	if(0 != sd_send_command(SD_CMD_GO_IDLE_STATE, 0, port, pin, &r))
 		return 1;
 	return 0;
 }
+
+#endif

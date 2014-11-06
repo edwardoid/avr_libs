@@ -20,6 +20,8 @@
 #ifndef ADC_H
 #define ADC_H
 
+#ifdef F_ADC
+
 #include <avr/io.h>
 #include "bitman.h"
 #include <stdint.h>
@@ -30,5 +32,7 @@
 
 void		adc_select_source(uint8_t source);
 uint16_t 	adc_read(uint8_t pin);
+
+#endif // F_ADC
 
 #endif // ADC_H

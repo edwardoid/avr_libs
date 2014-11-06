@@ -16,38 +16,14 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SD_H
-#define SD_H
+#ifndef AVR_LIBS_CONFIG_H
+#define AVR_LIBS_CONFIG_H
 
-#include "config.h"
+//#define F_1WIRE
+//#define F_ADC
+#define F_PCD8544
+//#define F_SD
+#define F_SPI
+#define F_UART
 
-#ifdef F_SD
-
-#include "my_types.h"
-#include "spi.h"
-#include "debug.h"
-#include "sd_cmd.h"
-
-#define TOKEN_WAIT_MAX_TIMEOUT 1000
-#define SD_CMD_RESP_MAX_TIMEOUT 3000
-#define SD_IDLE_WAIT_MAX_TIMEOUT 3000
-
-#define SD_R1	1
-#define SD_R1B	2
-#define SD_R2	3
-#define SD_R3	4
-
-#define SD_CRC 0x95
-
-#define SD_UNKNOWN_TYPE 0
-#define SD_MMC	(1 << 0)
-#define SD_SD	(1 << 2)
-#define SD_SDHC (1 << 3)
-
-int8_t	sd_init(ddr_ptr_t ddr, port_ptr_t port, uint8_t pin);
-
-int8_t sd_send_command(uint8_t cmd, uint32_t args,port_ptr_t port, uint8_t pin, char* resp);
-
-#endif // F_SD
-
-#endif // SD_H
+#endif // AVR_LIBS_CONFIG_H

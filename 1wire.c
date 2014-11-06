@@ -18,6 +18,8 @@
 
 #include "1wire.h"
 
+#ifdef F_1WIRE
+
 #include "time_utils_delays.h"
 #include <avr/interrupt.h>
 #include "bitman.h"
@@ -451,3 +453,5 @@ uint16_t ow_crc16(const uint8_t* input, uint16_t len, uint16_t crc_val)
 }
 
 #endif // ONEWIRE_CRC16
+
+#endif // F_1WIRE

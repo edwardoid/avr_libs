@@ -17,6 +17,9 @@
 */
 
 #include "uart.h"
+
+#ifdef F_UART
+
 #include <avr/io.h>
 #include <stdio.h>
 
@@ -86,3 +89,5 @@ void	uart_write_string_line(const char* s)
 	uart_write_byte('\n');
 	uart_write_byte('\0');
 }
+
+#endif // F_UART

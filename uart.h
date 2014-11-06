@@ -19,6 +19,9 @@
 #ifndef UART_H
 #define UART_H
 
+#include "config.h"
+#ifdef F_UART
+
 #include "bitman.h"
 #include "my_types.h"
 #include <stdint.h>
@@ -61,5 +64,7 @@ void	uart_write_num(int num);
 void	uart_write_u32num(uint32_t num);
 
 void	uart_write_string_line(const char* s);
+
+#endif // F_UART
 
 #endif // UART_H

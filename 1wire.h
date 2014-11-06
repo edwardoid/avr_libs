@@ -19,26 +19,11 @@
 #ifndef ONE_WIRE_H
 #define ONE_WIRE_H
 
+#include "config.h"
 #include "my_types.h"
 
-/*
-#ifndef OW_PORT
-#define OW_PORT PORTB
-#endif
+#ifdef F_1WIRE
 
-
-#ifndef OW_PB
-#define OW_PB PB2
-#endif
-
-#ifndef OW_PIN
-#define OW_PIN PINB
-#endif
-
-#ifndef OW_DDR
-#define OW_DDR DDRB
-#endif
-*/
 #define OW_TRUE				0x01
 #define OW_FALSE			0x00
 
@@ -139,4 +124,7 @@ double ow_read_temperature_ds18x2x(ow_conf* cfg, const uint8_t* rom);
 
 #endif // ONEWIRE_CRC16
 
+#endif // F_1WIRE
+
 #endif // ONE_WIRE_H
+

@@ -19,6 +19,10 @@
 #ifndef SPI_H
 #define SPI_H
 
+#include "config.h"
+
+#ifdef F_SPI
+
 #include <stdint.h>
 #include <avr/io.h>
 #include "my_types.h"
@@ -70,5 +74,7 @@ char spi_read();
 #define spi_enabeld() test_bit(SPSR, SPE)
 #define spi_is_master() test_bit(SPSR, MSTR)
 #define spi_is_slave() !(test_bit(SPSR, MSTR))
+
+#endif // F_SPI
 
 #endif // SPI_H

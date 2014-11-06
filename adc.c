@@ -19,6 +19,7 @@
 
 #include "adc.h"
 
+#ifdef F_ADC
 void adc_select_source(uint8_t source)
 {
 	switch(source)
@@ -60,3 +61,5 @@ uint16_t  adc_read(uint8_t pin)
 	uint16_t v = ADCL;	
 	return (ADCH << 8) + v;;
 }
+
+#endif // F_ADC

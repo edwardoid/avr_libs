@@ -20,6 +20,7 @@
 #include <avr/io.h>
 #include <inttypes.h>
 #include <util/delay.h>
+#include "config.h"
 #include "uart.h"
 #include "bitman.h"
 #include "1wire.h"
@@ -32,11 +33,13 @@
 #include "time_utils_counters.h"
 #include <stdint.h>
 #include <string.h>
+#include "pcd8544.h"
 
 #define WORKING		0x00
 #define SETIING_MAX	0x01
 #define SETTING_MIN 0x02
 
+#ifdef F_1WIRE
 double get_temp_sensor(ow_conf* cfg, uint8_t num)
 {
 	if(!ow_reset(cfg))
@@ -55,19 +58,40 @@ double get_temp_sensor(ow_conf* cfg, uint8_t num)
 	return ow_read_temperature_ds18x2x(cfg, addr);
 }
 
+#endif // F_1WIRE
+
 int main()
 {
 	uart_init(_9600_UBBRH, _9600_UBBRL);
 
 	uart_write_string_line("Starting....");
 
-	while(1)
+	pcd8544_cfg_t cfg;
+	cfg.dc.ddr = &DDRB;
+	cfg.dc.port = &PORTB;
+	cfg.dc.pin = PB1;
+	
+	cfg.ss.ddr = &SPI_DDR;
+	cfg.ss.port = &SPI_PORT;
+	cfg.ss.pin = SPI_SS;
+	
+	cfg.rst.ddr = & DDRB;
+	cfg.rst.port = & PORTB;
+	cfg.rst.pin = PB0;
+	
+	pcd8544_init(&cfg, 0x4, 0x40);
+	pcd8544_fill(0);
+	int16_t i  = 0;
+	pcd8544_draw_text(0, 0, "Hello, Luskin!");
+	pcd8544_draw_line(0, 0, 10, 10, 1);
+	while(1 || i)
 	{
-		sd_init(&SPI_DDR, &SPI_PORT, SPI_SS);
-		tu_delay_ms(1000);
+		pcd8544_render();
+		tu_delay_ms(100);
 	}
 }
 
+#undef SPI_TEST
 #ifdef SPI_TEST
 #define  MASTER_CODE 
 int main()
@@ -78,7 +102,7 @@ int main()
 #ifdef MASTER_CODE
 	char i = 5;
 	
-	if(0 != spi_init_as_master(SPI_DIV_CLK_128, SPI_MODE_0))
+	if(0 != spi_init_as_master(SPI_DIV_CLK_4, SPI_MODE_0))
 		uart_write_string_line("SPI initialization failed");
 
 	while(1)
