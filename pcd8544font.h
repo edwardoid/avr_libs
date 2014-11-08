@@ -121,10 +121,6 @@ static const byte pcd8544_font[][5] PROGMEM =
 	,{0x00, 0x06, 0x09, 0x09, 0x06} // 7f ?
 };
 
-
-/*
-	standard numbers, like on digital calculators. 
-*/
 static const byte pcd8544_digits[][5] PROGMEM =
 {
 	 { 0x00, 0x3e, 0x2a, 0x3e, 0x00 } /* 0 */
