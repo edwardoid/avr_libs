@@ -22,12 +22,9 @@
 #include "bitman.h"
 #include "debug.h"
 #include <string.h>
-#include "pcd8544font.h"
 
 
 #ifdef PCD8544_USE_BUFFER
-
-uint8_t pcd8544_buffer[PCD8544_WIDTH * PCD8544_HEIGHT / 8];
 
 static int16_t	invalid_rc_t	= 0;
 static int16_t	invalid_rc_l	= 0;
@@ -45,8 +42,6 @@ void pcd8544_invalidate(uint8_t x, uint8_t y, uint8_t w, uint8_t h)
 	invalid_rc_r = max(invalid_rc_r, x + w);
 }
 	
-	
-#define PCD8544_ADDR(x, y) (PCD8544_WIDTH * ((y) / 8)  + (x))
 #endif // PCD8544_USE_BUFFER(y  /  5)
 
 #define PCD8544_POWERDOWN 0x04
@@ -92,9 +87,8 @@ void pcd8544_set_pixel(int16_t x, int16_t y, uint16_t color)
 	else
 		clear_bit(pcd8544_buffer[PCD8544_ADDR(x, y)], y % 8);
 #else
-	uint16_t addr = x + (y >> 3) * PCD8544_WIDTH;
-	pcd8544_send_command(PCD8544_SETXADDR | (addr % PCD8544_WIDTH));
-	pcd8544_send_command(PCD8544_SETYADDR | (addr / PCD8544_WIDTH));
+	pcd8544_send_command(PCD8544_SETXADDR | (PCD8544_ADDR(x, y) % PCD8544_WIDTH));
+	pcd8544_send_command(PCD8544_SETYADDR | (PCD8544_ADDR(x, y) / PCD8544_WIDTH));
 	
 	if (color)
 		pcd8544_send_data( 1 << (y % 8)); //"black pixel"
@@ -168,83 +162,6 @@ void pcd8544_fill(uint8_t c)
 		pcd8544_send_data(c);
 		pcd8544_send_data(c);		
 	}
-#endif // PCD8544_USE_BUFFER
-}
-
-#define fast_swap(x, y)	(x) ^=	(y);		\
-						(y)	^=	(x);		\
-						(x) ^=	(y);
-
-#define my_abs(v) ((v > 0) ? (v) : -(v))
-						
-void pcd8544_draw_line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t color)
-{
-    int8_t dx =	my_abs(x2 - x1);
-    int8_t step_x =	x1 < x2 ? 1 : -1;
-    int8_t dy = -my_abs(y2 - y1);
-    int8_t step_y =	y1 < y2 ? 1 : -1;
-      
-    int16_t err = dx + dy;
-    int16_t err_new = 0;
-      
-    while(1)
-    {
-	    pcd8544_set_pixel(x1, y1, color);
-	    if (x1 == x2 && y1 == y2)
-	    break;
-	    err_new = err << 1;
-	    if (err_new >= dy)
-	    {
-		    err += dy;
-		    x1 += step_x;
-	    }
-	    if (err_new <= dx)
-	    {
-		    err += dx;
-		    y1 += step_y;
-	    }
-    }
-}
-
-void pcd8544_draw_text(int16_t x, int16_t y, const char* str)
-{
-	if(str == NULL)
-		return;
-		
-#ifdef PCD8544_USE_BUFFER
-	uint8_t x_pos = x;
-#else
-	pcd8544_send_command(PCD8544_SETXADDR | x);
-	pcd8544_send_command(PCD8544_SETYADDR | y);
-#endif // PCD8544_USE_BUFFER
-
-	while (*str != '\0')
-	{
-#ifdef PCD8544_USE_BUFFER
-		uint8_t* cursor = pcd8544_buffer + PCD8544_ADDR(x_pos, y);
-		*cursor	|= pgm_read_byte(&pcd8544_font[(*str) - 0x20][0]);
-		++cursor;
-		*cursor	|= pgm_read_byte(&pcd8544_font[(*str) - 0x20][1]);
-		++cursor;
-		*cursor	|= pgm_read_byte(&pcd8544_font[(*str) - 0x20][2]);
-		++cursor;
-		*cursor	|= pgm_read_byte(&pcd8544_font[(*str) - 0x20][3]);
-		++cursor;
-		*cursor	|= pgm_read_byte(&pcd8544_font[(*str) - 0x20][4]);
-		x_pos += 6;
-#else // PCD8544_USE_BUFFER
-		pcd8544_send_data(pgm_read_byte(&pcd8544_font[(*str) - 0x20][0]));
-		pcd8544_send_data(pgm_read_byte(&pcd8544_font[(*str) - 0x20][1]));
-		pcd8544_send_data(pgm_read_byte(&pcd8544_font[(*str) - 0x20][2]));
-		pcd8544_send_data(pgm_read_byte(&pcd8544_font[(*str) - 0x20][3]));
-		pcd8544_send_data(pgm_read_byte(&pcd8544_font[(*str) - 0x20][4]));
-		pcd8544_send_data(0x00);
-#endif // PCD8544
-		++str;
-	}
-	
-#ifdef PCD8544_USE_BUFFER
-	pcd8544_invalidate(x, y, x_pos - x , 8 );
 #endif // PCD8544_USE_BUFFER
 }
 

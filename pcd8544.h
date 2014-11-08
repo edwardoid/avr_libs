@@ -25,11 +25,13 @@
 #define PCD8544_BLACK 1
 #define PCD8544_WHITE 0
 
+
+#define PCD8544_ADDR(x, y) (PCD8544_WIDTH * ((y) / 8)  + (x))
+
 #include "my_types.h"
 
 /* Enabling buffering. This feature will allow XOR-ing display data. */
 #define PCD8544_USE_BUFFER 1
-
 
 typedef struct
 {
@@ -43,10 +45,11 @@ void pcd8544_set_contrast(uint8_t contrast);
 void pcd8544_fill(uint8_t c);
 #define pcd8544_clear() pcd8544_fill(0)
 void pcd8544_set_pixel(int16_t x, int16_t y, uint16_t color);
-void pcd8544_draw_line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t color);
-void pcd8544_draw_text(int16_t x, int16_t y, const char* str);
 
 #ifdef PCD8544_USE_BUFFER
+
+uint8_t pcd8544_buffer[PCD8544_WIDTH * PCD8544_HEIGHT / 8];
+
 void	pcd8544_render();
 void	pcd8544_invalidate(uint8_t x, uint8_t y, uint8_t w, uint8_t h);
 #else
