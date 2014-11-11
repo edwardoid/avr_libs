@@ -59,9 +59,7 @@ void	uart_write_byte(char data);
 
 void	uart_write_string(const char* s);
 
-void	uart_write_num(int num);
-
-void	uart_write_u32num(uint32_t num);
+void	uart_write_num(int32_t num);
 
 void	uart_write_string_line(const char* s);
 

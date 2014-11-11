@@ -23,9 +23,8 @@
 
 #include "bitman.h"
 #include <avr/io.h>
-#include <stdlib.h>
-#include <string.h>
 #include "debug.h"
+#include "my_stdlib.h"
 
 #ifdef SPI_USE_BUFFER
 #include <avr/interrupt.h>
