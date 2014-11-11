@@ -32,6 +32,8 @@
 			* *** ***   * *** ***   * *** *** *** *
 */
 // order: 1 2 3 4 5 6 7 8 9 '.'. Symbols height is 5px
+
+
 static const byte calc_font [35] PROGMEM = {	0x1F,				//	1	Offset: 0
 												0x1D, 0x15, 0x17,	//	2	Offset:	1
 												0x15, 0x15, 0x1F,	//	3	Offset:	4
