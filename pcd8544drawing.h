@@ -47,8 +47,6 @@ void pcd8544_draw_rounded_rect(uint8_t top, uint8_t left, uint8_t bottom, uint8_
 
 void pcd8544_fill_rounded_rect(uint8_t top, uint8_t left, uint8_t bottom, uint8_t right, uint8_t radius, uint8_t color);
 
-void pcd8544_draw_text(int16_t x, int16_t y, const char* str);
-
 void pcd8544_draw_bitmap(uint8_t x, uint8_t y, const byte* bitmap, uint8_t width, uint8_t height, uint8_t color);
 
 #endif // F_PCD8544

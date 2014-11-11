@@ -17,53 +17,12 @@
 */
 
 #include "pcd8544drawing.h"
-#include "pcd8544font.h"
-#include "int_utils.h"
+#include "my_stdlib.h"
+#include "utils.h"
 #include "bitman.h"
+#include <avr/pgmspace.h>
 
 #ifdef F_PCD8544
-
-void pcd8544_draw_text(int16_t x, int16_t y, const char* str)
-{
-	if(str == NULL)
-	return;
-	
-	#ifdef PCD8544_USE_BUFFER
-	uint8_t x_pos = x;
-	#else
-	pcd8544_send_command(PCD8544_SETXADDR | x);
-	pcd8544_send_command(PCD8544_SETYADDR | y);
-	#endif // PCD8544_USE_BUFFER
-
-	while (*str != '\0')
-	{
-		#ifdef PCD8544_USE_BUFFER
-		uint8_t* cursor = pcd8544_buffer + PCD8544_ADDR(x_pos, y);
-		*cursor	|= pgm_read_byte(&pcd8544_font[(*str) - 0x20][0]);
-		++cursor;
-		*cursor	|= pgm_read_byte(&pcd8544_font[(*str) - 0x20][1]);
-		++cursor;
-		*cursor	|= pgm_read_byte(&pcd8544_font[(*str) - 0x20][2]);
-		++cursor;
-		*cursor	|= pgm_read_byte(&pcd8544_font[(*str) - 0x20][3]);
-		++cursor;
-		*cursor	|= pgm_read_byte(&pcd8544_font[(*str) - 0x20][4]);
-		x_pos += 6;
-		#else // PCD8544_USE_BUFFER
-		pcd8544_send_data(pgm_read_byte(&pcd8544_font[(*str) - 0x20][0]));
-		pcd8544_send_data(pgm_read_byte(&pcd8544_font[(*str) - 0x20][1]));
-		pcd8544_send_data(pgm_read_byte(&pcd8544_font[(*str) - 0x20][2]));
-		pcd8544_send_data(pgm_read_byte(&pcd8544_font[(*str) - 0x20][3]));
-		pcd8544_send_data(pgm_read_byte(&pcd8544_font[(*str) - 0x20][4]));
-		pcd8544_send_data(0x00);
-		#endif // PCD8544
-		++str;
-	}
-	
-	#ifdef PCD8544_USE_BUFFER
-	pcd8544_invalidate(x, y, x_pos - x , 8 );
-	#endif // PCD8544_USE_BUFFER
-}
 						
 void pcd8544_draw_line(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t color)
 {
