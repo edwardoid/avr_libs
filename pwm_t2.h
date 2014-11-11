@@ -19,6 +19,10 @@
 #ifndef PWM_T2_H
 #define PWM_T2_H
 
+#include "config.h"
+
+#ifdef F_PWM
+
 #include "bitman.h"
 #include <inttypes.h>
 #include <avr/io.h>
@@ -47,5 +51,7 @@
                                                 pwm_t2_set_prescaling_8()
 
 
+
+#endif // F_PWM
 
 #endif // PWM_T2_H

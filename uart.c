@@ -22,6 +22,7 @@
 
 #include <avr/io.h>
 #include <stdio.h>
+#include "my_stdlib.h"
 
 void uart_init (int BAUDRATE_H, int BAUDRATE_L)
 {
@@ -60,25 +61,10 @@ void	uart_write_string(const char* s)
 		uart_write_byte(*s++);
 }
 
-void	uart_write_num(int num)
+void	uart_write_num(int32_t num)
 {
-	char str[32] = {};
-	sprintf(str, "%d\n", num);
-	uart_write_string(str);
-}
-
-void	uart_write_u32num(uint32_t num)
-{
-	char str[32] = {};
-	sprintf(str, "%lu", num);
-	uart_write_string(str);
-}
-
-
-void	uart_write_num_hex(int num)
-{
-	char str[32] = {};
-	sprintf(str, "%2X", num);
+	char str[6] = {};
+	itoa(num, str);
 	uart_write_string(str);
 }
 

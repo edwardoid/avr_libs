@@ -19,8 +19,12 @@
 #ifndef AVR_LIBS_CONFIG_H
 #define AVR_LIBS_CONFIG_H
 
+//#define USE_STD_LIB /* enable using <stdlib.h>
+
+
 //#define F_1WIRE
 //#define F_ADC
+//#define F_PWM
 #define F_PCD8544
 //#define F_SD
 #define F_SPI

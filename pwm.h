@@ -19,7 +19,13 @@
 #ifndef PWM_H
 #define PWM_H
 
+#include "config.h"
+
+#ifdef F_PWM
+
 #include "pwm_t2.h"
 #include "pwm_t1.h"
+
+#endif // F_PWM
 
 #endif // PWM_H

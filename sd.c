@@ -17,10 +17,9 @@
 */
 
 #include "sd.h"
+#include "config.h"
 
 #ifdef F_SD
-
-#include <stdlib.h>
 
 int8_t sd_send_command(uint8_t cmd, uint32_t args,port_ptr_t port, uint8_t pin, char* resp)
 {

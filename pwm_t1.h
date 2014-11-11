@@ -20,6 +20,10 @@
 #ifndef PWM_T1_H
 #define PWM_T1_H
 
+#include "config.h"
+
+#ifdef F_PWM
+
 #define pwm_t1_timer_from_pin(pin)              (*(pin == PB1 ? &OCR1A: &OCR1B))
 #define pwm_t1_timer_control_from_pin(pin)      (*(pin == PB1 ? &TCCR1A: &TCCR1B))
 #define pwm_t1_comparator_from_pin(pin, num)    (pin == PB1 ? COM1A ## num : COM1B ## num )
@@ -50,5 +54,7 @@
                                                 pwm_t1_set_mode_pc_10bit();           \
                                                 pwm_t1_set_prescaling_8();
 
+
+#endif // F_PWM
 
 #endif // PWM_T1_H
