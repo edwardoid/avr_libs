@@ -41,11 +41,11 @@ int8_t sd_send_command(uint8_t cmd, uint32_t args,port_ptr_t port, uint8_t pin, 
 		r = spi_write_byte_ss(0x95, pin, port);
 	
 	
-	uart_write_num(r);
+	usart_write_num(r);
 	uint32_t rsp_start = tu_millis();
 	do 
 	{
-		uart_write_num(r);
+		usart_write_num(r);
 			
 		if(r != 0xFF)
 		{

@@ -98,6 +98,28 @@ void pcd8544_fill_rect(uint8_t top, uint8_t left, uint8_t bottom, uint8_t right,
 		pcd8544_draw_horisontal_line(left, right, top, color);
 }
 
+#ifdef PCD8544_USE_BUFFER
+
+void pcd8544_invert_rect(uint8_t top, uint8_t left, uint8_t bottom, uint8_t right)
+{
+	if(top > bottom)
+		fast_swap(top, bottom);
+		
+	if(left > right)
+		fast_swap(left, right);
+
+	uint8_t l = left;
+	for(; top < bottom; ++top)
+	{
+		for(l = left; l < right; ++l)
+		{
+			pcd8544_set_pixel(l, top, !pcd8544_get_pixel(l, top));
+		}
+	}
+}
+
+#endif // PCD8544_USE_BUFFER
+
 void pcd8544_draw_circle_helper(int16_t x0, int16_t y0, int16_t r,  uint16_t color, uint8_t quadrant)
 {
 	int16_t x = -r;

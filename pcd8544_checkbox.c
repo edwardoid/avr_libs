@@ -16,26 +16,20 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PCD8544_PROGRESS_H
-#define PCD8544_PROGRESS_H
-
-#include "config.h"
-#include "my_types.h"
-#include <avr/pgmspace.h>
+#include "pcd8544_checkbox.h"
+#include "pcd8544drawing.h"
+#include "pcd8544_tiny_font.h"
+#include "pcd8544_default_font.h"
 
 #ifdef F_PCD8544
 
-static const byte pcd8544_progress[6] PROGMEM = {
-	0x3C, 0x7E, // start
-	0x18,		// line
-	0x7E,		// value
-	0x7E, 0x3C	// end
-};
-
-void pcd8544_draw_progress(uint8_t x, uint8_t y, uint8_t width, uint8_t value, uint8_t draw_value, uint8_t color);
+void pcd8544_draw_checkbox(uint8_t x, uint8_t y, const char* string,  uint8_t checked)
+{
+	pcd8544_draw_rect(y + 1, x + 1, y + 8, x + 8, 1);
+	if(checked)
+		pcd8544_fill_rect(y + 3, x + 3, y + 7, x + 7, 1);
+		
+	pcd8544_print_str(x + 11, y + 1, string, &default_font, 1, ALIGN_LEFT);
+}
 
 #endif // F_PCD8544
-
-
-
-#endif /* PCD8544_PROGRESS_H_ */

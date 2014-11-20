@@ -22,7 +22,7 @@
 
 #ifdef F_PCD8544
 
-void pcd8544_draw_progress(uint8_t x, uint8_t y, uint8_t width, uint8_t value, uint8_t color)
+void pcd8544_draw_progress(uint8_t x, uint8_t y, uint8_t width, uint8_t value, uint8_t draw_value, uint8_t color)
 {
 	if(width < 5)
 		return;
@@ -42,9 +42,12 @@ void pcd8544_draw_progress(uint8_t x, uint8_t y, uint8_t width, uint8_t value, u
 			pcd8544_draw_bitmap(x + 2 + i, y, pcd8544_progress + 2, 1, 8, color);
 	}
 	
-	uint8_t txt = pcd8577_print_calc_style_num_length_in_px(value);
-	txt = (width - txt + 4 ) / 2;
-	pcd8577_print_calc_style_num(txt, y + 8, value, color);
+	if(draw_value)
+	{
+		uint8_t txt = pcd8577_print_calc_style_num_length_in_px(value);
+		txt = (width - txt + 4 ) / 2;
+		pcd8577_print_calc_style_num(txt, y + 8, value, color);
+	}
 }
 
 #endif // F_PCD8544

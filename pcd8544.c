@@ -3,7 +3,7 @@
 	Copyright (C) 2014  Edward Sargsyan
 
 	avr_libs is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
+	it under the terms of the GNU `neral Public License as published by
 	the Free Software Foundation, either version 3 of the License, or
 	(at your option) any later version.
 
@@ -96,6 +96,13 @@ void pcd8544_set_pixel(int16_t x, int16_t y, uint16_t color)
 		pcd8544_send_data(0); //"remove black pixel"
 #endif // PCD8455_USE_BUFFER
 }
+
+#ifdef PCD8544_USE_BUFFER
+uint8_t	pcd8544_get_pixel(int16_t x, int16_t y)
+{
+	return test_bit(pcd8544_buffer[PCD8544_ADDR(x, y)], y % 8);
+}
+#endif // PCD8455_USE_BUFFER
 
 void pcd8544_init(pcd8544_cfg_t* cfg, uint8_t bias, uint8_t contrast)
 {

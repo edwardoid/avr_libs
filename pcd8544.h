@@ -52,6 +52,7 @@ uint8_t pcd8544_buffer[PCD8544_WIDTH * PCD8544_HEIGHT / 8];
 
 void	pcd8544_render();
 void	pcd8544_invalidate(uint8_t x, uint8_t y, uint8_t w, uint8_t h);
+uint8_t	pcd8544_get_pixel(int16_t x, int16_t y);
 #else
 #define pcd8544_render()
 void	pcd8544_invalidate(x, y, w, h)

@@ -112,4 +112,16 @@ uint8_t pcd8577_print_calc_style_num(uint8_t x, uint8_t y, int16_t num, uint8_t 
 	return lenght;
 }
 
+uint8_t pcd8577_print_calc_style_fnum(uint8_t x, uint8_t y, float num, uint8_t color)
+{
+	int8_t num_after_dot = (int16_t)(num * 10) % 10;
+	if(num_after_dot < 0)
+		num_after_dot = -num_after_dot;
+	x = pcd8577_print_calc_style_num(x , y, num, color);
+	x = pcd8577_print_calc_style_num(x , y, CALC_FONT_DOT, color);
+	x = pcd8577_print_calc_style_num(x , y, num_after_dot, color);
+
+	return x + 3;
+}
+
 #endif // F_PCD8544

@@ -56,6 +56,8 @@ static const byte calc_font [35] PROGMEM = {	0x1F,				//	1	Offset: 0
 // return x-pos last number. CALC_FONT_DOT is reserved for '.' symbol.
 uint8_t pcd8577_print_calc_style_num(uint8_t x, uint8_t y, int16_t num, uint8_t color);
 
+uint8_t pcd8577_print_calc_style_fnum(uint8_t x, uint8_t y, float num, uint8_t color);
+
 uint8_t pcd8577_print_calc_style_num_length_in_px(int16_t num);
 
 #endif // F_PCD8544

@@ -19,7 +19,6 @@
 #include "pcd8544_font.h"
 #include "my_stdlib.h"
 #include <avr/pgmspace.h>
-#include "uart.h"
 #include "pcd8544drawing.h"
 
 #ifdef F_PCD8544

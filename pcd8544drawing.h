@@ -39,6 +39,10 @@ void pcd8544_draw_vertical_line(uint8_t x, uint8_t y1, uint8_t y2, uint8_t color
 
 void pcd8544_fill_rect(uint8_t top, uint8_t left, uint8_t bottom, uint8_t right, uint8_t color);
 
+#ifdef PCD8544_USE_BUFFER
+void pcd8544_invert_rect(uint8_t top, uint8_t left, uint8_t bottom, uint8_t right);
+#endif // PCD8544_USE_BUFFER
+
 void pcd8544_draw_circle(int16_t x0, int16_t y0, int16_t r,  uint16_t color);
 
 void pcd8544_fill_circle(int16_t x0, int16_t y0, int16_t r,  uint16_t color);
