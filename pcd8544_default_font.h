@@ -121,11 +121,11 @@ static const uint8_t default_font_width[] PROGMEM =
 static const struct font_t default_font =
 {
 	.type = FONT_TYPE_STANDARD,
-	.first = 0x20,
+	.first = 0x21,
 	.count = 0x5E,
 	.font = default_font_data,
 	.widths = default_font_width,
-	.height = 0xA
+	.height = 0x08
 };
 
 
