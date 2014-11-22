@@ -143,6 +143,7 @@ static const uint8_t tiny_font_widths[] PROGMEM =
 
 static const struct font_t tiny_font =	
 {
+	.type = FONT_TYPE_STANDARD,
 	.first = 0x21,
 	.count = 0x5E,
 	.font = tiny_font_data,

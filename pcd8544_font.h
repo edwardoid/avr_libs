@@ -23,14 +23,21 @@
 
 #ifdef F_PCD8544
 
+#define  GLCD_FONTS_SUPPORT
+
 #define ALIGN_LEFT		0
 #define ALIGN_CENTER	1
 #define ALIGN_RIGHT		2
 
 #include "my_types.h"
 
+
+#define FONT_TYPE_STANDARD	0
+#define FONT_TYPE_GLCD		1
+
 struct font_t
 {
+	uint8_t			type;
 	uint8_t			first;
 	uint8_t			count;
 	const byte*		font;
@@ -38,10 +45,9 @@ struct font_t
 	uint8_t			height;
 };
 
-
 uint16_t	pcd8544_get_symbol_offset(const struct font_t* font, char symbol);
-uint8_t	pcd8544_get_symbol_width(const struct font_t* font, char symbol);
-uint8_t pcd8544_get_str_length_in_px(const char* str, const struct font_t* font);
+uint8_t		pcd8544_get_symbol_width(const struct font_t* font, char symbol);
+uint8_t		pcd8544_get_str_length_in_px(const char* str, const struct font_t* font);
 
 uint8_t pcd8544_print_str(uint8_t x, uint8_t y, const char* str, const struct font_t* font, uint8_t color, uint8_t align);
 
