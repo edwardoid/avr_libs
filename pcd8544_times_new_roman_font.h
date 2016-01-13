@@ -21,10 +21,12 @@
 
 #include "config.h"
 #include "pcd8544_font.h"
+#include "pcd8544_fonts_config.h"
 #include <avr/pgmspace.h>
 
 #ifdef F_PCD8544
 
+#ifdef ENABLE_TIMES_NEW_ROMAN_FONT
 
 static const byte times_new_roman_font_data[] PROGMEM = {
 	0x07, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // Code for char
@@ -139,6 +141,8 @@ static const struct font_t times_new_roman_font =
 	.widths = times_new_roman_font_widths,
 	.height = 0x0B
 };
+
+#endif // ENABLE_TIMES_NEW_ROMAN_FONT
 
 #endif // F_PCD8544
 

@@ -70,42 +70,42 @@ typedef struct
 	port_ptr_t	port;
 	uint8_t*	pin;
 	uint8_t		pin_num;
-} ow_conf;
+} ow_conf_t;
 													
 
-void ow_init_config(ow_conf* cfg);
+void ow_init_config(ow_conf_t* cfg);
 
-void ow_init(ow_conf* cfg);
+void ow_init(ow_conf_t* cfg);
 
-uint8_t	ow_reset(ow_conf* cfg);
+uint8_t	ow_reset(ow_conf_t* cfg);
 
-void	ow_write_bit(ow_conf* cfg, uint8_t v);
+void	ow_write_bit(ow_conf_t* cfg, uint8_t v);
 
 #define ow_write(cfg, v) ow_write_ex(cfg, v, 0);
 
-void ow_write_ex(ow_conf* cfg, uint8_t v, uint8_t pwr);
+void ow_write_ex(ow_conf_t* cfg, uint8_t v, uint8_t pwr);
 
-void ow_write_bytes(ow_conf* cfg, const uint8_t *buf, uint16_t count);
+void ow_write_bytes(ow_conf_t* cfg, const uint8_t *buf, uint16_t count);
 
-uint8_t ow_read_bit(ow_conf* cfg);
+uint8_t ow_read_bit(ow_conf_t* cfg);
 
 // Read a byte
 //
-uint8_t ow_read(ow_conf* cfg);
+uint8_t ow_read(ow_conf_t* cfg);
 
-void ow_read_bytes(ow_conf* cfg, uint8_t *buf, uint16_t count);
+void ow_read_bytes(ow_conf_t* cfg, uint8_t *buf, uint16_t count);
 
-void ow_select(ow_conf* cfg, const uint8_t rom[8]);
+void ow_select(ow_conf_t* cfg, const uint8_t rom[8]);
 
 void ow_skip();
 
 void ow_depower();
 
-void ow_reset_search(ow_conf* cfg);
+void ow_reset_search(ow_conf_t* cfg);
 
-void ow_target_search(uint8_t family_code, ow_conf* cfg);
+void ow_target_search(uint8_t family_code, ow_conf_t* cfg);
 
-uint8_t ow_search(uint8_t *newAddr, ow_conf* cfg);
+uint8_t ow_search(uint8_t *newAddr, ow_conf_t* cfg);
 
 uint8_t ow_crc8(const uint8_t *addr, uint8_t len);
 
@@ -118,9 +118,9 @@ uint8_t ow_check_crc16(	const	uint8_t*	input,
 uint16_t ow_crc16(const uint8_t* input, uint16_t len, uint16_t crc_val);
 
 
-uint8_t	ow_read_scratchpad(ow_conf* cfg, const uint8_t* rom /* [8] */ , uint8_t* data, uint8_t count);
+uint8_t	ow_read_scratchpad(ow_conf_t* cfg, const uint8_t* rom /* [8] */ , uint8_t* data, uint8_t count);
 
-double ow_read_temperature_ds18x2x(ow_conf* cfg, const uint8_t* rom);
+double ow_read_temperature_ds18x2x(ow_conf_t* cfg, const uint8_t* rom);
 
 #endif // ONEWIRE_CRC16
 

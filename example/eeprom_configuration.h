@@ -16,33 +16,13 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USART_H
-#define USART_H
+#ifndef EEPROM_CONFIGURATION_H
+#define EEPROM_CONFIGURATION_H
 
-#include "config.h"
-#ifdef F_USART
+#include <inttypes.h>
 
-#include "bitman.h"
-#include "my_types.h"
-#include <stdint.h>
+#define EEPROM_INIT_FLAG_ADDR ((void*)0)
+#define EEPROM_SETTINGS_ADDR ((void*)((EEPROM_INIT_FLAG_ADDR + sizeof(uint8_t))))
 
-#define CALC_BRR(rate) (((F_CPU >> 4) / rate) - 1)
 
-#define BAUD_RATE_H(rate) (uint8_t)((CALC_BRR(rate) >> 8) & 0xFF)
-#define BAUD_RATE_L(rate) (uint8_t)(CALC_BRR(rate) & 0xFF)
-
-void	usart_init (uint32_t baud_rate);
-
-char	usart_read_byte();
-	
-void	usart_write_byte(char data);
-
-void	usart_write_string(const char* s);
-
-void	usart_write_num(int32_t num);
-
-void	usart_write_string_line(const char* s);
-
-#endif // F_USART
-
-#endif // USART_H
+#endif /* EEPROM_CONFIGURATION_H_ */

@@ -115,7 +115,7 @@ uint8_t pcd8544_print_str(uint8_t x, uint8_t y, const char* str, const struct fo
 		if(font->type == FONT_TYPE_STANDARD)
 		{
 			pcd8544_draw_bitmap(x, y, font->font + offset, width, font->height, color);
-			x += width + 1;
+			x += width + width / 2;
 		}
 		else if(font->type == FONT_TYPE_GLCD)
 		{
@@ -135,8 +135,10 @@ uint8_t pcd8544_print_str(uint8_t x, uint8_t y, const char* str, const struct fo
 							pcd8544_set_pixel(x, y + r + b * 8, color);
 					}
 				}
-				++x;
 			}
+			
+			x+= font->height >> 1 + 1;
+			
 		}
 
 		if(x > PCD8544_WIDTH)

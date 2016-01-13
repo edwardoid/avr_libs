@@ -23,12 +23,13 @@
 
 void*	memset(void * buff, int val, uint16_t sz);
 void	itoa(int32_t val, char * str);
-
 #ifndef NULL
 #define NULL 0
 #endif // NULL
 
 
 #endif // USE_STDLIB
+
+void	ftoa(float	val, uint8_t precision, char*	str);
 
 #endif /* MY_STDLIB_H_ */

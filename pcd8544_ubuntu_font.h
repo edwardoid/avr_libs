@@ -21,10 +21,11 @@
 
 #include "config.h"
 #include "pcd8544_font.h"
+#include "pcd8544_fonts_config.h"
 #include <avr/pgmspace.h>
 
 #ifdef F_PCD8544
-
+#ifdef ENABLE_UBUNTU_FRONT
 
 static const byte ubuntu_font_data[] PROGMEM = {
 	0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // Code for char
@@ -143,4 +144,5 @@ static const struct font_t ubuntu_font =
 #endif // F_PCD8544
 
 
+#endif
 #endif /* PCD8544_UBUNTU_FONT_H */

@@ -19,15 +19,15 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include "uart.h"
+#include "usart.h"
 #include "time_utils_counters.h"
 
-#define ENABLE_UART_DEBUGGING 1
+#define ENABLE_USART_DEBUGGING 1
 
-#ifdef ENABLE_UART_DEBUGGING
-#define DBG_MSG(msg) uart_write_byte('['); uart_write_u32num(tu_millis()); uart_write_string("] MSG: "); uart_write_string_line(msg);
-#define DBG_WRN(wrn) uart_write_byte('['); uart_write_u32num(tu_millis()); uart_write_string("] WRN: "); uart_write_string_line(wrn);
-#define DBG_ERR(err) uart_write_byte('['); uart_write_u32num(tu_millis()); uart_write_string("] ERR: "); uart_write_string_line(err);	
+#ifdef ENABLE_USART_DEBUGGING
+#define DBG_MSG(msg) usart_write_byte('['); usart_write_u32num(tu_millis()); usart_write_string("]: "); usart_write_string_line(msg);
+#define DBG_WRN(wrn) usart_write_byte('['); usart_write_u32num(tu_millis()); usart_write_string("] ?: "); usart_write_string_line(wrn);
+#define DBG_ERR(err) usart_write_byte('['); usart_write_u32num(tu_millis()); usart_write_string("] !: "); usart_write_string_line(err);	
 #else
 #define DBG_MSG(msg) /* msg */
 #define DBG_WRN(wrn) /* wrn */

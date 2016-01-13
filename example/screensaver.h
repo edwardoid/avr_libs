@@ -16,33 +16,25 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USART_H
-#define USART_H
+#ifndef SCREENSAVER_H
+#define SCREENSAVER_H
 
-#include "config.h"
-#ifdef F_USART
+#include "screen.h"
+#include "events.h"
+#include "../pcd8544_font.h"
+#include <avr/pgmspace.h>
 
-#include "bitman.h"
-#include "my_types.h"
-#include <stdint.h>
+/*
+void draw_screensaver();
+void screensaver_events_handler(struct event_t* e);
 
-#define CALC_BRR(rate) (((F_CPU >> 4) / rate) - 1)
+struct screensaver_t
+{
+	uint16_t			last_timer_tick;
+	struct screen_t*	prev_screen;
+	struct screen_t		saver;	
+};
 
-#define BAUD_RATE_H(rate) (uint8_t)((CALC_BRR(rate) >> 8) & 0xFF)
-#define BAUD_RATE_L(rate) (uint8_t)(CALC_BRR(rate) & 0xFF)
-
-void	usart_init (uint32_t baud_rate);
-
-char	usart_read_byte();
-	
-void	usart_write_byte(char data);
-
-void	usart_write_string(const char* s);
-
-void	usart_write_num(int32_t num);
-
-void	usart_write_string_line(const char* s);
-
-#endif // F_USART
-
-#endif // USART_H
+extern struct screensaver_t screensaver;
+*/
+#endif /* SCREENSAVER_H */

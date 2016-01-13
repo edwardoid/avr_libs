@@ -5,7 +5,7 @@
 #include "../my_stdlib.h"
 #include "../bitman.h"
 #include "state.h"
-#include "display_settings_screen.h"
+//#include "display_settings_screen.h"
 
 uint8_t menu_selection = 0;
 uint8_t screen_is_about_to_be_changed = 0;
@@ -50,8 +50,8 @@ uint8_t main_screen_event_handler(struct event_t* event)
 			{
 				if(test_bit(menu_selection, 2))
 				{
-					current_state.current_screen = &display_settings_screen;
-					screen_is_about_to_be_changed = 0;
+					//current_state.current_screen = &display_settings_screen;
+					//screen_is_about_to_be_changed = 0;
 				}
 			}
 			else
@@ -65,6 +65,11 @@ uint8_t main_screen_event_handler(struct event_t* event)
 		{
 			screen_is_about_to_be_changed = 1;
 		}
+	}
+	else if (event->emitter == TEMP_SENSOR)
+	{
+		current_state.temperature = event->data;
+		return SIGNAL_REDRAW;
 	}
 	
 	

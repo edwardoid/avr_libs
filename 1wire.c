@@ -30,15 +30,13 @@
 #define ow_write_ow_1(cfg) set_bit(* (cfg->port), cfg->pin_num)
 #define ow_write_ow_0(cfg) clear_bit(* (cfg->port), cfg->pin_num)
 
-#include "uart.h"
-
-void ow_init(ow_conf* cfg)
+void ow_init(ow_conf_t* cfg)
 {
 	ow_set_ow_as_input(cfg);
 	ow_reset_search(cfg);
 }
 
-void ow_reset_search(ow_conf* cfg)
+void ow_reset_search(ow_conf_t* cfg)
 {
 	// reset the search state
 	cfg->LastDiscrepancy = 0;
@@ -53,7 +51,7 @@ void ow_reset_search(ow_conf* cfg)
 	}
 }
 
-void ow_init_config(ow_conf* cfg)
+void ow_init_config(ow_conf_t* cfg)
 {
 	cfg->LastDiscrepancy = 0;
 	cfg->LastFamilyDiscrepancy = 0;
@@ -67,19 +65,32 @@ void ow_init_config(ow_conf* cfg)
 	}
 }
 
-uint8_t	ow_reset(ow_conf* cfg)
+uint8_t	ow_reset(ow_conf_t* cfg)
 {
-	uint8_t r = 0;
+	cli();
+	ow_set_ow_as_input(cfg);
+	uint8_t tries = 50;
+	while(tries-- && ow_read_ow_wire(cfg))
+	{
+		tu_delay_us(2);
+	}
+	
+	
 	ow_write_ow_0(cfg);
 	ow_set_ow_as_output(cfg);
+	sei();
 	tu_delay_us(480);
 	ow_set_ow_as_input(cfg);
-	r = ow_read_ow_wire(cfg);
-	tu_delay_us(420);
+	tu_delay_us(70);
+	cli();
+	uint8_t r = ow_read_ow_wire(cfg);
+	sei();
+	tu_delay_us(410);
+	
 	return !r;
 }
 
-void	ow_write_bit(ow_conf* cfg, uint8_t v)
+void	ow_write_bit(ow_conf_t* cfg, uint8_t v)
 {
 	ow_write_ow_0(cfg);
 	ow_set_ow_as_output(cfg);
@@ -90,7 +101,7 @@ void	ow_write_bit(ow_conf* cfg, uint8_t v)
 	ow_set_ow_as_input(cfg);
 }
 
-void	ow_write_ex(ow_conf* cfg, uint8_t v, uint8_t pwr)
+void	ow_write_ex(ow_conf_t* cfg, uint8_t v, uint8_t pwr)
 {
 	uint8_t i = 8;
 	while(i--)
@@ -109,14 +120,14 @@ void	ow_write_ex(ow_conf* cfg, uint8_t v, uint8_t pwr)
 	}
 }
 
-void ow_write_bytes(ow_conf* cfg, const uint8_t *buf, uint16_t count)
+void ow_write_bytes(ow_conf_t* cfg, const uint8_t *buf, uint16_t count)
 {
 	uint16_t i = 0;
 	for ( ; i < count ; i++)
 		ow_write(cfg, buf[i]);
 }
 
-uint8_t ow_read_bit(ow_conf* cfg)
+uint8_t ow_read_bit(ow_conf_t* cfg)
 {
 	uint8_t b = 0;
 	ow_write_ow_0(cfg);
@@ -132,7 +143,7 @@ uint8_t ow_read_bit(ow_conf* cfg)
 	return b;
 }
 
-uint8_t ow_read(ow_conf* cfg) {
+uint8_t ow_read(ow_conf_t* cfg) {
 	
     uint8_t bitMask = 0xFF;
     uint8_t r = 0;
@@ -145,14 +156,14 @@ uint8_t ow_read(ow_conf* cfg) {
     return r;
 }
 
-void ow_read_bytes(ow_conf* cfg, uint8_t *buf, uint16_t count)
+void ow_read_bytes(ow_conf_t* cfg, uint8_t *buf, uint16_t count)
 {
 	uint16_t i = 0;
 	for ( ; i < count ; i++)
 		buf[i] = ow_read(cfg);
 }
 
-void ow_select(ow_conf* cfg, const uint8_t rom[8])
+void ow_select(ow_conf_t* cfg, const uint8_t rom[8])
 {
     uint8_t i = 0;
 
@@ -162,19 +173,19 @@ void ow_select(ow_conf* cfg, const uint8_t rom[8])
 		ow_write(cfg, rom[i]);
 }
 
-void ow_skip(ow_conf* cfg)
+void ow_skip(ow_conf_t* cfg)
 {
     ow_write(cfg, OW_SKIP_ROM_CMD);           // Skip ROM
 }
 
-void ow_depower(ow_conf* cfg)
+void ow_depower(ow_conf_t* cfg)
 {
 	cli();
 	ow_set_ow_as_input(cfg);
 	sei();
 }
 
-void ow_target_search(uint8_t family_code, ow_conf* cfg)
+void ow_target_search(uint8_t family_code, ow_conf_t* cfg)
 {
 // set the search state to find SearchFamily type devices
 	cfg->ROM_NO[0] = family_code;
@@ -187,7 +198,7 @@ void ow_target_search(uint8_t family_code, ow_conf* cfg)
 	cfg->LastDeviceFlag = OW_FALSE;
 }
 
-uint8_t ow_search(uint8_t *newAddr, ow_conf* cfg)
+uint8_t ow_search(uint8_t *newAddr, ow_conf_t* cfg)
 {
 	uint8_t id_bit_number;
 	uint8_t last_zero, rom_byte_number, search_result;
@@ -305,7 +316,7 @@ uint8_t ow_search(uint8_t *newAddr, ow_conf* cfg)
 	return search_result;
 }
 
-uint8_t	ow_read_scratchpad(ow_conf* cfg, const uint8_t* rom, uint8_t* data, uint8_t count)
+uint8_t	ow_read_scratchpad(ow_conf_t* cfg, const uint8_t* rom, uint8_t* data, uint8_t count)
 {
 	if(!ow_reset(cfg))
 	{
@@ -324,11 +335,10 @@ uint8_t	ow_read_scratchpad(ow_conf* cfg, const uint8_t* rom, uint8_t* data, uint
 	return OW_TRUE;
 }
 
-double ow_read_temperature_ds18x2x(ow_conf* cfg, const uint8_t* rom)
+double ow_read_temperature_ds18x2x(ow_conf_t* cfg, const uint8_t* rom)
 {
 	if(ow_crc8(rom, 7) != rom[7])
 	{
-		uart_write_string_line("CRC is not valid");
 		return -999.999;
 	}
 		

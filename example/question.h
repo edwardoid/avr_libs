@@ -16,33 +16,15 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USART_H
-#define USART_H
+#ifndef QUESTION_H
+#define QUESTION_H
 
-#include "config.h"
-#ifdef F_USART
+#define QUESTION_RESULT_NOT_ANSWERED	0
+#define QUESTION_RESULT_YES				3
+#define QUESTION_RESULT_NO				2
 
-#include "bitman.h"
-#include "my_types.h"
-#include <stdint.h>
-
-#define CALC_BRR(rate) (((F_CPU >> 4) / rate) - 1)
-
-#define BAUD_RATE_H(rate) (uint8_t)((CALC_BRR(rate) >> 8) & 0xFF)
-#define BAUD_RATE_L(rate) (uint8_t)(CALC_BRR(rate) & 0xFF)
-
-void	usart_init (uint32_t baud_rate);
-
-char	usart_read_byte();
-	
-void	usart_write_byte(char data);
-
-void	usart_write_string(const char* s);
-
-void	usart_write_num(int32_t num);
-
-void	usart_write_string_line(const char* s);
-
-#endif // F_USART
-
-#endif // USART_H
+#include <inttypes.h>
+/*
+uint8_t question(const char* str);
+*/
+#endif // QUESTION_H

@@ -20,9 +20,18 @@
 #define TIME_UTILS_COUNTERS_H
 
 #include <inttypes.h>
+#include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define tu_counters_init() TCCR0 |= (_BV(CS01) | _BV(CS00)); TIMSK |= _BV(TOIE0); sei();
+#if defined __AVR_ATmega8__ || defined __AVR_ATmega8A__
+#define TIMER_COUNTER TCCR0
+#define TIMER_INT_MASK TIMSK
+#else
+#define TIMER_COUNTER TCCR0B
+#define TIMER_INT_MASK TIMSK0
+#endif
+
+#define tu_counters_init() TIMER_COUNTER |= (_BV(CS01) | _BV(CS00)); TIMER_INT_MASK |= _BV(TOIE0); sei();
 
 uint32_t tu_millis();
 

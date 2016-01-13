@@ -11,11 +11,14 @@
 
 #include <inttypes.h>
 
+#include "../1wire.h"
+#include <avr/io.h>
+
 #define NOTHING_HAPPENED	0
 #define BUTTON_LEFT			5
 #define BUTTON_RIGHT		4
 #define BUTTON_CENTER		3
-#define TEMP_SENSOR			4
+#define TEMP_SENSOR			2
 
 
 #define BUTTON_PRESSED		1

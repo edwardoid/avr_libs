@@ -177,7 +177,7 @@ void pcd8544_render()
 {
 	if(invalid_rc_t >= invalid_rc_b || invalid_rc_l >= invalid_rc_r)
 		return;
-		
+	
 	int16_t min_column = invalid_rc_t >> 3;
 	int16_t max_column = invalid_rc_b >> 3;
 	++max_column;

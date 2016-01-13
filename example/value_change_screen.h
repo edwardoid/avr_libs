@@ -16,33 +16,28 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USART_H
-#define USART_H
+#ifndef VALUE_CHANGE_SCREEN
+#define VALUE_CHANGE_SCREEN
 
-#include "config.h"
-#ifdef F_USART
+#include "screen.h"
+/*
+void draw_value_change_screen();
+void value_change_screen_events_handler(struct event_t* e);
 
-#include "bitman.h"
-#include "my_types.h"
-#include <stdint.h>
+typedef void (*apply_function_ptr)(float);
 
-#define CALC_BRR(rate) (((F_CPU >> 4) / rate) - 1)
+struct value_change_screen_t
+{
+	struct screen_t	screen;
+	const	char*	parameter_name;
+	float			current_value;
+	float			min;
+	float			max;
+	float			step;
+	float			difference;
+	apply_function_ptr	apply;
+};
 
-#define BAUD_RATE_H(rate) (uint8_t)((CALC_BRR(rate) >> 8) & 0xFF)
-#define BAUD_RATE_L(rate) (uint8_t)(CALC_BRR(rate) & 0xFF)
-
-void	usart_init (uint32_t baud_rate);
-
-char	usart_read_byte();
-	
-void	usart_write_byte(char data);
-
-void	usart_write_string(const char* s);
-
-void	usart_write_num(int32_t num);
-
-void	usart_write_string_line(const char* s);
-
-#endif // F_USART
-
-#endif // USART_H
+extern struct value_change_screen_t value_change_screen;
+*/
+#endif // VALUE_CHANGE_SCREEN

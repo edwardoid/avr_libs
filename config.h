@@ -22,12 +22,17 @@
 //#define USE_STD_LIB /* enable using <stdlib.h>
 
 
-//#define F_1WIRE
+#ifndef F_CPU // change line below according to MCU fuses.
+#define F_CPU 20000000UL
+#endif // F_CPU
+
+
+#define F_1WIRE
 //#define F_ADC
 //#define F_PWM
 #define F_PCD8544
 //#define F_SD
 #define F_SPI
-#define F_UART
+#define F_USART
 
 #endif // AVR_LIBS_CONFIG_H

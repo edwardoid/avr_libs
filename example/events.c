@@ -38,6 +38,19 @@ struct button_t right =
 	.last_state = BUTTON_RELEASED
 };
 
+ ow_conf_t temp =
+ {
+	 .LastDeviceFlag = 0,
+	 .LastDiscrepancy = 0,
+	 .LastFamilyDiscrepancy = 0,
+	 .ddr = &DDRD,
+	 .port = &PORTD,
+	 .pin = &PIND,
+	 .pin_num = PD7
+ };
+ 
+uint8_t temp_rom[]  = { 0, 0, 0, 0,    0, 0, 0, 0 };
+
 int8_t button_left_last_state	= BUTTON_RELEASED;
 int8_t button_right_last_state	= BUTTON_RELEASED;
 int8_t button_center_last_state	= BUTTON_RELEASED;
@@ -87,6 +100,30 @@ uint8_t poll_button_for_long_press(struct button_t* bttn)
 	return bttn->last_state;
 }
 
+uint8_t poll_temp_sensor()
+{
+	ow_conf_t cfg;
+	memset(&cfg, 0, sizeof(ow_conf_t));
+	ow_init(&cfg);
+	ow_init_config(&cfg);
+	if(ow_reset(&cfg))
+	{
+		usart_write_string_line("R!");
+		return NOTHING_HAPPENED;
+	}
+	if(ow_search(temp_rom, &cfg))
+	{
+		usart_write_string_line("S!");
+		return NOTHING_HAPPENED;
+	}
+	temp_sensor_last_value = ow_read_temperature_ds18x2x(&temp, temp_rom);
+	char str[10];
+	memset(str, 0, 10);
+	ftoa(temp_sensor_last_value, 2, str);
+	usart_write_string_line(str);
+	return TEMP_CHANGED;
+}
+
 uint8_t poll_hardware(struct event_t* res)
 {
 	if(res != NULL)
@@ -110,6 +147,12 @@ uint8_t poll_hardware(struct event_t* res)
 				poll_button_for_long_press(&center);
 			res->emitter = center.num;
 			res->data = center.last_state;
+		}
+		else if(poll_temp_sensor() != NOTHING_HAPPENED)
+		{
+			res->emitter = TEMP_SENSOR;
+			temp_sensor_last_value += 1;
+			res->data = temp_sensor_last_value;
 		}
 		
 		return res->emitter;

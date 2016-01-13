@@ -16,33 +16,6 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef USART_H
-#define USART_H
-
-#include "config.h"
-#ifdef F_USART
-
-#include "bitman.h"
-#include "my_types.h"
-#include <stdint.h>
-
-#define CALC_BRR(rate) (((F_CPU >> 4) / rate) - 1)
-
-#define BAUD_RATE_H(rate) (uint8_t)((CALC_BRR(rate) >> 8) & 0xFF)
-#define BAUD_RATE_L(rate) (uint8_t)(CALC_BRR(rate) & 0xFF)
-
-void	usart_init (uint32_t baud_rate);
-
-char	usart_read_byte();
-	
-void	usart_write_byte(char data);
-
-void	usart_write_string(const char* s);
-
-void	usart_write_num(int32_t num);
-
-void	usart_write_string_line(const char* s);
-
-#endif // F_USART
-
-#endif // USART_H
+#define ENABLE_UBUNTU_FRONT
+//#define ENABLE_TIMES_NEW_ROMAN_FONT
+//#define ENABLE_SCRIPT_MT

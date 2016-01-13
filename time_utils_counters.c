@@ -28,6 +28,7 @@
 #define TU_FRACT_INC ((TU_MICROSECONDS_PER_TIMER0_OVERFLOW % 1000) >> 3)
 #define TU_FRACT_MAX (1000 >> 3)
 
+#define CLOCK_CYCLES_PER_
 
 volatile static uint32_t tu_timer0_millis = 0;
 static uint8_t tu_timer0_fract = 0;
@@ -56,6 +57,7 @@ ISR(TIMER0_OVF_vect)
     uint8_t f = tu_timer0_fract;
 
     m += TU_MILLIS_INC;
+
     f += TU_FRACT_INC;
     if (f >= TU_FRACT_MAX) {
         f -= TU_FRACT_MAX;
