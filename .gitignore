@@ -26,3 +26,5 @@
 #AtmelStudio
 Debug*
 Release*
+*.d
+*.o
