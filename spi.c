@@ -230,13 +230,17 @@ char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port)
 	int is_master = test_bit(SPCR, MSTR);
 	
 	if( is_master != 0 && ss_port != NULL)
+	{
 		set_low(*ss_port, ss_pin);
-	else
+	}
+	else {
 		while(test_bit(SPI_PORT, SPI_SS)); // wait for master
-		
+	}
+	
 	SPDR = data;
 	
-	while(!(test_bit(SPSR, SPIF)));
+	while(!(test_bit(SPSR, SPIF))) {
+	}
 	
 	data = SPDR;
 	
@@ -254,7 +258,7 @@ void spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port)
 	for(; i < sz; ++i)
 	{
 		spi_write_byte_ss(buff[i], ss_pin, ss_port);
-		--sz;
+		//--sz;
 	}
 }
 

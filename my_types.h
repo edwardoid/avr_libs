@@ -19,6 +19,10 @@
 #ifndef MY_TYPES_H
 #define MY_TYPES_H
 
+#ifndef NULL
+#define NULL 0
+#endif
+
 #include <stdint.h>
 
 typedef char    byte;

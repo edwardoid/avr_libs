@@ -60,7 +60,8 @@ void	usart_write_string(const char* s)
 
 void	usart_write_num(int32_t num)
 {
-	char str[6] = {};
+	char str[10];
+	memset(str, '\0', 10);
 	itoa(num, str);
 	usart_write_string(str);
 }

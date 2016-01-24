@@ -349,10 +349,7 @@ double ow_read_temperature_ds18x2x(ow_conf_t* cfg, const uint8_t* rom)
 	
 	ow_select(cfg, rom);
 	ow_write_ex(cfg, OW_START_TEMP_CONV_CMD, 1);
-	
-	tu_delay_ms(600);
-	
-	
+
 	uint8_t data[12];
 	
 	if(OW_FALSE == ow_read_scratchpad(cfg, rom, data, 9))

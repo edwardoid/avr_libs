@@ -20,46 +20,19 @@
 #include "adc.h"
 
 #ifdef F_ADC
-void adc_select_source(uint8_t source)
-{
-	switch(source)
-	{
-		case ADC_SRC_AREF:
-		{
-			clear_bit(ADMUX, REFS0);
-			clear_bit(ADMUX, REFS1);
-			break;
-		}
-		
-		case ADC_SRC_AVCC:
-		{
-			set_bit(ADMUX, REFS0);
-			clear_bit(ADMUX, REFS1);
-			break;
-		}
-		
-		case ADC_SRC_INT:
-		default:
-		{
-			set_bit(ADMUX, REFS0);
-			set_bit(ADMUX, REFS1);
-		}
-	}
-}
 
-uint16_t  adc_read(uint8_t pin)
+uint16_t  adc_read(uint8_t adc)
 {
-	ADMUX |= pin;
+	adc_select(adc);
+	set_bit(ADCSRA, ADEN);
 	clear_bit(ADMUX, ADLAR);
+	set_bit(ADCSRA, ADSC);
 	
-	ADCSRA |= _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0);	
-	set_bit(ADCSRA, ADEN); // enable adc
-	set_bit(ADCSRA, ADSC); // start conversion
-	
-	while(ADCSRA & _BV(ADSC));
+	while(test_bit(ADCSRA, ADIF));
 
-	uint16_t v = ADCL;	
-	return (ADCH << 8) + v;;
+	uint16_t v  = ADC;
+	clear_bit(ADCSRA, ADIF);
+	return v;
 }
 
 #endif // F_ADC

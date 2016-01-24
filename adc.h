@@ -20,18 +20,44 @@
 #ifndef ADC_H
 #define ADC_H
 
+#include "config.h"
+
 #ifdef F_ADC
 
 #include <avr/io.h>
 #include "bitman.h"
 #include <stdint.h>
 
-#define ADC_SRC_AREF	1
-#define ADC_SRC_AVCC	2
-#define ADC_SRC_INT		3
+#define ADC_SRC_AREF	0
+#define ADC_SRC_AVCC	(_BV(REFS0))
+#define ADC_SRC_INT		(_BV(REFS0) | _BV(REFS1))
 
-void		adc_select_source(uint8_t source);
-uint16_t 	adc_read(uint8_t pin);
+#define ADC_DIV_2 0
+#define ADC_DIV_2_EX (_BV(ADPS0))
+
+#define ADC_DIV_4 (_BV(ADPS1))
+#define ADC_DIV_8 (_BV(ADPS1) | _BV(ADPS0))
+
+#define ADC_DIV_16 (_BV(ADPS2))
+#define ADC_DIV_32 (_BV(ADPS2) | _BV(ADPS0))
+#define ADC_DIV_64 (_BV(ADPS2) | _BV(ADPS1))
+#define ADC_DIV_128 (_BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0))
+
+#define ADC0 0
+#define ADC1 (_BV(MUX0))
+#define ADC2 (_BV(MUX1))
+#define ADC3 (_BV(MUX1) | _BV(MUX0))
+#define ADC4 (_BV(MUX2))
+#define ADC5 (_BV(MUX2) | _BV(MUX0))
+#define ADC6 (_BV(MUX2) | _BV(MUX1))
+#define ADC7 (_BV(MUX2) | _BV(MUX1) | _BV(MUX0))
+
+
+
+#define		adc_divide_by(div) (ADCSRA = (ADCSRA & ~0x7) | div)
+#define		adc_select_reference(source) ADMUX = (ADMUX & ~(_BV(REFS1) | _BV(REFS0))) | source
+#define		adc_select(pin) ADMUX = (ADMUX & ~ADC7) | pin
+uint16_t 	adc_read(uint8_t adc);
 
 #endif // F_ADC
 
