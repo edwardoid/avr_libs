@@ -19,6 +19,10 @@
 #ifndef PCD8544_H
 #define PCD8544_H
 
+
+#include "config.h"
+#ifdef F_PCD8544
+
 #define PCD8544_WIDTH	84
 #define PCD8544_HEIGHT	48
 
@@ -57,5 +61,7 @@ uint8_t	pcd8544_get_pixel(int16_t x, int16_t y);
 #define pcd8544_render()
 void	pcd8544_invalidate(x, y, w, h)
 #endif // PCD8544_USE_BUFFER
+
+#endif // F_PCD8544
 
 #endif /* PCD8544_H */

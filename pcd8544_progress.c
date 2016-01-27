@@ -17,6 +17,7 @@
 */
 
 #include "pcd8544_progress.h"
+#include "config.h"
 #include "pcd8544drawing.h"
 #include "pcd8544_calcfont.h"
 

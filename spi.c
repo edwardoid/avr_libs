@@ -19,7 +19,7 @@
 
 #include "spi.h"
 
-#ifdef F_SPI
+#if defined(F_SPI)
 
 #include "bitman.h"
 #include <avr/io.h>
@@ -163,8 +163,9 @@ void spi_set_mode(uint8_t mode)
 uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, ddr_ptr_t ss_ddr, uint8_t clk, uint8_t mode)
 {
 	if((ss_pins == NULL || ss_ddr == NULL) && count != 1)
+	{
 		return -1;
-	
+	}
 	set_as_output(SPI_DDR, SPI_SCK);
 	set_as_output(SPI_DDR, SPI_MOSI);
 	set_as_input(SPI_DDR, SPI_MISO);
@@ -176,14 +177,18 @@ uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, ddr_ptr_t ss_ddr,
 	{
 		uint8_t i = 0;
 		for(; i != count; ++i)
+		{
 			set_as_output(*ss_ddr, ss_pins[i]);
+		}
 	}
 		
 	set_bit(SPCR, MSTR); // set as master
 	
 	clk = spi_set_clock(clk);
 	if(clk != 0)
-		return clk;
+	{
+			return clk;
+	}
 	spi_set_mode(mode);
 
 	set_bit(SPCR, SPE); // enable SPI
@@ -224,14 +229,17 @@ uint8_t	spi_init_as_slave(uint8_t clk, uint8_t mode)
 	return 0;
 }
 
-
 char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port)
 {
 	int is_master = test_bit(SPCR, MSTR);
 	
+	uint8_t high = ss_port != NULL ? test_bit(*ss_port, ss_pin) : 0;
 	if( is_master != 0 && ss_port != NULL)
 	{
-		set_low(*ss_port, ss_pin);
+		if(high)
+		{
+			set_low(*ss_port, ss_pin);
+		}
 	}
 	else {
 		while(test_bit(SPI_PORT, SPI_SS)); // wait for master
@@ -239,27 +247,31 @@ char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port)
 	
 	SPDR = data;
 	
-	while(!(test_bit(SPSR, SPIF))) {
-	}
+	while(!(test_bit(SPSR, SPIF)));
 	
 	data = SPDR;
 	
 	if(is_master != 0  && ss_port != NULL)
 	{
-		set_high(*ss_port, ss_pin);
+		if(high)
+		{
+			set_high(*ss_port, ss_pin);
+		}
 	}
 	
 	return data;
 }
 
-void spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port)
+byte spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port)
 {
 	uint8_t i = 0;
+	byte res = 0;
 	for(; i < sz; ++i)
 	{
-		spi_write_byte_ss(buff[i], ss_pin, ss_port);
+		res = spi_write_byte_ss(buff[i], ss_pin, ss_port);
 		//--sz;
 	}
+	return res;
 }
 
 #ifdef SPI_USE_BUFFER

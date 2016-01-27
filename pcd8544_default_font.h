@@ -9,8 +9,11 @@
 #ifndef PCD8544_DEFAULT_FONT_H
 #define PCD8544_DEFAULT_FONT_H
 
+#include "config.h"
 #include <avr/pgmspace.h>
 #include "pcd8544_font.h"
+
+#ifdef F_PCD8544
 
 static const byte default_font_data[] PROGMEM = 
 {
@@ -128,6 +131,6 @@ static const struct font_t default_font =
 	.height = 0x08
 };
 
-
+#endif // F_PCD8544
 
 #endif /* PCD8544_DEFAULT_FONT_H_ */

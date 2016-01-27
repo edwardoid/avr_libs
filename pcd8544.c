@@ -23,6 +23,9 @@
 #include "debug.h"
 #include <string.h>
 
+#ifdef F_SPI
+#ifdef F_PCD8544
+
 
 #ifdef PCD8544_USE_BUFFER
 
@@ -200,3 +203,7 @@ void pcd8544_render()
 }
 
 #endif //	 PCD8544_USE_BUFFER
+
+
+#endif // F_PCD8544
+#endif // F_SPI

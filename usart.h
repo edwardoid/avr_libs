@@ -20,7 +20,7 @@
 #define USART_H
 
 #include "config.h"
-#ifdef F_USART
+#if defined(F_USART)
 
 #include "bitman.h"
 #include "my_types.h"

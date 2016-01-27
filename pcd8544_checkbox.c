@@ -16,6 +16,7 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config.h"
 #include "pcd8544_checkbox.h"
 #include "pcd8544drawing.h"
 #include "pcd8544_tiny_font.h"

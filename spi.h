@@ -21,7 +21,7 @@
 
 #include "config.h"
 
-#ifdef F_SPI
+#if defined(F_SPI)
 
 #include <stdint.h>
 #include <avr/io.h>
@@ -52,6 +52,7 @@
 #define SPI_USE_BUFFER
 #define SPI_BUFFER_LEN	256
 
+
 /**
 	Initializes SPI protocol
 	@param ss_pins pins connected to the slaves
@@ -59,7 +60,7 @@
 	@param ss_ddr DDR for slaves. if NULL DDRB will be used
 	@param clk speed. @see spi_set_clock
 	@param mode connectin mode. @see spi_set_mode()
-	@return 0 if spi was succefuly initialied. uint8_t(-1) if failed.
+	@return 0 if SPI was successfully initialized. uint8_t(-1) if failed.
 */
 uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, volatile ddr_ptr_t ss_ddr, uint8_t clk, uint8_t mode);
 
@@ -84,7 +85,7 @@ char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port);
 
 #define spi_write_byte(data) spi_write_byte_ss( (data), SPI_SS, & SPI_PORT)
 
-void spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port);
+byte spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port);
 
 #define spi_write(buff, sz) spi_write_ss( buff, sz, SPI_SS, & SPI_PORT);
 

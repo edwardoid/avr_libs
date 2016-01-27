@@ -16,10 +16,10 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "usart.h"
+
 
 #ifdef F_USART
-
+#include "usart.h"
 #include <avr/io.h>
 #include <stdio.h>
 

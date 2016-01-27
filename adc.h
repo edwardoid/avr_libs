@@ -16,7 +16,6 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #ifndef ADC_H
 #define ADC_H
 
