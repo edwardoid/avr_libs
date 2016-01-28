@@ -30,12 +30,13 @@ typedef volatile uint8_t* ddr_ptr_t;
 typedef volatile uint8_t* port_ptr_t;
 typedef volatile uint8_t* pin_ptr_t;
 typedef volatile uint8_t* register_ptr_t;
+typedef volatile uint8_t pin_num_t;
 
 typedef struct
 {
 	ddr_ptr_t	ddr;
 	port_ptr_t	port;
-	uint8_t		pin;
+	pin_num_t	pin;
 } pin_cfg_t;
 
 #endif // MY_TYPES_H

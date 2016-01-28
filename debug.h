@@ -25,13 +25,7 @@
 #define ENABLE_USART_DEBUGGING 1
 
 #ifdef ENABLE_USART_DEBUGGING
-#define DBG_MSG(msg) usart_write_byte('['); usart_write_u32num(tu_millis()); usart_write_string("]: "); usart_write_string_line(msg);
-#define DBG_WRN(wrn) usart_write_byte('['); usart_write_u32num(tu_millis()); usart_write_string("] ?: "); usart_write_string_line(wrn);
-#define DBG_ERR(err) usart_write_byte('['); usart_write_u32num(tu_millis()); usart_write_string("] !: "); usart_write_string_line(err);	
-#else
-#define DBG_MSG(msg) /* msg */
-#define DBG_WRN(wrn) /* wrn */
-#define DBG_ERR(err) /* err */
+#define DBG_VALUE(desc, num) usart_write_string(desc); usart_write_num((int32_t) num); usart_write_byte('\n');
 #endif
 
-#endif // DEBUB_H
+#endif // DEBUG_H
