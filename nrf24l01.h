@@ -7,6 +7,13 @@
 #include "nrf24l01_commands.h"
 #include "nrf24l01_bits.h"
 
+// Flags
+#define NRF24L01_FLAG_MODEL 0
+// End of flags
+
+#define NRF24L01
+#define NRF24L01_P
+
 #define NRF24L01_PA_MIN 0
 #define NRF24L01_PA_LOW 1
 #define NRF24L01_PA_HIGH 2
@@ -20,6 +27,11 @@
 #define NRF24L01_CRC_DISABLED 0
 #define NRF24L01_CRC_8 1
 #define NRF24L01_CRC_16 2;
+
+#define NRF24L01_ADDR_WIDTH_ILLEGAL 0x00
+#define NRF24L01_ADDR_WIDTH_3_BYTES 0x01
+#define NRF24L01_ADDR_WIDTH_4_BYTES 0x02
+#define NRF24L01_ADDR_WIDTH_5_BYTES 0x03
 
 typedef uint8_t nrf24l01_role_t;
 
@@ -39,9 +51,10 @@ typedef struct {
   pin_num_t   ss_pin;
 
   // internal data. Do not change value manually
+  uint8_t flags; // [ 0000 000 ] [ {Plus version?}  ]
   uint8_t payload_size;
   uint8_t transmission_delay;
-  
+  uint8_t crc;  
 } nrf24l01_conf_t;
 
 #define NRF24L01_ENABLE 1
@@ -67,9 +80,19 @@ extern byte nrf24l01_get_channel(nrf24l01_conf_t* dev);
 extern byte nrf24l01_flush(nrf24l01_conf_t* dev, nrf24l01_role_t role);
 extern void nrf24l01_enable_payload_acknowledge(nrf24l01_conf_t* dev, uint8_t enable);
 extern void nrf24l01_enable_dynamic_acknowledge(nrf24l01_conf_t* dev, uint8_t enable);
+extern void nrf24l01_set_crc_length(nrf24l01_conf_t* dev, uint8_t length);
+extern void nrf24l01_disable_crc(nrf24l01_conf_t* dev);
 #define nrf24l01_flush_rx(dev) nrf24l01_flush(dev, Receiver)
 #define nrf24l01_flush_tx(dev) nrf24l01_flush(dev, Transmitter)
 #define nrf24l01_flush_all(dev) (nrf24l01_flush_rx(dev) & nrf24l01_flush_tx(dev))
+#define nrf24l01_is_plus_model(dev) (test_bit(dev->flags, NRF24L01_FLAG_MODEL))
+
+extern void nrf24l01_set_power_amplifier(nrf24l01_conf_t* dev, uint8_t value);
+extern uint8_t nrf24l01_get_power_amplifier(nrf24l01_conf_t* dev);
+
+extern void nrf24l01_set_address_width(nrf24l01_conf_t* dev, uint8_t value);
+extern uint8_t nrf24l01_get_address_width(nrf24l01_conf_t* dev);
+
 
 // Common //
 extern byte nrf24l01_read_register(nrf24l01_conf_t* dev, byte reg);
