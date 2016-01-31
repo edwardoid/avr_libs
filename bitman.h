@@ -16,6 +16,10 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef _BV
+#define _BV(bit) (1 << bit)
+#endif // _BV
+
 #define set_bit(dst, bit) ((dst) |= _BV(bit))
 #define set_high(dst, bit) set_bit((dst), bit)
 #define clear_bit(dst, bit) ((dst) &= ~ _BV((bit)))

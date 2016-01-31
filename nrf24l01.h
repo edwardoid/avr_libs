@@ -6,13 +6,14 @@
 #include "nrf24l01_registers.h"
 #include "nrf24l01_commands.h"
 #include "nrf24l01_bits.h"
+#include "debug.h"
 
 // Flags
 #define NRF24L01_FLAG_MODEL 0
 // End of flags
 
-#define NRF24L01
-#define NRF24L01_P
+#define NRF24L01 0
+#define NRF24L01_P 1
 
 #define NRF24L01_PA_MIN 0
 #define NRF24L01_PA_LOW 1
@@ -26,23 +27,18 @@
 
 #define NRF24L01_CRC_DISABLED 0
 #define NRF24L01_CRC_8 1
-#define NRF24L01_CRC_16 2;
+#define NRF24L01_CRC_16 2
 
 #define NRF24L01_ADDR_WIDTH_ILLEGAL 0x00
-#define NRF24L01_ADDR_WIDTH_3_BYTES 0x01
-#define NRF24L01_ADDR_WIDTH_4_BYTES 0x02
-#define NRF24L01_ADDR_WIDTH_5_BYTES 0x03
+#define NRF24L01_ADDR_WIDTH_3_BYTES 3
+#define NRF24L01_ADDR_WIDTH_4_BYTES 4
+#define NRF24L01_ADDR_WIDTH_5_BYTES 5
 
-typedef uint8_t nrf24l01_role_t;
-
-extern nrf24l01_role_t Receiver;
-extern nrf24l01_role_t Transmitter;
+typedef uint8_t nrf24l01_pipe_addr_t;
 
 typedef struct {
   // IRQ
   int8_t interrupt;
-
-  nrf24l01_role_t      role;
 
   port_ptr_t  ce_port;
   pin_num_t   ce_pin;
@@ -51,6 +47,13 @@ typedef struct {
   pin_num_t   ss_pin;
 
   // internal data. Do not change value manually
+  uint8_t payload_lengths[6];
+
+  uint8_t pipe_addr_len; // common for all pipes!! 5 value is maximum!
+  nrf24l01_pipe_addr_t pipe_0_addr [5];
+  nrf24l01_pipe_addr_t pipe_1_addr [5]; 
+  nrf24l01_pipe_addr_t pipe_addrs[4]; // each byte as addr for pipe 1-5 
+
   uint8_t flags; // [ 0000 000 ] [ {Plus version?}  ]
   uint8_t payload_size;
   uint8_t transmission_delay;
@@ -62,30 +65,58 @@ typedef struct {
 #define NRF24L01_DISABLE 0
 #define NRF24L01_DISABLED NRF24L01_DISABLE
 
-
 #define NRF24L01_ERX_P0 _BV(0)
 #define NRF24L01_ERX_P1 _BV(1)
 #define NRF24L01_ERX_P2 _BV(2)
 #define NRF24L01_ERX_P3 _BV(3)
 #define NRF24L01_ERX_P4 _BV(4)
 
+#define NRF24L01_ROLE_RECEIVER 1
+#define NRF24L01_ROLE_TRANSMITTER 2
+
 extern byte nrf24l01_init(nrf24l01_conf_t* dev, ddr_ptr_t ce, ddr_ptr_t ss);
+
+#define nrf24l01_is_plus_model(dev) (test_bit(dev->flags, NRF24L01_FLAG_MODEL))
+
 extern byte nrf24l01_get_status(nrf24l01_conf_t* dev);
-extern byte nrf24l01_set_role(nrf24l01_conf_t* dev); 
+
+extern void nrf24l01_set_role(nrf24l01_conf_t* dev, uint8_t role); 
 extern byte nrf24l01_set_retries(nrf24l01_conf_t* dev, uint8_t delay, uint8_t count);
+
 extern byte nrf24l01_set_speed(nrf24l01_conf_t* dev, uint8_t speed);
 extern byte nrf24l01_get_speed(nrf24l01_conf_t* dev);
+
 extern byte nrf24l01_set_channel(nrf24l01_conf_t* dev, uint8_t channel);
 extern byte nrf24l01_get_channel(nrf24l01_conf_t* dev);
-extern byte nrf24l01_flush(nrf24l01_conf_t* dev, nrf24l01_role_t role);
+
+extern byte nrf24l01_flush_rx(nrf24l01_conf_t* dev);
+extern byte nrf24l01_flush_tx(nrf24l01_conf_t* dev);
+
+#define nrf24l01_rx_is_full(dev) (nrf24l01_read_register(dev, NRF24L01_FIFO_STATUS) & NRF24L01_RX_FULL)
+#define nrf24l01_rx_is_empty(dev) (nrf24l01_read_register(dev, NRF24L01_FIFO_STATUS) & NRF24L01_RX_EMPTY) 
+
+#define nrf24l01_tx_is_full(dev) (nrf24l01_read_register(dev, NRF24L01_FIFO_STATUS) & NRF24L01_TX_FULL)
+#define nrf24l01_tx_is_empty(dev) (nrf24l01_read_register(dev, NRF24L01_FIFO_STATUS) & NRF24L01_TX_EMPTY)
+
 extern void nrf24l01_enable_payload_acknowledge(nrf24l01_conf_t* dev, uint8_t enable);
+
+extern void nrf24l01_enable_auto_acknowledge_for_pipe(nrf24l01_conf_t* dev, uint8_t pipe,uint8_t enable);
+extern void nrf24l01_enable_auto_acknowledge_for_all_pipes(nrf24l01_conf_t* dev, uint8_t enable);
+
 extern void nrf24l01_enable_dynamic_acknowledge(nrf24l01_conf_t* dev, uint8_t enable);
+
+extern void nrf24l01_enable_dynamic_payload_feature(nrf24l01_conf_t* dev, uint8_t enable);
+
+extern void nrf24l01_enable_dynamic_payload_on_pipe(nrf24l01_conf_t* dev, uint8_t enable, uint8_t pipe);
+extern void nrf24l01_enable_dynamic_payload_on_all_pipes(nrf24l01_conf_t* dev, uint8_t enable);
+extern uint8_t nrf24l01_dynamic_payload_enabled(nrf24l01_conf_t* dev, uint8_t pipe);
+
+extern void nrf24l01_set_payload_size(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t size);
+
+extern byte nrf24l01_acknowlede_available(nrf24l01_conf_t* dev);
+
 extern void nrf24l01_set_crc_length(nrf24l01_conf_t* dev, uint8_t length);
 extern void nrf24l01_disable_crc(nrf24l01_conf_t* dev);
-#define nrf24l01_flush_rx(dev) nrf24l01_flush(dev, Receiver)
-#define nrf24l01_flush_tx(dev) nrf24l01_flush(dev, Transmitter)
-#define nrf24l01_flush_all(dev) (nrf24l01_flush_rx(dev) & nrf24l01_flush_tx(dev))
-#define nrf24l01_is_plus_model(dev) (test_bit(dev->flags, NRF24L01_FLAG_MODEL))
 
 extern void nrf24l01_set_power_amplifier(nrf24l01_conf_t* dev, uint8_t value);
 extern uint8_t nrf24l01_get_power_amplifier(nrf24l01_conf_t* dev);
@@ -93,9 +124,36 @@ extern uint8_t nrf24l01_get_power_amplifier(nrf24l01_conf_t* dev);
 extern void nrf24l01_set_address_width(nrf24l01_conf_t* dev, uint8_t value);
 extern uint8_t nrf24l01_get_address_width(nrf24l01_conf_t* dev);
 
+extern void nrf24l01_enable_pipe(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t enable);
+extern void nrf24l01_enable_all_pipes(nrf24l01_conf_t* dev, uint8_t enable);
 
+extern uint8_t nrf24l01_data_available(nrf24l01_conf_t* dev, uint8_t* pipe);
+
+extern void nrf24l01_retransmit_last(nrf24l01_conf_t* dev);
+
+extern uint8_t nrf24l01_wait_for_transmit(nrf24l01_conf_t* dev);
+
+
+// RX mode
+extern uint8_t nrf24l01_prepare_for_read(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t disable_others);
+extern uint8_t nrf24l01_read_byte(nrf24l01_conf_t* dev, uint8_t pipe);
+extern uint8_t nrf24l01_read(nrf24l01_conf_t* dev, uint8_t pipe, byte* buffer, uint8_t length);
+extern uint8_t nrf24l01_read_no_check(nrf24l01_conf_t* dev, uint8_t pipe, byte* buffer, uint8_t length);
+
+// TX mode
+extern uint8_t nrf24l01_write(nrf24l01_conf_t* dev, uint8_t pipe, byte* data, uint8_t length);
+extern uint8_t nrf24l01_write_ack(nrf24l01_conf_t* dev, uint8_t pipe, byte* data, uint8_t length);
+#define nrf24l01_write_byte(dev, pipe, data) nrf24l01_write(dev, pipe, &data, 1);
 // Common //
 extern byte nrf24l01_read_register(nrf24l01_conf_t* dev, byte reg);
 extern byte nrf24l01_write_register(nrf24l01_conf_t* dev, byte reg, byte value);
 
+#ifdef ENABLE_USART_DEBUGGING
+extern void nrf24l01_print_addresses(nrf24l01_conf_t* dev);
+#else
+#define nrf24l01_print_addresses(dev) /* nop */
+#endif // ENABLE_USART_DEBUGGING
+
+
 #endif // NRF24L01_H
+    
