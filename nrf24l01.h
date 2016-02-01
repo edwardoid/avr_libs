@@ -9,7 +9,8 @@
 #include "debug.h"
 
 // Flags
-#define NRF24L01_FLAG_MODEL 0
+#define NRF24L01_FLAG_MODEL 7
+#define NRF24L01_FLAG_MODE_ACK 6
 // End of flags
 
 #define NRF24L01 0
@@ -55,7 +56,7 @@ typedef struct {
   nrf24l01_pipe_addr_t pipe_addrs[4]; // each byte as addr for pipe 1-5 
 
   uint8_t flags; // [ 0000 000 ] [ {Plus version?}  ]
-  uint8_t payload_size;
+  uint8_t tx_payload_size;
   uint8_t transmission_delay;
   uint8_t crc;  
 } nrf24l01_conf_t;
@@ -131,19 +132,23 @@ extern uint8_t nrf24l01_data_available(nrf24l01_conf_t* dev, uint8_t* pipe);
 
 extern void nrf24l01_retransmit_last(nrf24l01_conf_t* dev);
 
-extern uint8_t nrf24l01_wait_for_transmit(nrf24l01_conf_t* dev);
-
+extern void nrf24l01_wait_for_transmit(nrf24l01_conf_t* dev);
 
 // RX mode
-extern uint8_t nrf24l01_prepare_for_read(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t disable_others);
+extern uint8_t nrf24l01_prepare_for_read(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t payload_length);
 extern uint8_t nrf24l01_read_byte(nrf24l01_conf_t* dev, uint8_t pipe);
 extern uint8_t nrf24l01_read(nrf24l01_conf_t* dev, uint8_t pipe, byte* buffer, uint8_t length);
-extern uint8_t nrf24l01_read_no_check(nrf24l01_conf_t* dev, uint8_t pipe, byte* buffer, uint8_t length);
-
+extern uint8_t nrf24l01_end_reading(nrf24l01_conf_t* dev, uint8_t pipe);
+extern uint8_t nrf24l01_end_reading_keep_irq(nrf24l01_conf_t* dev, uint8_t pipe);
+extern uint8_t nrf24l01_end_succeed(nrf24l01_conf_t* dev, result);
 // TX mode
-extern uint8_t nrf24l01_write(nrf24l01_conf_t* dev, uint8_t pipe, byte* data, uint8_t length);
-extern uint8_t nrf24l01_write_ack(nrf24l01_conf_t* dev, uint8_t pipe, byte* data, uint8_t length);
+extern byte nrf24l01_prepare_for_write(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t enable_ackowledge);
+extern byte nrf24l01_prepare_for_write_to_addr(nrf24l01_conf_t* dev, byte* address, uint8_t payload_length, uint8_t enable_ackowledge);
+extern uint8_t nrf24l01_write(nrf24l01_conf_t* dev, byte* data, uint8_t length);
 #define nrf24l01_write_byte(dev, pipe, data) nrf24l01_write(dev, pipe, &data, 1);
+extern uint8_t nrf24l01_end_writing(nrf24l01_conf_t* dev);
+extern uint8_t nrf24l01_end_writing_keep_irq(nrf24l01_conf_t* dev);
+extern uint8_t nrf24l01_write_succeed(nrf24l01_conf_t* dev, result);
 // Common //
 extern byte nrf24l01_read_register(nrf24l01_conf_t* dev, byte reg);
 extern byte nrf24l01_write_register(nrf24l01_conf_t* dev, byte reg, byte value);
