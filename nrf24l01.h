@@ -81,6 +81,8 @@ extern byte nrf24l01_init(nrf24l01_conf_t* dev, ddr_ptr_t ce, ddr_ptr_t ss);
 
 extern byte nrf24l01_get_status(nrf24l01_conf_t* dev);
 
+extern void nrf24l01_set_address(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t a1, uint8_t a2, uint8_t a3, uint8_t a4, uint8_t a5);
+
 extern void nrf24l01_set_role(nrf24l01_conf_t* dev, uint8_t role); 
 extern byte nrf24l01_set_retries(nrf24l01_conf_t* dev, uint8_t delay, uint8_t count);
 
@@ -93,10 +95,10 @@ extern byte nrf24l01_get_channel(nrf24l01_conf_t* dev);
 extern byte nrf24l01_flush_rx(nrf24l01_conf_t* dev);
 extern byte nrf24l01_flush_tx(nrf24l01_conf_t* dev);
 
-#define nrf24l01_rx_is_full(dev) (nrf24l01_read_register(dev, NRF24L01_FIFO_STATUS) & NRF24L01_RX_FULL)
-#define nrf24l01_rx_is_empty(dev) (nrf24l01_read_register(dev, NRF24L01_FIFO_STATUS) & NRF24L01_RX_EMPTY) 
+#define nrf24l01_rx_is_full(dev) (!(nrf24l01_read_register(dev, NRF24L01_FIFO_STATUS) & NRF24L01_RX_FULL))
+#define nrf24l01_rx_is_empty(dev) (nrf24l01_read_register(dev, NRF24L01_FIFO_STATUS) & NRF24L01_RX_EMPTY)
 
-#define nrf24l01_tx_is_full(dev) (nrf24l01_read_register(dev, NRF24L01_FIFO_STATUS) & NRF24L01_TX_FULL)
+#define nrf24l01_tx_is_full(dev) (!(nrf24l01_read_register(dev, NRF24L01_NOP) & NRF24L01_TX_FULL))
 #define nrf24l01_tx_is_empty(dev) (nrf24l01_read_register(dev, NRF24L01_FIFO_STATUS) & NRF24L01_TX_EMPTY)
 
 extern void nrf24l01_enable_payload_acknowledge(nrf24l01_conf_t* dev, uint8_t enable);
@@ -140,7 +142,7 @@ extern uint8_t nrf24l01_read_byte(nrf24l01_conf_t* dev, uint8_t pipe);
 extern uint8_t nrf24l01_read(nrf24l01_conf_t* dev, uint8_t pipe, byte* buffer, uint8_t length);
 extern uint8_t nrf24l01_end_reading(nrf24l01_conf_t* dev, uint8_t pipe);
 extern uint8_t nrf24l01_end_reading_keep_irq(nrf24l01_conf_t* dev, uint8_t pipe);
-extern uint8_t nrf24l01_end_succeed(nrf24l01_conf_t* dev, result);
+extern uint8_t nrf24l01_end_succeed(nrf24l01_conf_t* dev, byte result);
 // TX mode
 extern byte nrf24l01_prepare_for_write(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t enable_ackowledge);
 extern byte nrf24l01_prepare_for_write_to_addr(nrf24l01_conf_t* dev, byte* address, uint8_t payload_length, uint8_t enable_ackowledge);
@@ -148,15 +150,17 @@ extern uint8_t nrf24l01_write(nrf24l01_conf_t* dev, byte* data, uint8_t length);
 #define nrf24l01_write_byte(dev, pipe, data) nrf24l01_write(dev, pipe, &data, 1);
 extern uint8_t nrf24l01_end_writing(nrf24l01_conf_t* dev);
 extern uint8_t nrf24l01_end_writing_keep_irq(nrf24l01_conf_t* dev);
-extern uint8_t nrf24l01_write_succeed(nrf24l01_conf_t* dev, result);
+extern uint8_t nrf24l01_write_succeed(nrf24l01_conf_t* dev, byte result);
 // Common //
 extern byte nrf24l01_read_register(nrf24l01_conf_t* dev, byte reg);
 extern byte nrf24l01_write_register(nrf24l01_conf_t* dev, byte reg, byte value);
 
 #ifdef ENABLE_USART_DEBUGGING
 extern void nrf24l01_print_addresses(nrf24l01_conf_t* dev);
+extern void nrf24l01_print_status(nrf24l01_conf_t* dev);
 #else
 #define nrf24l01_print_addresses(dev) /* nop */
+#define nrf24l01_print_status(status)
 #endif // ENABLE_USART_DEBUGGING
 
 

@@ -16,7 +16,11 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "value_change_screen.h";
+#include "value_change_screen.h"
+
+#include "../config.h"
+#ifdef F_EXAMPLES
+
 #include "events.h"
 #include "question.h"
 #include "state.h"
@@ -122,3 +126,5 @@ void value_change_screen_events_handler(struct event_t* e)
 	}
 }
 */
+
+#endif // F_EXAMPLES

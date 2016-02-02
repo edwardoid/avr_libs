@@ -17,6 +17,10 @@
 */
 
 #include "screensaver.h"
+
+#include "../config.h"
+#ifdef F_EXAMPLES
+
 #include "../pcd8544drawing.h"
 #include "../pcd8544_font.h"
 #include "../pcd8544_ubuntu_font.h"
@@ -57,3 +61,5 @@ void screensaver_events_handler(struct event_t* e)
 	}
 }
 */
+
+#endif // F_EXAMPLES

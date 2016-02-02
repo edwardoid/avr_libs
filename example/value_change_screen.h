@@ -19,6 +19,9 @@
 #ifndef VALUE_CHANGE_SCREEN
 #define VALUE_CHANGE_SCREEN
 
+#include "../config.h"
+#ifdef F_EXAMPLES
+
 #include "screen.h"
 /*
 void draw_value_change_screen();
@@ -40,4 +43,7 @@ struct value_change_screen_t
 
 extern struct value_change_screen_t value_change_screen;
 */
+
+#endif // F_EXAMPLES
+
 #endif // VALUE_CHANGE_SCREEN

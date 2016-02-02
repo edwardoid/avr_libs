@@ -1,5 +1,7 @@
-#include "screen.h"
+#include "../config.h"
+#ifdef F_EXAMPLES
 
+#include "screen.h"
 
 #define QUESTION_RESULT_NOT_ANSWERED	0
 #define QUESTION_RESULT_YES				1
@@ -18,3 +20,5 @@ extern struct question_box_t question_screen;
 void draw_question();
 
 uint8_t question_screen_event_handler(struct event_t* event);
+
+#endif // F_EXAMPLES

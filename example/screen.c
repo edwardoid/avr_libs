@@ -1,4 +1,8 @@
 #include "screen.h"
+
+#include "../config.h"
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_PCD8544)
+
 #include "state.h"
 #include "../pcd8544_tiny_font.h"
 #include "../pcd8544.h"
@@ -26,7 +30,7 @@ uint8_t print_temp_in_notification_area(float temp, uint8_t color)
 	len += pcd8577_print_calc_style_num_length_in_px(temp) + 1 + pcd8577_print_calc_style_num_length_in_px(num_after_dot);
 	uint8_t x = PCD8544_WIDTH - len - 3;
 	
-	x = pcd8544_print_str(x, 1, "TEMP: ", &tiny_font, color, ALIGN_LEFT);
+	x = pcd8544_print_str(x, 1, " TEMP: ", &tiny_font, color, ALIGN_LEFT);
 	x = pcd8577_print_calc_style_num(x + 1, 3, current_state.temperature, color);
 	x = pcd8577_print_calc_style_num(x , 3, CALC_FONT_DOT, color);
 	x = pcd8577_print_calc_style_num(x , 3, num_after_dot, color);
@@ -58,3 +62,5 @@ void draw_button(uint8_t x, uint8_t y, const byte* icon, uint8_t w, uint8_t h, u
 	
 	pcd8544_draw_bitmap( x, y , icon, w, h, pressed ? 0 : 1);
 }
+
+#endif // F_EXAMPLES

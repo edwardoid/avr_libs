@@ -1,4 +1,8 @@
 #include "state.h"
+
+#include "../config.h"
+#ifdef F_EXAMPLES
+
 #include "main_screen.h"
 
 struct state_t current_state =
@@ -10,3 +14,5 @@ struct state_t current_state =
 	.is_socket_on = 0,
 	.current_screen = &main_screen
 };
+
+#endif // F_EXAMPLES

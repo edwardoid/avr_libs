@@ -19,6 +19,9 @@
 #ifndef QUESTION_H
 #define QUESTION_H
 
+#include "../config.h"
+#ifdef F_EXAMPLES
+
 #define QUESTION_RESULT_NOT_ANSWERED	0
 #define QUESTION_RESULT_YES				3
 #define QUESTION_RESULT_NO				2
@@ -27,4 +30,6 @@
 /*
 uint8_t question(const char* str);
 */
+#endif // F_EXAMPLES
+
 #endif // QUESTION_H

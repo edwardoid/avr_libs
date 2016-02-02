@@ -1,5 +1,9 @@
 #include "main_screen.h"
 
+#include "../config.h"
+
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_PCD8544)
+
 #include "../pcd8544.h"
 #include "../pcd8544bitmaps.h"
 #include "../my_stdlib.h"
@@ -75,3 +79,5 @@ uint8_t main_screen_event_handler(struct event_t* event)
 	
 	return 0;
 }
+
+#endif // F_EXAMPLES

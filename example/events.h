@@ -9,12 +9,19 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
+#include "../config.h"
+
+#ifdef F_EXAMPLES
+
 #include <inttypes.h>
 
 #include "../1wire.h"
 #include <avr/io.h>
 
 #define NOTHING_HAPPENED	0
+
+#define BUTTON_ADC ADC5
+
 #define BUTTON_LEFT			5
 #define BUTTON_RIGHT		4
 #define BUTTON_CENTER		3
@@ -39,5 +46,6 @@ uint8_t	poll_hardware(struct event_t* res);
 
 uint8_t	global_event_handler(struct event_t* event);
 
+#endif // F_EXAMPLES
 
 #endif /* EVENTS_H_ */

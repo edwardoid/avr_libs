@@ -1,9 +1,13 @@
 #include "question_screen.h"
+
+#include "../config.h"
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_PCD8544)
+
 #include "events.h"
 #include "state.h"
 #include "../pcd8544.h"
 #include "../my_stdlib.h"
-#include "../uart.h"
+#include "../usart.h"
 #include "../pcd8544_default_font.h"
 #include "../pcd8544drawing.h"
 
@@ -67,3 +71,5 @@ uint8_t question_screen_event_handler(struct event_t* event)
 	
 	return 0;
 }
+
+#endif // F_EXAMPLES

@@ -19,6 +19,9 @@
 #ifndef SCREENSAVER_H
 #define SCREENSAVER_H
 
+#include "../config.h"
+#ifdef F_EXAMPLES
+
 #include "screen.h"
 #include "events.h"
 #include "../pcd8544_font.h"
@@ -37,4 +40,7 @@ struct screensaver_t
 
 extern struct screensaver_t screensaver;
 */
+
+#endif // F_EXAMPLES
+
 #endif /* SCREENSAVER_H */

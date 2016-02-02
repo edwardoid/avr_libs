@@ -19,10 +19,15 @@
 #ifndef EEPROM_CONFIGURATION_H
 #define EEPROM_CONFIGURATION_H
 
+#include "config.h"
+
+#ifdef F_EXAMPLES
+
 #include <inttypes.h>
 
 #define EEPROM_INIT_FLAG_ADDR ((void*)0)
 #define EEPROM_SETTINGS_ADDR ((void*)((EEPROM_INIT_FLAG_ADDR + sizeof(uint8_t))))
 
+#endif // F_EXAMPLES
 
 #endif /* EEPROM_CONFIGURATION_H_ */

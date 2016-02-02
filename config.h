@@ -18,7 +18,7 @@
 
 #ifndef AVR_LIBS_CONFIG_H
 #define AVR_LIBS_CONFIG_H
-
+#include "debug.h"
 //#define USE_STD_LIB /* enable using <stdlib.h>
 
 
@@ -27,12 +27,30 @@
 #endif // F_CPU
 
 
-#define F_1WIRE
+//#define F_1WIRE
 //#define F_ADC
 //#define F_PWM
-#define F_PCD8544
+//#define F_PCD8544
 //#define F_SD
+//#define F_SPI
+//#define F_USART
+
+#ifdef F_ENABLE_ALL
+/*
+//#define F_EXAMPLES
+
+#define F_1WIRE
+#define F_ADC
+#define F_PWM
+#define F_SD
 #define F_SPI
 #define F_USART
+#define F_PCD8544
+*/
+#endif // F_ENABLE_ALL
+
+#ifndef F_EXAMPLES
+#define F_EXAMPLES
+#endif
 
 #endif // AVR_LIBS_CONFIG_H

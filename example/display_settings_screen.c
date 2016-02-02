@@ -5,17 +5,21 @@
  *  Author: eduards
  */ 
 
-#include "display_settings_screen.h"
 #include "../config.h"
+
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_PCD8544)
+
+#include "display_settings_screen.h"
 #include "../pcd8544.h"
 #include "../pcd8544_progress.h"
 #include "../pcd8544drawing.h"
 #include "../pcd8544bitmaps.h"
+#include "../pcd8544_font.h"
+
 #include "events.h"
 #include "state.h"
 #include "main_screen.h"
 #include "../my_stdlib.h"
-#include "../pcd8544_font.h"
 //#include "../pcd8544_tiny_font.h"
 #include "../pcd8544_default_font.h"
 #include "question_screen.h"
@@ -35,7 +39,7 @@ void draw_display_settings_screen()
 	redraw_notification_area();
 	
 	pcd8544_print_str(2, 32 - default_font.height - 1, "contrast", &default_font, 1, ALIGN_CENTER);
-	pcd8544_draw_progress(6, 32, PCD8544_WIDTH - 10 - 16, contrast, 1);
+	//pcd8544_draw_progress(6, 32, PCD8544_WIDTH - 10 - 16, contrast, 1);
 	pcd8544_draw_bitmap(PCD8544_WIDTH - 16, 28, contrast_icon, 16, 16, 1);
 	pcd8544_set_contrast(contrast);
 	pcd8544_render();
@@ -78,3 +82,5 @@ uint8_t display_settings_event_handler(struct event_t* event)
 	
 	return 0;
 }
+
+#endif // F_EXAMPLES
