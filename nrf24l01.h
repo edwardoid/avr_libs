@@ -134,7 +134,6 @@ extern void nrf24l01_set_address_width(nrf24l01_conf_t* dev, uint8_t value);
 extern uint8_t nrf24l01_get_address_width(nrf24l01_conf_t* dev);
 
 extern void nrf24l01_enable_pipe(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t enable);
-extern void nrf24l01_enable_all_pipes(nrf24l01_conf_t* dev, uint8_t enable);
 
 extern uint8_t nrf24l01_data_available(nrf24l01_conf_t* dev, uint8_t* pipe);
 
@@ -143,7 +142,7 @@ extern void nrf24l01_retransmit_last(nrf24l01_conf_t* dev);
 extern void nrf24l01_wait_for_transmit(nrf24l01_conf_t* dev);
 
 // RX mode
-extern uint8_t nrf24l01_prepare_for_read(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t payload_length);
+extern uint8_t nrf24l01_prepare_for_read(nrf24l01_conf_t* dev, uint8_t pipe);
 extern uint8_t nrf24l01_read_byte(nrf24l01_conf_t* dev, uint8_t pipe);
 extern uint8_t nrf24l01_read(nrf24l01_conf_t* dev, uint8_t pipe, byte* buffer, uint8_t length);
 extern uint8_t nrf24l01_end_reading(nrf24l01_conf_t* dev, uint8_t pipe);
