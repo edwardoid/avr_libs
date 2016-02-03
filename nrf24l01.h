@@ -47,9 +47,6 @@ typedef struct {
   port_ptr_t  ss_port;
   pin_num_t   ss_pin;
 
-  // internal data. Do not change value manually
-  uint8_t payload_lengths[6];
-
   uint8_t pipe_addr_len; // common for all pipes!! 5 value is maximum!
   nrf24l01_pipe_addr_t pipe_0_addr [5];
   nrf24l01_pipe_addr_t pipe_1_addr [5]; 
@@ -57,8 +54,7 @@ typedef struct {
 
   uint8_t flags; // [ 0000 000 ] [ {Plus version?}  ]
   uint8_t tx_payload_size;
-  uint8_t transmission_delay;
-  uint8_t crc;  
+  uint16_t transmission_delay; 
 } nrf24l01_conf_t;
 
 #define NRF24L01_ENABLE 1
@@ -75,7 +71,15 @@ typedef struct {
 #define NRF24L01_ROLE_RECEIVER 1
 #define NRF24L01_ROLE_TRANSMITTER 2
 
+/**
+  Initializes nRF24L01(+) chip. Reads initial addresses into config struct, determines chip version(+ version or not)
+*/
+
+extern void nrf24l01_init_config(nrf24l01_conf_t* dst);
+
 extern byte nrf24l01_init(nrf24l01_conf_t* dev, ddr_ptr_t ce, ddr_ptr_t ss);
+
+extern uint8_t nrf24l01_is_plus_model(nrf24l01_conf_t* dev);
 
 #define nrf24l01_is_plus_model(dev) (test_bit(dev->flags, NRF24L01_FLAG_MODEL))
 
@@ -101,20 +105,22 @@ extern byte nrf24l01_flush_tx(nrf24l01_conf_t* dev);
 #define nrf24l01_tx_is_full(dev) (!(nrf24l01_read_register(dev, NRF24L01_NOP) & NRF24L01_TX_FULL))
 #define nrf24l01_tx_is_empty(dev) (nrf24l01_read_register(dev, NRF24L01_FIFO_STATUS) & NRF24L01_TX_EMPTY)
 
+/**
+  All function nrf24l01_enable* functions takes care about their dependencies
+*/
 extern void nrf24l01_enable_payload_acknowledge(nrf24l01_conf_t* dev, uint8_t enable);
 
 extern void nrf24l01_enable_auto_acknowledge_for_pipe(nrf24l01_conf_t* dev, uint8_t pipe,uint8_t enable);
-extern void nrf24l01_enable_auto_acknowledge_for_all_pipes(nrf24l01_conf_t* dev, uint8_t enable);
 
 extern void nrf24l01_enable_dynamic_acknowledge(nrf24l01_conf_t* dev, uint8_t enable);
 
 extern void nrf24l01_enable_dynamic_payload_feature(nrf24l01_conf_t* dev, uint8_t enable);
 
 extern void nrf24l01_enable_dynamic_payload_on_pipe(nrf24l01_conf_t* dev, uint8_t enable, uint8_t pipe);
-extern void nrf24l01_enable_dynamic_payload_on_all_pipes(nrf24l01_conf_t* dev, uint8_t enable);
 extern uint8_t nrf24l01_dynamic_payload_enabled(nrf24l01_conf_t* dev, uint8_t pipe);
 
 extern void nrf24l01_set_payload_size(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t size);
+extern uint8_t nrf24l01_get_payload_size(nrf24l01_conf_t* dev, uint8_t pipe);
 
 extern byte nrf24l01_acknowlede_available(nrf24l01_conf_t* dev);
 
@@ -157,10 +163,10 @@ extern byte nrf24l01_write_register(nrf24l01_conf_t* dev, byte reg, byte value);
 
 #ifdef ENABLE_USART_DEBUGGING
 extern void nrf24l01_print_addresses(nrf24l01_conf_t* dev);
-extern void nrf24l01_print_status(nrf24l01_conf_t* dev);
+extern void nrf24l01_print_details(nrf24l01_conf_t* dev);
 #else
 #define nrf24l01_print_addresses(dev) /* nop */
-#define nrf24l01_print_status(status)
+#define nrf24l01_print_details(status)
 #endif // ENABLE_USART_DEBUGGING
 
 

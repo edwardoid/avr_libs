@@ -43,8 +43,8 @@ void nrf24l01_print_addresses(nrf24l01_conf_t* dev)
     nrf24l01_read_address(dev, NRF24L01_RX_ADDR_P3, & dev->pipe_addrs[1], 1);
     nrf24l01_read_address(dev, NRF24L01_RX_ADDR_P4, & dev->pipe_addrs[2], 1);
     nrf24l01_read_address(dev, NRF24L01_RX_ADDR_P5, & dev->pipe_addrs[3], 1);
-    
-
+   
+     
     usart_write_string("PIPE0 ");
     uint8_t i = dev->pipe_addr_len;
     char hex[6];
@@ -82,6 +82,7 @@ void nrf24l01_print_status(nrf24l01_conf_t* dev)
     DBG_VALUE_NNL("\tMAX_RT\t", (status & NRF24L01_MAX_RT) ? 1 : 0);
     DBG_VALUE_NNL("\tRX_P_NO\t", (status >> 1) & 0x7);
     DBG_VALUE("\tTX_FULL\t", (status & NRF24L01_RX_DR) ? 1 : 0);
+
     usart_write_string("FIFO_STATUS:");
     DBG_VALUE_NNL("\tTX_REUSE\t", (fifo & NRF24L01_TX_REUSE) ? 1 : 0);
     DBG_VALUE_NNL("\tTX_FULL\t", (fifo & NRF24L01_TX_FULL) ? 1 : 0);
@@ -116,36 +117,39 @@ void nrf24l01_read_address(nrf24l01_conf_t* dev, byte reg, byte* buffer, uint8_t
 
 void nrf24l01_write_pipe_rx_address(nrf24l01_conf_t* dev, uint8_t pipe)
 {
+    set_low(*dev->ss_port, dev->ss_pin);
     if (pipe == 0)
     {
-        set_low(*dev->ss_port, dev->ss_pin);
-        spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_ERX_P0), dev->ss_pin, dev->ss_port);
+        spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P0), dev->ss_pin, dev->ss_port);
         spi_write_ss(dev->pipe_0_addr, dev->pipe_addr_len, dev->ss_pin, dev->ss_port);
-        set_high(*dev->ss_port, dev->ss_pin);
     }
-    else if (pipe == 1)
+    else
     {
-        set_low(*dev->ss_port, dev->ss_pin);
-        spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_ERX_P1), dev->ss_pin, dev->ss_port);
+        spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P1), dev->ss_pin, dev->ss_port);
         spi_write_ss(dev->pipe_1_addr, dev->pipe_addr_len, dev->ss_pin, dev->ss_port);
-        set_high(*dev->ss_port, dev->ss_pin);
     }
-    else if (pipe == 2)
+    
+    if (pipe == 2)
     {
-        nrf24l01_write_register(dev, NRF24L01_ERX_P1, dev->pipe_addrs[2]);
+        spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P2), dev->ss_pin, dev->ss_port);
+        spi_write_byte_ss(dev->pipe_addrs[0], dev->ss_pin, dev->ss_port);
     }
     else if (pipe == 3)
     {
-        nrf24l01_write_register(dev, NRF24L01_ERX_P1, dev->pipe_addrs[2]);
+        spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P3), dev->ss_pin, dev->ss_port);
+        spi_write_byte_ss(dev->pipe_addrs[1], dev->ss_pin, dev->ss_port);
     }
     else if (pipe == 4)
     {
-        nrf24l01_write_register(dev, NRF24L01_ERX_P1, dev->pipe_addrs[2]);
+        spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P4), dev->ss_pin, dev->ss_port);
+        spi_write_byte_ss(dev->pipe_addrs[2], dev->ss_pin, dev->ss_port);
     }
     else if (pipe == 5)
     {
-        nrf24l01_write_register(dev, NRF24L01_ERX_P1, dev->pipe_addrs[2]);
+        spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P5), dev->ss_pin, dev->ss_port);
+        spi_write_byte_ss(dev->pipe_addrs[4], dev->ss_pin, dev->ss_port);
     }
+    set_high(*dev->ss_port, dev->ss_pin);
 }
 
 void nrf24l01_write_pipe_tx_address(nrf24l01_conf_t* dev, byte* addr, uint8_t length)
@@ -154,9 +158,6 @@ void nrf24l01_write_pipe_tx_address(nrf24l01_conf_t* dev, byte* addr, uint8_t le
 
     spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P0), dev->ss_pin, dev->ss_port);
     spi_write_ss(addr, dev->pipe_addr_len, dev->ss_pin, dev->ss_port);
-    set_high(*dev->ss_port, dev->ss_pin);
-    tu_delay_us(10);
-    set_low(*dev->ss_port, dev->ss_pin);
     spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_TX_ADDR), dev->ss_pin, dev->ss_port);
     spi_write_ss(addr, dev->pipe_addr_len, dev->ss_pin, dev->ss_port);
     
@@ -192,7 +193,7 @@ byte nrf24l01_unset_register_bit(nrf24l01_conf_t* dev, byte reg, byte bit)
 inline void nrf24l01_up(nrf24l01_conf_t* dev)
 {
     nrf24l01_set_register_bit(dev, NRF24L01_CONFIG, NRF24L01_PWR_UP);
-    tu_delay_us(5);
+    tu_delay_us(160); // Standby-I mode
 }
 
 inline void nrf24l01_down(nrf24l01_conf_t* dev)
@@ -201,23 +202,34 @@ inline void nrf24l01_down(nrf24l01_conf_t* dev)
     nrf24l01_unset_register_bit(dev, NRF24L01_CONFIG, NRF24L01_PWR_UP);
 }
 
+void nrf24l01_init_config(nrf24l01_conf_t* dst)
+{
+    dst->pipe_addr_len = 0;
+    dst->transmission_delay = 85;
+    dst->ce_port = NULL;
+    dst->ce_pin = 0;
+
+    dst->ss_port = NULL;
+    dst->ss_pin = 0;
+
+    dst->flags = 0x00;
+}
+
 byte nrf24l01_init(nrf24l01_conf_t* dev, ddr_ptr_t ce, ddr_ptr_t ss)
 {
-    tu_delay_ms(15);
+    tu_delay_ms(55);
     set_as_output(*ce, dev->ce_pin);
     set_low(*dev->ce_port, dev->ce_pin);
     
     set_as_output(*ss, dev->ss_pin);
-    set_high(*dev->ss_port, dev->ss_pin);
     
     spi_init_as_master(SPI_DIV_CLK_8, SPI_MODE_0);
     spi_set_master_bit_first(1);
     
-    set_low(*dev->ce_port, dev->ce_pin);
+    set_low(*dev->ce_port, dev->ce_pin); // Power down mode
     
-    nrf24l01_write_register(dev, NRF24L01_CONFIG, NRF24L01_EN_CRC | NRF24L01_CRCO); 
+    nrf24l01_write_register(dev, NRF24L01_CONFIG, NRF24L01_EN_CRC | NRF24L01_CRCO);  // enable CRC16
     nrf24l01_up(dev);
-    tu_delay_us(10);
     
     nrf24l01_set_retries(dev, 5, 15);
     if(nrf24l01_set_speed(dev, NRF24L01_250KBPS))
@@ -235,8 +247,6 @@ byte nrf24l01_init(nrf24l01_conf_t* dev, ddr_ptr_t ce, ddr_ptr_t ss)
     nrf24l01_set_speed(dev, NRF24L01_1MBPS);
     nrf24l01_write_register(dev, NRF24L01_DYNPD, 0);
     nrf24l01_set_channel(dev, 76);
-    
-    byte rx = nrf24l01_read_register(dev, NRF24L01_EN_RXADDR);
     
     if (dev->pipe_addr_len == 0) // read
     {
@@ -257,6 +267,7 @@ byte nrf24l01_init(nrf24l01_conf_t* dev, ddr_ptr_t ce, ddr_ptr_t ss)
             nrf24l01_set_payload_size(dev, i, dev->payload_lengths[i]);
         }
     }
+
     set_low(*dev->ss_port, dev->ss_pin);
     spi_write_byte_ss(NRF24L01_ACTIVATE, dev->ss_pin, dev->ss_port);
     spi_write_byte_ss(0x73, dev->ss_pin, dev->ss_port);
@@ -307,33 +318,6 @@ void nrf24l01_set_address(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t a1, uint8_
     }   
 }
 
-void nrf24l01_set_role(nrf24l01_conf_t* dev, uint8_t role)
-{
-    set_low(*dev->ce_port, dev->ce_pin);
-    nrf24l01_up(dev);
-    if (role == NRF24L01_ROLE_RECEIVER)
-    {
-        nrf24l01_set_register_bit(dev, NRF24L01_CONFIG, NRF24L01_PRIM_RX);
-        if (nrf24l01_read_register(dev, NRF24L01_FEATURE) & NRF24L01_EN_ACK_PAY)
-        {
-            nrf24l01_flush_tx(dev);
-        }
-        set_high(*dev->ce_port, dev->ce_pin);
-    }
-    else
-    {
-        tu_delay_us(dev->transmission_delay);
-        if (nrf24l01_read_register(dev, NRF24L01_FEATURE) & NRF24L01_EN_ACK_PAY)
-        {
-            tu_delay_us(dev->transmission_delay);
-            nrf24l01_flush_tx(dev);
-        }
-        
-        nrf24l01_unset_register_bit(dev, NRF24L01_CONFIG, NRF24L01_PRIM_RX);
-        nrf24l01_up(dev);
-    }
-}
-
 byte nrf24l01_get_status(nrf24l01_conf_t* dev)
 {
     return spi_write_byte_ss(NRF24L01_NOP, dev->ss_pin, dev->ss_port);
@@ -341,9 +325,8 @@ byte nrf24l01_get_status(nrf24l01_conf_t* dev)
 
 byte nrf24l01_set_retries(nrf24l01_conf_t* dev, uint8_t delay, uint8_t count)
 {
-    byte ard = ((delay & 0x0f) << NRF24L01_ARD);
-    byte arc = ((count & 0x0f) << NRF24L01_ARC);
-    nrf24l01_write_register(dev, NRF24L01_SETUP_RETR,  ard | arc);    
+    dev->transmission_delay = (uint16_t) delay * 250;
+    nrf24l01_write_register(dev, NRF24L01_SETUP_RETR,  (dev << 4) | count);    
 }
 
 byte nrf24l01_set_speed(nrf24l01_conf_t* dev, uint8_t speed)
@@ -355,21 +338,18 @@ byte nrf24l01_set_speed(nrf24l01_conf_t* dev, uint8_t speed)
         {
             set_bit(reg, NRF24L01_RF_PWR_LOW);
             clear_bit(reg, NRF24L01_RF_PWR_HIGH);
-            dev->transmission_delay = 155;
             break;
         }
         case NRF24L01_1MBPS:
         {
             clear_bit(reg, NRF24L01_RF_PWR_LOW);
             clear_bit(reg, NRF24L01_RF_PWR_HIGH);
-            dev->transmission_delay = 85;
             break;
         }
         case NRF24L01_2MBPS:
         {
             clear_bit(reg, NRF24L01_RF_PWR_LOW);
             set_bit(reg, NRF24L01_RF_PWR_HIGH);
-            dev->transmission_delay = 65;
             break;
         }
         default:{
@@ -429,6 +409,7 @@ void nrf24l01_enable_payload_acknowledge(nrf24l01_conf_t* dev, uint8_t enable)
     {
         set_bit(feature, NRF24L01_EN_ACK_PAY);
         set_bit(feature, NRF24L01_EN_DPL);
+        nrf24l01_enable_dynamic_payload_on_pipe(dev, 0, NRF24L01_ENABLE);
     }
     else
     {
@@ -481,22 +462,6 @@ void nrf24l01_enable_auto_acknowledge_for_pipe(nrf24l01_conf_t* dev, uint8_t pip
     }
 }
 
-void nrf24l01_enable_auto_acknowledge_for_all_pipes(nrf24l01_conf_t* dev, uint8_t enable)
-{
-    byte enaa = nrf24l01_read_register(dev, NRF24L01_EN_AA);
-    byte pipes = NRF24L01_ENAA_P0 | NRF24L01_ENAA_P1 | NRF24L01_ENAA_P2 | NRF24L01_ENAA_P3 | NRF24L01_ENAA_P4 | NRF24L01_ENAA_P5;
-    if (enable == enable)
-    {
-        enaa |= pipes;
-    }
-    else
-    {
-        enaa &= ~pipes;
-    }
-
-    nrf24l01_write_register(dev, NRF24L01_EN_AA, pipes);
-}
-
 void nrf24l01_enable_dynamic_acknowledge(nrf24l01_conf_t* dev, uint8_t enable)
 {
     if (enable == NRF24L01_ENABLE)
@@ -529,11 +494,6 @@ void nrf24l01_enable_dynamic_payload_on_pipe(nrf24l01_conf_t* dev, uint8_t enabl
 {
     byte aa = 0xFF;
     
-    if (enable == NRF24L01_ENABLE)
-    {
-        nrf24l01_enable_auto_acknowledge_for_pipe(dev, pipe, enable);
-    }
-
     if(pipe == 0)
     {
         pipe = NRF24L01_DPL_P0;
@@ -565,37 +525,14 @@ void nrf24l01_enable_dynamic_payload_on_pipe(nrf24l01_conf_t* dev, uint8_t enabl
 
     if (enable == NRF24L01_ENABLE)
     {
-        byte feature = nrf24l01_read_register(dev, NRF24L01_FEATURE);
-        if (~(feature & NRF24L01_EN_DPL))
-        {
-            nrf24l01_enable_dynamic_payload_feature(dev, enable);
-        }
-
+        nrf24l01_enable_auto_acknowledge_for_pipe(dev, pipe, enable);
+        nrf24l01_enable_dynamic_payload_feature(dev, enable);
         nrf24l01_set_register_bit(dev, NRF24L01_DYNPD, pipe);
     }
     else
     {
         nrf24l01_unset_register_bit(dev, NRF24L01_DYNPD, pipe);
     }
-}
-
-void nrf24l01_enable_dynamic_payload_on_all_pipes(nrf24l01_conf_t* dev, uint8_t enable)
-{
-    byte pipes = NRF24L01_DPL_P0 | NRF24L01_DPL_P1 | NRF24L01_DPL_P2 | NRF24L01_DPL_P3 | NRF24L01_DPL_P4 | NRF24L01_DPL_P5;
-    byte dynpd = nrf24l01_read_register(dev, NRF24L01_DYNPD);
-    
-    if (enable == NRF24L01_ENABLE)
-    {
-        nrf24l01_enable_dynamic_payload_feature(dev, enable);
-        nrf24l01_enable_auto_acknowledge_for_all_pipes(dev, enable);
-        dynpd |= pipes;
-    }
-    else
-    {
-        dynpd &= ~pipes;
-    }
-
-    nrf24l01_write_register(dev, NRF24L01_DYNPD, dynpd);
 }
 
 uint8_t nrf24l01_dynamic_payload_enabled(nrf24l01_conf_t* dev, uint8_t pipe)
@@ -664,6 +601,37 @@ void nrf24l01_set_payload_size(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t size)
     }
     
     dev->payload_lengths[pipe] = size;
+}
+
+uint8_t nrf24l01_get_payload_size(nrf24l01_conf_t* dev, uint8_t pipe)
+{
+    uint8_t value = 0xFF;
+    if (pipe == 0)
+    {
+        value = nrf24l01_read_register(dev, NRF24L01_RX_PW_P0);
+    }
+    else if (pipe == 1)
+    {
+        value = value = nrf24l01_read_register(dev, NRF24L01_RX_PW_P1);
+    }
+    else if (pipe == 2)
+    {
+        value = value = nrf24l01_read_register(dev, NRF24L01_RX_PW_P2);
+    }
+    else if (pipe == 3)
+    {
+        value = value = nrf24l01_read_register(dev, NRF24L01_RX_PW_P3);
+    }
+    else if (pipe == 4)
+    {
+        value = value = nrf24l01_read_register(dev, NRF24L01_RX_PW_P4);
+    }
+    else if (pipe == 5)
+    {
+        value = value = nrf24l01_read_register(dev, NRF24L01_RX_PW_P5);
+    }
+    value = (value << 3) >> 3;
+    return value;
 }
 
 byte nrf24l01_acknowlede_available(nrf24l01_conf_t* dev)
@@ -840,6 +808,7 @@ void nrf24l01_wait_for_transmit(nrf24l01_conf_t* dev)
     while(!nrf24l01_tx_is_empty(dev))
     {
         set_high(*dev->ce_port, dev->ce_pin);
+        tu_delay_us(15);
     }
     
     set_low(*dev->ce_port, dev->ce_pin);
@@ -847,8 +816,20 @@ void nrf24l01_wait_for_transmit(nrf24l01_conf_t* dev)
 
 uint8_t nrf24l01_read_payload(nrf24l01_conf_t* dev, byte* buffer, uint8_t length)
 {
-    length = length < dev->tx_payload_size ? length : 32;
-    uint8_t blank = dev->tx_payload_size - length;
+    set_high(*dev->ce_port, dev->ce_pin);
+
+    while(nrf24l01_rx_is_empty())
+    {
+        tu_delay_us(10);
+    }
+
+    uint8_t pldWidth = nrf24l01_read_register(dev, NRF24L01_R_RX_PL_WID);
+    if (pldWidth > 32)
+    {
+        return 0;
+    }
+
+    length = length < pldWidth ? length : pldWidth;
 
     set_low(*dev->ss_port, dev->ss_pin);
     spi_write_byte_ss(NRF24L01_R_RX_PAYLOAD, dev->ss_pin, dev->ss_port);
@@ -856,25 +837,18 @@ uint8_t nrf24l01_read_payload(nrf24l01_conf_t* dev, byte* buffer, uint8_t length
     {
         *buffer++ = spi_write_byte_ss(0xFF, dev->ss_pin, dev->ss_port); 
     }
-    while(blank--)
-    {
-        spi_write_byte_ss(0xFF, dev->ss_pin, dev->ss_port);
-    }
     
-    set_high(*dev->ss_port, dev->ss_pin);
-    
-    set_high(*dev->ce_port, dev->ce_pin); // ready to receive data
-    return nrf24l01_get_status(dev);
+    set_low(*dev->ce_port, dev->ce_pin);
+    return length;
 }
 
-uint8_t nrf24l01_prepare_for_read(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t payload_length)
+uint8_t nrf24l01_prepare_for_read(nrf24l01_conf_t* dev, uint8_t pipe)
 {
-    nrf24l01_unset_register_bit(dev, NRF24L01_CONFIG, NRF24L01_PRIM_RX);
-    nrf24l01_flush_rx(dev);
-    nrf24l01_write_pipe_rx_address(dev, pipe);
     nrf24l01_set_address_width(dev, dev->pipe_addr_len);
+    nrf24l01_write_pipe_rx_address(dev, pipe);
+    nrf24l01_up(dev); // go to Standby-I mode
+    nrf24l01_unset_register_bit(dev, NRF24L01_CONFIG, NRF24L01_PRIM_RX); // Go to PRX mode
     nrf24l01_enable_pipe(dev, pipe, NRF24L01_ENABLE); // enable selected pipe to be ready to receive data :)
-    nrf24l01_set_payload_size(dev, pipe, dev->payload_lengths[pipe]);
 }
 
 uint8_t nrf24l01_read(nrf24l01_conf_t* dev, uint8_t pipe, byte* buffer, uint8_t length)
@@ -918,21 +892,26 @@ uint8_t nrf24l01_write_payload(nrf24l01_conf_t* dev, byte* data, uint8_t length,
     print_addr("RX_P0: ", p0, dev->pipe_addr_len);
     print_addr("TX ADDR:", tx, dev->pipe_addr_len);
     
-    length = length < dev->tx_payload_size ? length : dev->tx_payload_size;
-    
-    uint8_t blank = (nrf24l01_dynamic_payload_enabled(dev, 0) == NRF24L01_ENABLED) ? 0 : (dev->tx_payload_size - length);
+    length = length < 32 ? length : 32;
+    uint8_t blank = 0;
+
+    if (nrf24l01_dynamic_payload_enabled(dev, 0))
+    {
+        blank = nrf24l01_get_payload_size(dev, 0) - length;
+    }
     
     set_low(*dev->ss_port, dev->ss_pin);
     spi_write_byte_ss(cmd, dev->ss_pin, dev->ss_port); // write to correct payload storage
 
     spi_write_ss(data, length, dev->ss_pin, dev->ss_port);
+    
     while(blank--)
     {
         spi_write_byte_ss(0x00, dev->ss_pin, dev->ss_port);
     }
 
     set_low(*dev->ss_port, dev->ss_pin);
-    return nrf24l01_get_status(dev);
+    return length - blank;
 }
 
 byte nrf24l01_prepare_for_write(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t enable_ackowledge)
@@ -960,20 +939,21 @@ byte nrf24l01_prepare_for_write(nrf24l01_conf_t* dev, uint8_t pipe, uint8_t enab
 
 byte nrf24l01_prepare_for_write_to_addr(nrf24l01_conf_t* dev, byte* address, uint8_t payload_length, uint8_t enable_ackowledge)
 {
-    nrf24l01_unset_register_bit(dev, NRF24L01_CONFIG, NRF24L01_PRIM_RX);
+    nrf24l01_up(dev);
+    nrf24l01_unset_register_bit(dev, NRF24L01_CONFIG, NRF24L01_PRIM_RX); // go to PTX mode
     if(dev->flags & NRF24L01_FLAG_MODE_ACK)
     {
         nrf24l01_flush_rx(dev);
     }
     nrf24l01_write_pipe_tx_address(dev, address, dev->pipe_addr_len);
     nrf24l01_set_payload_size(dev, 0, payload_length);
+    set_high(*dev->ce_port, dev->ce_pin); // Goto TX settling mode
     return nrf24l01_get_status(dev);
 }
 
-
 uint8_t nrf24l01_write(nrf24l01_conf_t* dev, byte* data, uint8_t length)
 {
-    set_high(*dev->ce_port, dev->ce_pin);
+
     if(test_bit(dev->flags, NRF24L01_FLAG_MODE_ACK))
     {
         return nrf24l01_write_payload(dev, data, length, NRF24L01_W_TX_PAYLOAD);
@@ -983,9 +963,7 @@ uint8_t nrf24l01_write(nrf24l01_conf_t* dev, byte* data, uint8_t length)
         return nrf24l01_write_payload(dev, data, length, NRF24L01_W_TX_PAYLOAD_NO_ACK);
     }
     
-    set_high(*dev->ce_port, dev->ce_pin); // start transmission
-    tu_delay_us(15);
-    set_low(*dev->ce_port, dev->ce_pin);
+    tu_delay_us(15 + dev->transmission_delay); // write and go to StandBy-II mode
 }
 
 uint8_t nrf24l01_end_writing(nrf24l01_conf_t* dev)
@@ -1001,7 +979,7 @@ uint8_t nrf24l01_end_writing_keep_irq(nrf24l01_conf_t* dev)
 {
     nrf24l01_wait_for_transmit(dev);
     uint8_t status = nrf24l01_get_status(dev);
-    
+    nrf24l01_down(dev); // Go to power down mode
     return status;
 }
 
