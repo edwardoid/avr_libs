@@ -18,7 +18,7 @@
 
 #include "pcd8544.h"
 #include "time_utils_delays.h"
-#include "spi.h"
+#include <spi/spi.h>
 #include "bitman.h"
 #include "debug.h"
 #include <string.h>

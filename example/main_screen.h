@@ -10,7 +10,7 @@
 #define MAIN_SCREEN_H
 
 
-#include "../pcd8544_font.h"
+#include <pcd8544/pcd8544_font.h>
 #ifdef F_EXAMPLES
 
 #include "screen.h"

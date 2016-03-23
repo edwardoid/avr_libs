@@ -19,15 +19,14 @@
 #ifndef SCREENSAVER_H
 #define SCREENSAVER_H
 
-#include "../config.h"
+#include <config.h>
 #ifdef F_EXAMPLES
 
 #include "screen.h"
 #include "events.h"
-#include "../pcd8544_font.h"
+#include <pcd8544/pcd8544_font.h>
 #include <avr/pgmspace.h>
 
-/*
 void draw_screensaver();
 void screensaver_events_handler(struct event_t* e);
 
@@ -39,7 +38,6 @@ struct screensaver_t
 };
 
 extern struct screensaver_t screensaver;
-*/
 
 #endif // F_EXAMPLES
 

@@ -24,7 +24,7 @@
 #ifdef F_SD
 
 #include "my_types.h"
-#include "spi.h"
+#include <spi/spi.h>
 #include "debug.h"
 #include "sd_cmd.h"
 

@@ -33,10 +33,9 @@
 //#define F_PCD8544
 //#define F_SD
 //#define F_SPI
-//#define F_USART
+#define F_USART
 
 #ifdef F_ENABLE_ALL
-/*
 //#define F_EXAMPLES
 
 #define F_1WIRE
@@ -46,7 +45,6 @@
 #define F_SPI
 #define F_USART
 #define F_PCD8544
-*/
 #endif // F_ENABLE_ALL
 
 #ifndef F_EXAMPLES

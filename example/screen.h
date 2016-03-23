@@ -1,12 +1,12 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "../config.h"
+#include <config.h>
 #ifdef F_EXAMPLES
 
 #include "events.h"
 #include <inttypes.h>
-#include "../my_types.h"
+#include <my_types.h>
 
 typedef void (*draw_function_ptr)();
 typedef uint8_t (*event_handler_function_ptr)(struct event_t*);

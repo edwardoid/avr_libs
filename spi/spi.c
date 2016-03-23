@@ -187,7 +187,7 @@ uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, ddr_ptr_t ss_ddr,
 	clk = spi_set_clock(clk);
 	if(clk != 0)
 	{
-			return clk;
+		return clk;
 	}
 	spi_set_mode(mode);
 

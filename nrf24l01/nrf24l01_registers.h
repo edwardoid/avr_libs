@@ -28,4 +28,4 @@
 #define NRF24L01_DYNPD       0x1C
 #define NRF24L01_FEATURE     0x1D
 
-#endif // NRF24L01_REGISTERS_H
+#endif // NRF24L01_REGIS    TERS_H

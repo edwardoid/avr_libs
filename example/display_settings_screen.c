@@ -10,18 +10,18 @@
 #if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_PCD8544)
 
 #include "display_settings_screen.h"
-#include "../pcd8544.h"
-#include "../pcd8544_progress.h"
-#include "../pcd8544drawing.h"
-#include "../pcd8544bitmaps.h"
-#include "../pcd8544_font.h"
+#include <pcd8544/pcd8544.h>
+#include <pcd8544/pcd8544_progress.h>
+#include <pcd8544/pcd8544drawing.h>
+#include <pcd8544/pcd8544bitmaps.h>
+#include <pcd8544/pcd8544_default_font.h>
+#include <pcd8544/pcd8544_font.h>
 
 #include "events.h"
 #include "state.h"
 #include "main_screen.h"
-#include "../my_stdlib.h"
+#include <my_stdlib.h>
 //#include "../pcd8544_tiny_font.h"
-#include "../pcd8544_default_font.h"
 #include "question_screen.h"
 
 uint8_t contrast = 0x40;

@@ -19,12 +19,12 @@
 #include "question.h"
 #include "events.h"
 #include "state.h"
-#include "../pcd8544.h"
-#include "../my_stdlib.h"
-#include "../usart.h"
-#include "../pcd8544_default_font.h"
-#include "../pcd8544drawing.h"
-#include "../utils.h"
+#include <pcd8544/pcd8544.h>
+#include <my_stdlib.h>
+#include <usart/usart.h>
+#include <pcd8544/pcd8544_default_font.h>
+#include <pcd8544/pcd8544drawing.h>
+#include <utils.h>
 
 /*
 static const char* YES = "YES";

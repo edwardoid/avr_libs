@@ -9,13 +9,13 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
-#include "../config.h"
+#include <config.h>
 
 #ifdef F_EXAMPLES
 
 #include <inttypes.h>
 
-#include "../1wire.h"
+#include <1wire/1wire.h>
 #include <avr/io.h>
 
 #define NOTHING_HAPPENED	0

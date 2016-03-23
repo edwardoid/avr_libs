@@ -21,11 +21,11 @@
 #include "../config.h"
 #ifdef F_EXAMPLES
 
-#include "../pcd8544drawing.h"
-#include "../pcd8544_font.h"
-#include "../pcd8544_ubuntu_font.h"
+#include <pcd8544/pcd8544drawing.h>
+#include <pcd8544/pcd8544_font.h>
+#include <pcd8544/pcd8544_ubuntu_font.h>
+#include <my_stdlib.h>
 #include "main_screen.h"
-#include "../my_stdlib.h"
 #include "state.h"
 
 /*

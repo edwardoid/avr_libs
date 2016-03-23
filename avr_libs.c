@@ -21,21 +21,21 @@
 #include <inttypes.h>
 #include <util/delay.h>
 #include "config.h"
-#include "usart.h"
+#include <usart/usart.h>
 #include "bitman.h"
-#include "1wire.h"
+#include <1wire/1wire.h>
 #include "time_utils_delays.h"
-#include "pwm.h"
-#include "spi.h"
-#include "sd.h"
+#include <pwm/pwm.h>
+#include <spi/spi.h>
+#include <sd/sd.h>
 #include "time_utils_counters.h"
 #include <stdint.h>
-#include "pcd8544.h"
-#include "pcd8544drawing.h"
-#include "pcd8544_calcfont.h"
-#include "pcd8544_progress.h"
-#include "pcd8544_font.h"
-#include "pcd8544_tiny_font.h"
+#include <pcd8544/pcd8544.h>
+#include <pcd8544/pcd8544drawing.h>
+#include <pcd8544/pcd8544_calcfont.h>
+#include <pcd8544/pcd8544_progress.h>
+#include <pcd8544/pcd8544_font.h>
+#include <pcd8544/pcd8544_tiny_font.h>
 
 #define WORKING		0x00
 #define SETIING_MAX	0x01
