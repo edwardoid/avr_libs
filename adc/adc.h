@@ -19,7 +19,7 @@
 #ifndef ADC_H
 #define ADC_H
 
-#include "config.h"
+#include <lib_ex_config.h>
 
 #ifdef F_ADC
 

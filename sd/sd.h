@@ -19,7 +19,7 @@
 #ifndef SD_H
 #define SD_H
 
-#include "config.h"
+#include <lib_ex_config.h>
 
 #ifdef F_SD
 

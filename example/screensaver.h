@@ -19,8 +19,10 @@
 #ifndef SCREENSAVER_H
 #define SCREENSAVER_H
 
-#include <config.h>
-#ifdef F_EXAMPLES
+#include <lib_ex_config.h>
+	
+
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC) && defined(F_PCD8544)
 
 #include "screen.h"
 #include "events.h"

@@ -19,7 +19,7 @@
 #ifndef ONE_WIRE_H
 #define ONE_WIRE_H
 
-#include "config.h"
+#include <lib_ex_config.h>
 #include "my_types.h"
 
 #ifdef F_1WIRE

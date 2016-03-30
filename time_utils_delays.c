@@ -16,17 +16,10 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef PCD8544_CHECKBOX_H
-#define PCD8544_CHECKBOX_H
 
-#include "pcd8544.h"
+#include "time_utils_delays.h"
 
-#ifdef F_PCD8544
-
-#include <inttypes.h>
-
-void pcd8544_draw_checkbox(uint8_t x, uint8_t y, const char* string,  uint8_t checked);
-
-#endif // F_PCD8544
-
-#endif /* PCD8544_CHECKBOX_H */
+inline __attribute__((gnu_inline)) void tu_delay_cycles(uint32_t cycles)
+{
+	while(--cycles) asm volatile("nop");
+};

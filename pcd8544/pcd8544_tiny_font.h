@@ -19,7 +19,6 @@
 #ifndef PCD8544_TINY_FONT_H
 #define PCD8544_TINY_FONT_H
 
-#include "config.h"
 #include "pcd8544_font.h"
 #include <avr/pgmspace.h>
 

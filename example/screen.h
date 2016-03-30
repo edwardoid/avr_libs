@@ -1,8 +1,9 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include <config.h>
-#ifdef F_EXAMPLES
+#include <lib_ex_config.h>
+
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC) && defined(F_PCD8544)
 
 #include "events.h"
 #include <inttypes.h>
@@ -23,4 +24,5 @@ void redraw_notification_area();
 void draw_button(uint8_t x, uint8_t y, const byte* icon, uint8_t w, uint8_t h, uint8_t pressed);
 
 #endif // F_EXAMPLES
+
 #endif /* SCREEN_H_ */

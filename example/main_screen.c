@@ -1,13 +1,14 @@
 #include "main_screen.h"
 
-#include "../config.h"
+#include <lib_ex_config.h>
 
-#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_PCD8544)
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC)
 
-#include "../pcd8544.h"
-#include "../pcd8544bitmaps.h"
-#include "../my_stdlib.h"
-#include "../bitman.h"
+
+#include <pcd8544/pcd8544.h>
+#include <pcd8544/pcd8544bitmaps.h>
+#include <my_stdlib.h>
+#include <bitman.h>
 #include "state.h"
 //#include "display_settings_screen.h"
 

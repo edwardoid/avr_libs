@@ -25,7 +25,7 @@ CFLAGS += -std=gnu99 -Wall -funsigned-char -funsigned-bitfields
 CFLAGS += -fpack-struct -fshort-enums -ffunction-sections
 CFLAGS += -fdata-sections
 BIN_CFLAGS := -mmcu=$(MCU)
-LFLAGS = $(LIBDIRS) $(LIBS) -Wl
+LFLAGS = $(LIBDIRS) $(LIBS) -Wl,--gc-sections
 
 %.o: %.c $(HEADERS) prepare
 	$(CC) $(CFLAGS) -mmcu=$(MCU) -c $< -o $@
@@ -33,9 +33,9 @@ LFLAGS = $(LIBDIRS) $(LIBS) -Wl
 all: prepare app	
 
 app: $(OBJECTS)
-	$(CC) $(BIN_CFLAGS) $(OBJECTS) $(LFLAGS) -o $(EXAMPLE_NAME).elf
-	$(OBJ_DUMP) -h -S $(OUT_DIR)/$(EXAMPLE_NAME).hex
-	$(SIZE) --format=avr --mcu=$(MCU) $(OUT_DIR)/$(EXAMPLE_NAME).hex
+	$(CC) $(BIN_CFLAGS) $(OBJECTS) $(LFLAGS) -o $(OUT_DIR)/$(EXAMPLE_NAME).elf
+#	$(OBJ_DUMP) -h -S $(OUT_DIR)/$(EXAMPLE_NAME).elf
+	$(SIZE) --format=avr --mcu=$(MCU) $(OUT_DIR)/$(EXAMPLE_NAME).elf
 
 prepare:
 	$(MKDIR) -p $(OUT_DIR)

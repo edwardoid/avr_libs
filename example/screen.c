@@ -1,15 +1,17 @@
 #include "screen.h"
 
-#include "../config.h"
-#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_PCD8544)
+#include <lib_ex_config.h>
+
+
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC) && defined(F_PCD8544)
 
 #include "state.h"
-#include "../pcd8544_tiny_font.h"
-#include "../pcd8544.h"
-#include "../pcd8544_font.h"
-#include "../pcd8544bitmaps.h"
-#include "../pcd8544drawing.h"
-#include "../pcd8544_calcfont.h"
+#include <pcd8544/pcd8544_tiny_font.h>
+#include <pcd8544/pcd8544.h>
+#include <pcd8544/pcd8544_font.h>
+#include <pcd8544/pcd8544bitmaps.h>
+#include <pcd8544/pcd8544drawing.h>
+#include <pcd8544/pcd8544_calcfont.h>
 
 uint8_t print_socket_status_in_notification_area(uint8_t color)
 {
@@ -48,7 +50,7 @@ void redraw_notification_area()
 	{
 		len = PCD8544_WIDTH - x - len;
 		
-		pcd8544_draw_bitmap( x + len / 2 - 5, 1, auto_on, 10, 10, 0);
+		pcd8544_draw_bitmap( x + len / 2 - 5, 1, NULL /* auto on */, 10, 10, 0);
 	}
 }
 

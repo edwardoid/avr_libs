@@ -17,7 +17,6 @@
 */
 
 #include "pcd8544drawing.h"
-#include "config.h"
 #include "my_stdlib.h"
 #include "utils.h"
 #include "bitman.h"

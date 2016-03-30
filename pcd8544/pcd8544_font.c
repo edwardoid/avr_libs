@@ -17,7 +17,6 @@
 */
 
 #include "pcd8544_font.h"
-#include "config.h"
 #include "my_stdlib.h"
 #include "bitman.h"
 #include <avr/pgmspace.h>

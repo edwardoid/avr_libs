@@ -9,9 +9,9 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
-#include <config.h>
+#include <lib_ex_config.h>
 
-#ifdef F_EXAMPLES
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC)
 
 #include <inttypes.h>
 
@@ -46,6 +46,12 @@ uint8_t	poll_hardware(struct event_t* res);
 
 uint8_t	global_event_handler(struct event_t* event);
 
+#else
+#define poll_hardware(x) 0
+#define global_event_handler(x) 0
+
 #endif // F_EXAMPLES
+
+
 
 #endif /* EVENTS_H_ */

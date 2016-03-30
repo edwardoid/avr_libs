@@ -1,13 +1,14 @@
-#include "../config.h"
 
-#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE)
+#include <lib_ex_config.h>
+
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC)
 
 #include "events.h"
-#include "../my_stdlib.h"
-#include "../my_types.h"
-#include "../bitman.h"
-#include "../time_utils_delays.h"
-#include "../adc.h"
+#include <my_stdlib.h>
+#include <my_types.h>
+#include <bitman.h>
+#include <time_utils_delays.h>
+#include <adc/adc.h>
 #include <avr/io.h>
 
 struct button_t

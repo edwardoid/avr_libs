@@ -1,15 +1,16 @@
 #include "question_screen.h"
 
-#include "../config.h"
-#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_PCD8544)
+#include <lib_ex_config.h>
+
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC) && defined(F_PCD8544)
 
 #include "events.h"
 #include "state.h"
-#include "../pcd8544.h"
-#include "../my_stdlib.h"
-#include "../usart.h"
-#include "../pcd8544_default_font.h"
-#include "../pcd8544drawing.h"
+#include <pcd8544/pcd8544.h>
+#include <my_stdlib.h>
+#include <usart/usart.h>
+#include <pcd8544/pcd8544_default_font.h>
+#include <pcd8544/pcd8544drawing.h>
 
 struct question_box_t question_screen = 
 {

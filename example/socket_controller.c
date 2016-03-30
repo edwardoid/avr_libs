@@ -2,7 +2,7 @@
 #include "state.h"
 #include "events.h"
 
-#include <config.h>
+#include <lib_ex_config.h>
 #include <my_stdlib.h>
 #include <utils.h>
 #include <avr/io.h>
@@ -19,7 +19,8 @@ uint8_t pressed = 0;
 #define ROLETX 1
 #define ROLERX 0
 
-#ifdef F_EXAMPLES
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC)
+
 void run()
 {
 	setup_hardware();
@@ -55,6 +56,8 @@ void run()
 }
 
 #endif // F_EXAMPLES
+
+#if defined(F_NRF24L01)
 
 void rf24test()
 {
@@ -99,6 +102,10 @@ void rf24test()
         usart_read_byte();
     }
 }
+
+#else
+#define rf24test()
+#endif
 
 int main()
 {

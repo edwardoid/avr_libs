@@ -19,7 +19,8 @@
 #ifndef VALUE_CHANGE_SCREEN
 #define VALUE_CHANGE_SCREEN
 
-#include "../config.h"
+#include <lib_ex_config.h>
+
 #ifdef F_EXAMPLES
 
 #include "screen.h"

@@ -19,7 +19,7 @@
 #ifndef USART_H
 #define USART_H
 
-#include "config.h"
+#include <lib_ex_config.h>
 #if defined(F_USART)
 
 #include "bitman.h"

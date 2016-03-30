@@ -18,12 +18,13 @@
 
 #include "screensaver.h"
 
-#include "../config.h"
-#ifdef F_EXAMPLES
+#include <lib_ex_config.h>
+
+
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC) && defined(F_PCD8544)
 
 #include <pcd8544/pcd8544drawing.h>
 #include <pcd8544/pcd8544_font.h>
-#include <pcd8544/pcd8544_ubuntu_font.h>
 #include <my_stdlib.h>
 #include "main_screen.h"
 #include "state.h"

@@ -17,10 +17,9 @@
 */
 
 
-#include "config.h"
-
-#ifdef F_ADC
 #include "adc.h"
+#ifdef F_ADC
+	
 uint16_t  adc_read(uint8_t adc)
 {
 	adc_select(adc);

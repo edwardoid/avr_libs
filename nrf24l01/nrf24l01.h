@@ -1,6 +1,9 @@
 #ifndef NRF24L01_H
 #define NRF24L01_H
 
+
+#if defined(F_NRF24L01) && defined(F_SPI)
+
 #include "my_types.h"
 
 #include "nrf24l01_registers.h"
@@ -169,5 +172,6 @@ extern void nrf24l01_print_details(nrf24l01_conf_t* dev);
 #endif // ENABLE_USART_DEBUGGING
 
 
+#endif
 #endif // NRF24L01_H
     

@@ -22,7 +22,7 @@ OBJECTS += $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/sd/*.c))
 OBJECTS += $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/pwm/*.c))
 OBJECTS += $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/adc/*.c))
 OBJECTS += $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/pcd8544/*.c))
-OBJECTS += $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/nrf2l01/*.c))
+OBJECTS += $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/nrf24l01/*.c))
 
 OBJECT_DIRS += $(addprefix $(OUT_DIR)/,$(dir $(OBJECTS)))
 OBJECT_FILES += $(addprefix $(OUT_DIR)/,$(OBJECTS))
@@ -42,8 +42,8 @@ all: prepare libs
 
 libs: $(OBJECTS) $(SUBLIBS)
 	$(AR) -r $(OUT_DIR)/$(LIB_NAME).a $(addprefix $(OUT_DIR)/,$(OBJECTS))
-	$(OBJ_DUMP) -h -S $(OUT_DIR)/$(LIB_NAME).a 
-	$(SIZE) --format=avr --mcu=$(MCU) $(OUT_DIR)/$(LIB_NAME).a
+#	$(OBJ_DUMP) -h -S $(OUT_DIR)/$(LIB_NAME).a 
+#	$(SIZE) --format=avr --mcu=$(MCU) $(OUT_DIR)/$(LIB_NAME).a
 	$(DU) -h $(OUT_DIR)/$(LIB_NAME).a
 
 prepare:

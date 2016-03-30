@@ -5,9 +5,9 @@
  *  Author: eduards
  */ 
 
-#include "../config.h"
-
-#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_PCD8544)
+#include <lib_ex_config.h>
+ 
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC)
 
 #include "display_settings_screen.h"
 #include <pcd8544/pcd8544.h>

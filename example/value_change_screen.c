@@ -18,7 +18,8 @@
 
 #include "value_change_screen.h"
 
-#include <config.h>
+#include <lib_ex_config.h>
+
 #ifdef F_EXAMPLES
 
 #include "events.h"
@@ -29,7 +30,6 @@
 #include <pcd8544/pcd8544drawing.h>
 #include <my_stdlib.h>
 #include <pcd8544/pcd8544_font.h>
-#include <pcd8544/pcd8544_ubuntu_font.h>
 /*
 struct value_change_screen_t value_change_screen = 
 {

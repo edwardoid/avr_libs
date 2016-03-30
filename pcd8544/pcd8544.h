@@ -20,7 +20,8 @@
 #define PCD8544_H
 
 
-#include "config.h"
+#include <lib_ex_config.h>
+
 #ifdef F_PCD8544
 
 #define PCD8544_WIDTH	84

@@ -11,7 +11,8 @@
 
 
 #include <pcd8544/pcd8544_font.h>
-#ifdef F_EXAMPLES
+
+#if defined(F_EXAMPLES)
 
 #include "screen.h"
 

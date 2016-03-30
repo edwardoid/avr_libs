@@ -16,7 +16,6 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "config.h"
 #include "pcd8544.h"
 
 #ifndef PCD8544DRAWING_H

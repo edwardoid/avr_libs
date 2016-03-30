@@ -19,7 +19,7 @@
 #ifndef SPI_H
 #define SPI_H
 
-#include "config.h"
+#include <lib_ex_config.h>
 
 #if defined(F_SPI)
 

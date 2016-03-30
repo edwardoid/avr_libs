@@ -18,8 +18,10 @@
 
 
 
-#ifdef F_USART
 #include "usart.h"
+
+#ifdef F_USART
+
 #include <avr/io.h>
 #include <stdio.h>
 

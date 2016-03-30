@@ -9,7 +9,6 @@
 #ifndef PCD8544_DEFAULT_FONT_H
 #define PCD8544_DEFAULT_FONT_H
 
-#include "config.h"
 #include <avr/pgmspace.h>
 #include "pcd8544_font.h"
 

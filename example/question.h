@@ -19,7 +19,8 @@
 #ifndef QUESTION_H
 #define QUESTION_H
 
-#include "../config.h"
+#include <lib_ex_config.h>
+
 #ifdef F_EXAMPLES
 
 #define QUESTION_RESULT_NOT_ANSWERED	0

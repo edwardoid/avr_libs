@@ -9,9 +9,9 @@
 #ifndef DISPLAY_SETTINGS_SCREEN_H
 #define DISPLAY_SETTINGS_SCREEN_H
 
-#include "../config.h"
+#include <lib_ex_config.h>
 
-#ifdef F_EXAMPLES
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC)
 
 #include "screen.h"
 

@@ -32,7 +32,7 @@
 //#define F_PWM
 //#define F_PCD8544
 //#define F_SD
-//#define F_SPI
+#define F_SPI
 #define F_USART
 
 #ifdef F_ENABLE_ALL
@@ -45,6 +45,7 @@
 #define F_SPI
 #define F_USART
 #define F_PCD8544
+#define F_RC522
 #endif // F_ENABLE_ALL
 
 #ifndef F_EXAMPLES

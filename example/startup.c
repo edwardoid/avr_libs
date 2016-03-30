@@ -1,13 +1,15 @@
 #include "startup.h"
 
-#include "../config.h"
-#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_PCD8544)
+#include <lib_ex_config.h>
 
-#include "../usart.h"
-#include "../spi.h"
-#include "../pcd8544.h"
-#include "../1wire.h"
-#include "../adc.h"
+
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC) && defined(F_PCD8544)
+
+#include <usart/usart.h>
+#include <spi/spi.h>
+#include <pcd8544/pcd8544.h>
+#include <1wire/1wire.h>
+#include <adc/adc.h>
 #include "state.h"
 #include "main_screen.h"
 

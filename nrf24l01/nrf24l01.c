@@ -1,5 +1,8 @@
 #include "nrf24l01.h"
-#include "spi.h"
+
+#if defined(F_NRF24L01) && defined(F_SPI)
+
+#include "spi/spi.h"
 #include "bitman.h"
 #include "time_utils_delays.h"
 #include "debug.h"
@@ -1003,3 +1006,5 @@ uint8_t nrf24l01_succeed(nrf24l01_conf_t* dev, byte result)
     
     return 0;
 }
+
+#endif

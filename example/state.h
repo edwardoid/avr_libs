@@ -9,6 +9,8 @@
 #ifndef STATE_H
 #define STATE_H
 
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC) && defined(F_PCD8544)
+
 #include <inttypes.h>
 #include "screen.h"
 
@@ -24,5 +26,8 @@ struct state_t
 
 
 extern struct state_t current_state;
+
+
+#endif
 
 #endif /* STATE_H_ */

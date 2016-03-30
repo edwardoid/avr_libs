@@ -1,11 +1,11 @@
 /*
- * spi_config.h
+ * usart_config.h
  *
  * Created: 11/12/2014 5:30:50 PM
  *  Author: eduards
  */ 
 
-#include "config.h"
+#include <lib_ex_config.h>
 
 #ifndef USART_CONFIG_H
 #define USART_CONFIG_H

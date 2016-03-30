@@ -17,7 +17,6 @@
 */
 
 #include "sd.h"
-#include "config.h"
 
 #ifdef F_SD
 

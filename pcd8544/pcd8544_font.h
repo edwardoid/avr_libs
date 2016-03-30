@@ -19,7 +19,7 @@
 #ifndef PCD8544_FONT_H
 #define PCD8544_FONT_H
 
-#include "config.h"
+#include <lib_ex_config.h>
 
 #ifdef F_PCD8544
 

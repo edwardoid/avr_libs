@@ -19,7 +19,7 @@
 #ifndef PCD8544_PROGRESS_H
 #define PCD8544_PROGRESS_H
 
-#include "config.h"
+#include <lib_ex_config.h>
 #include "my_types.h"
 #include <avr/pgmspace.h>
 

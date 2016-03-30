@@ -19,7 +19,6 @@
 #include "pcd8544_calcfont.h"
 #include "pcd8544drawing.h"
 
-#include "config.h"
 #ifdef F_PCD8544
 
 

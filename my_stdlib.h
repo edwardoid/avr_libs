@@ -9,7 +9,7 @@
 #ifndef MY_STDLIB_H
 #define MY_STDLIB_H
 
-#include "config.h"
+#include <lib_ex_config.h>
 #include <stdint.h>
 
 #define my_abs(v) ((v > 0) ? (v) : -(v))
