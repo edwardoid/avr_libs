@@ -94,11 +94,27 @@
 #define RC522_Reserved_3	0x10
 
 #define RC522_ModeReg		0x11
+#define		RC522_MSBFirst		_BV(7)
+#define		RC522_TxWaitRF		_BV(5)
+#define		RC522_PolMFin		_BV(3)
+#define		RC522_CRCPreset1	_BV(1)
+#define		RC522_CRCPreset0	_BV(0)
+
+
 #define RC522_TxModeReg		0x12
 #define RC522_RxModeReg		0x13
 
-#define RC522_TxControIReg	0x14
+#define RC522_TxControlReg	0x14
+#define 	RC522_InvTx2RF_On 	_BV(7)
+#define 	RC522_InvTx1RF_On 	_BV(6)
+#define 	RC522_InvTx2RF_Off 	_BV(5)
+#define 	RC522_InvTx1RF_Off 	_BV(4)
+#define 	RC522_InvTx2CW	 	_BV(3)
+#define 	RC522_InvTx2REFn	_BV(1)
+#define 	RC522_InvTx1REFn	_BV(0)
+
 #define RC522_TxASKReg		0x15
+#define 	RC522_Force100ASK 	_BV(6)
 
 #define RC522_TxSeIReg		0x16
 #define RC522_RxSeIReg		0x17
@@ -136,10 +152,14 @@
 #define RC522_ModGsPReg		0x29
 
 #define RC522_TModeReg		0x2A
+#define		RC522_TAuto			_BV(7)
+#define		RC522_TAutoRestart	_BV(4)
+
 #define RC522_TPrescalerReg	0x2B
 
-#define RC522_ReloadReg_H	0x2C
-#define RC522_ReloadReg_L	0x2D
+
+#define RC522_TReloadRegHi	0x2C
+#define RC522_TReloadRegLo	0x2D
 
 #define RC522_TCounterVaIReg_H 0x2E
 #define RC522_TCounterVaIReg_L 0x2F
@@ -152,7 +172,7 @@
 #define RC522_TestPinEnReg	0x33
 #define RC522_TestPinValueReg	0x34
 #define RC522_TestBusReg	0x35
-#define RC522_AutoTestReg	0x36
+#define RC522_AutoTestR11eg	0x36
 #define RC522_VersionReg	0x37
 #define RC522_AnalogTestReg	0x38
 #define RC522_TestDAC1Reg	0x39
@@ -160,9 +180,9 @@
 
 #define RC522_Reserved_11	0x3B
 #define RC522_Reserved_12	0x3C
-#define RC522_Reserved_12	0x3D
-#define RC522_Reserved_13	0x3E
-#define RC522_Reserver_14	0x3F
+#define RC522_Reserved_13	0x3D
+#define RC522_Reserved_14	0x3E
+#define RC522_Reserver_15	0x3F
 
 #endif // F_RC522
 

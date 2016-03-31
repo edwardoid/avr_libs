@@ -15,9 +15,9 @@ AR := avr-ar
 OBJECTS = $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/*.c))
 
 HEADERS = $(wildcard *.h)
-INCLUDES := -I$(SRC_DIR)/..
+INCLUDES := -I$(SRC_DIR)/../..
 
-LIBDIRS = -L./../out
+LIBDIRS = -L./../../out
 LIBS = -lex
 
 CFLAGS  = -Os $(MCU_DEF) -DF_CPU=$(CLOCK) $(INCLUDES)
