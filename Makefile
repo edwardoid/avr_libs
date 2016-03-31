@@ -23,6 +23,7 @@ OBJECTS += $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/pwm/*.c))
 OBJECTS += $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/adc/*.c))
 OBJECTS += $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/pcd8544/*.c))
 OBJECTS += $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/nrf24l01/*.c))
+OBJECTS += $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/rc522/*.c))
 
 OBJECT_DIRS += $(addprefix $(OUT_DIR)/,$(dir $(OBJECTS)))
 OBJECT_FILES += $(addprefix $(OUT_DIR)/,$(OBJECTS))
@@ -50,10 +51,8 @@ prepare:
 	$(MKDIR) -p $(OBJECT_DIRS)
 
 
-examples: socket_controller
-
-socket_controller: libs 
-	make -C $(SRC_DIR)/example
+examples: libs
+	cd $(SRC_DIR)/examples && make
 
 clean: prepare
 	$(RM) -f $(OUT_DIR)/$(LIB_NAME).a
