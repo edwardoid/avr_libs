@@ -1,9 +1,20 @@
 /*
- * usart_config.h
- *
- * Created: 11/12/2014 5:30:50 PM
- *  Author: eduards
- */ 
+	avr_libs
+	Copyright (C) 2014  Edward Sargsyan
+
+	avr_libs is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	avr_libs is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include <lib_ex_config.h>
 
@@ -46,7 +57,7 @@
 #define USART_DATA_READY_BIT	UDRE0
 #define USART_GOT_DATA_BIT		RXC0
 
-#endif // __AVR_ATmega8
+#endif // __AVR_ATmega328
 
 #endif // F_USART
 

@@ -1,3 +1,21 @@
+/*
+	avr_libs
+	Copyright (C) 2014  Edward Sargsyan
+
+	avr_libs is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+
+	avr_libs is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
+*/
+	
 #ifndef RC522_REISTERS_H
 #define RC522_REISTERS_H
 
@@ -78,16 +96,18 @@
 
 #define RC522_FIFODataReg	0x09
 
-#define RC522_FIFOLeveIReg	0x0A
+#define RC522_FIFOLevelReg	0x0A
 #define		RC522_FlushBuffer	_BV(7)
 
 #define RC522_WaterLeveIReg	0x0B
 
-#define RC522_ControIReg	0x0C
+#define RC522_ControlReg	0x0C
 #define		RC522_TStopNow		_BV(7)
 #define		RC522_TStartNow		_BV(6)
 
 #define RC522_BitFramingReg	0x0D
+#define		RC522_StartSend		_BV(7)
+
 #define RC522_ColIReg		0x0E
 
 #define RC522_Reserved_2	0x0F

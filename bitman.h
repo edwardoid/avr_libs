@@ -25,6 +25,11 @@
 #define clear_bit(dst, bit) ((dst) &= ~ _BV((bit)))
 #define set_low(dst, bit) clear_bit((dst), (bit))
 
+
+#define set_mask(dst, mask) ((dst) |= (mask))
+#define clear_mask(dst, mask) (dst &= ~(mask))
+
+
 #define check_bit(dst, bit) ((dst) & _BV((bit)))
 #define toggle_bit(dst, bit) ((dst) ^= _BV((bit)))
 #define concat_bytes(high, low) (((high) << 8) | (low))

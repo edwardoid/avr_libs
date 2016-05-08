@@ -25,7 +25,9 @@
 
 #include <stdint.h>
 #include <avr/io.h>
-#include "my_types.h"
+#include <my_types.h>
+#include <my_stdlib.h>
+#include <bitman.h>
 
 #define SPI_DDR		DDRB
 #define SPI_PORT	PORTB
@@ -67,7 +69,10 @@ uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, volatile ddr_ptr_
 /**
 	Initialize SPI on AVR with 1 slave connected to the DDRB and PB2 @see spi_init_as_master_ex()
 */
-#define spi_init_as_master(clk, mode) spi_init_as_master_ex(NULL, 1, NULL, clk, mode)
+FORCE uint8_t spi_init_as_master(uint8_t clk, uint8_t mode)
+{
+	return spi_init_as_master_ex(NULL, 1, NULL, clk, mode);
+}
 
 void	spi_set_master_bit_first(uint8_t val);
 
@@ -83,17 +88,34 @@ uint8_t	spi_init_as_slave(uint8_t clk, uint8_t mode);
 
 char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port);
 
-#define spi_write_byte(data) spi_write_byte_ss( (data), SPI_SS, & SPI_PORT)
+FORCE char spi_write_byte(char data)
+{
+	return spi_write_byte_ss( (data), SPI_SS, & SPI_PORT);
+}
 
 byte spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port);
 
-#define spi_write(buff, sz) spi_write_ss( buff, sz, SPI_SS, & SPI_PORT);
+FORCE byte spi_write(char* buff, uint8_t sz)
+{
+	return spi_write_ss( buff, sz, SPI_SS, & SPI_PORT);
+}
 
 char spi_read();
 
-#define spi_enabeld() test_bit(SPSR, SPE)
-#define spi_is_master() test_bit(SPSR, MSTR)
-#define spi_is_slave() !(test_bit(SPSR, MSTR))
+FORCE uint8_t spi_enabeld()
+{
+	return test_bit(SPSR, SPE);
+}
+
+FORCE uint8_t spi_is_master()
+{
+	return test_bit(SPSR, MSTR);
+}
+
+FORCE uint8_t spi_is_slave()
+{
+	return !(test_bit(SPSR, MSTR));
+}
 
 #endif // F_SPI
 

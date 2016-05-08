@@ -20,7 +20,7 @@
 #ifndef PWM_T1_H
 #define PWM_T1_H
 
-#include "config.h"
+#include <lib_ex_config.h>
 
 #ifdef F_PWM
 

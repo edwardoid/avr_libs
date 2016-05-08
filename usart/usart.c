@@ -46,6 +46,24 @@ char	usart_read_byte()
 
 	return USART_DATA_REG;
 }
+
+uint16_t	usart_read_str(char* buff, uint16_t sz)
+{
+	uint16_t count = 0;
+	do
+	{
+		*buff = usart_read_byte();
+		++count;
+		if(*buff == '\0')
+		{
+			return count;
+		}
+		++buff;
+		--sz;
+	}
+	while(sz);
+	return count;
+}
 	
 void	usart_write_byte(char data)
 {

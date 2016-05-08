@@ -34,6 +34,8 @@
 void	usart_init (uint32_t baud_rate);
 
 char	usart_read_byte();
+
+uint16_t	usart_read_str(char* buff, uint16_t sz);
 	
 void	usart_write_byte(char data);
 

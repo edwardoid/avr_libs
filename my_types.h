@@ -39,4 +39,6 @@ typedef struct
 	pin_num_t	pin;
 } pin_cfg_t;
 
+typedef void (*callback_t) (void*);
+
 #endif // MY_TYPES_H

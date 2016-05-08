@@ -32,4 +32,7 @@ void	itoa(int32_t val, char * str);
 
 void	ftoa(float	val, uint8_t precision, char*	str);
 
+
+#define FORCE inline __attribute__((always_inline))
+
 #endif /* MY_STDLIB_H_ */

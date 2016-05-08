@@ -52,10 +52,21 @@
 #define ADC7 (_BV(MUX2) | _BV(MUX1) | _BV(MUX0))
 
 
+FORCE void adc_divide_by(div)
+{
+	(ADCSRA = (ADCSRA & ~0x7) | div);
+}
 
-#define		adc_divide_by(div) (ADCSRA = (ADCSRA & ~0x7) | div)
-#define		adc_select_reference(source) ADMUX = (ADMUX & ~(_BV(REFS1) | _BV(REFS0))) | source
-#define		adc_select(pin) ADMUX = (ADMUX & ~ADC7) | pin
+FORCE void adc_select_reference(uint8_t source)
+{
+	ADMUX = (ADMUX & ~(_BV(REFS1) | _BV(REFS0))) | source;
+}
+
+FORCE void adc_select(utint8_t pin)
+{
+	ADMUX = (ADMUX & ~ADC7) | pin;
+}
+
 uint16_t 	adc_read(uint8_t adc);
 
 #endif // F_ADC

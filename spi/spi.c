@@ -199,9 +199,13 @@ uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, ddr_ptr_t ss_ddr,
 void spi_set_master_bit_first(uint8_t val)
 {
 	if(val)
+	{
 		set_bit(SPDR, DORD);
+	}
 	else
+	{
 		clear_bit(SPDR, DORD);
+	}
 }
 
 uint8_t	spi_init_as_slave(uint8_t clk, uint8_t mode)
@@ -241,7 +245,8 @@ char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port)
 			set_low(*ss_port, ss_pin);
 		}
 	}
-	else {
+	else
+	{
 		while(test_bit(SPI_PORT, SPI_SS)); // wait for master
 	}
 	
@@ -275,11 +280,14 @@ byte spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port)
 }
 
 #ifdef SPI_USE_BUFFER
+
 char spi_read()
 {
 	toggle_bit(PORTD, PD7);
 	while(spi_read_cursor == NULL || spi_write_cursor == NULL || spi_bytes_available == 0)
+	{
 		tu_delay_us(100);
+	}
 	toggle_bit(PORTD, PD7);
 	byte data = *spi_read_cursor;
 	--spi_bytes_available;
@@ -288,11 +296,14 @@ char spi_read()
 }
 
 #else
+
 char spi_read()
 {
-	while(!(SPSR & (1<<SPIF)));    // wait until all data is received
+	while(!(SPSR & (1<<SPIF))) {}   // wait until all data is received
+    
     return SPDR;
 }
+
 #endif // SPI_BUFFER_LEN
 
 #ifdef SPI_USE_BUFFER

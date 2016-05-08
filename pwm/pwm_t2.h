@@ -19,11 +19,11 @@
 #ifndef PWM_T2_H
 #define PWM_T2_H
 
-#include "config.h"
+#include <lib_ex_config.h>
 
 #ifdef F_PWM
 
-#include "bitman.h"
+#include <bitman.h>
 #include <inttypes.h>
 #include <avr/io.h>
 

@@ -21,10 +21,10 @@
 
 #include <avr/io.h>
 
-#include "config.h"
+#include <lib_ex_config.h>
 #ifdef F_PWM
 
-#include "bitman.h"
+#include <bitman.h>
 
 #define pwm_t1_disable()                   clear_bit(TCCR1B, WGM13);    clear_bit(TCCR1B, WGM12);   \
                                            clear_bit(TCCR1A, WGM11);    clear_bit(TCCR1A, WGM10);

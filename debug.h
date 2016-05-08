@@ -20,7 +20,6 @@
 #define DEBUG_H
 
 #include <usart/usart.h>
-#include "time_utils_counters.h"
 
 #define ENABLE_USART_DEBUGGING 1
 

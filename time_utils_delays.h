@@ -17,14 +17,28 @@
 */
 
 #ifndef TIME_UTILS_H
+
 #define TIME_UTILS_H
 #include <util/delay.h>
+
 #define LOOP_CYCLES 8 				//Number of cycles that the loop takes
 
-#define tu_delay_us(num) tu_delay_cycles((num) / ( 8 * ( 1 / (F_CPU / 1000000.))))
-#define tu_delay_ms(num) tu_delay_cycles((num) / ( 8 * ( 1 / (F_CPU / 1000.   ))))
-
+#include <my_stdlib.h>
 #include <inttypes.h>
-void tu_delay_cycles(uint32_t cycles);
+
+FORCE void tu_delay_cycles(uint16_t cycles)
+{
+	while(--cycles) asm volatile("nop");
+}
+
+FORCE void tu_delay_us(uint16_t us)
+{
+	tu_delay_cycles((us) / ( 8 * ( 1 / (F_CPU / 1000000.))));
+}
+
+FORCE void tu_delay_ms(uint16_t ms)
+{
+	tu_delay_cycles((ms) / ( 8 * ( 1 / (F_CPU / 1000.   ))));
+}
 
 #endif // TIME_UTILS_H

@@ -1,6 +1,6 @@
 .PHONY: all socket_controller
 
-all: rc522 clean
+all: rc522
 
 socket_controller:
 	make -C socket_controller all
