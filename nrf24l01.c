@@ -231,9 +231,8 @@ byte nrf24l01_init(nrf24l01_conf_t* dev, ddr_ptr_t ce, ddr_ptr_t ss)
     set_low(*dev->ce_port, dev->ce_pin); // Power down mode
     
     nrf24l01_write_register(dev, NRF24L01_CONFIG, NRF24L01_EN_CRC | NRF24L01_CRCO);  // enable CRC16
-    nrf24l01_up(dev);
-    
     nrf24l01_set_retries(dev, 5, 15);
+    nrf24l01_write_register(dev, NRF24L01_NRF_STATUS, NRF24L01_TX_DS | NRF24L01_RX_DR | NRF24L01_MAX_RT);
     if(nrf24l01_set_speed(dev, NRF24L01_250KBPS))
     {
         if(NRF24L01_P)
@@ -265,6 +264,9 @@ byte nrf24l01_init(nrf24l01_conf_t* dev, ddr_ptr_t ce, ddr_ptr_t ss)
     spi_write_byte_ss(NRF24L01_ACTIVATE, dev->ss_pin, dev->ss_port);
     spi_write_byte_ss(0x73, dev->ss_pin, dev->ss_port);
     set_high(*dev->ss_port, dev->ss_pin);
+    
+    nrf24l01_flush_rx(dev);
+    nrf24l01_flush_tx(dev);
     return nrf24l01_read_register(dev, NRF24L01_CONFIG);
 }
 
@@ -794,13 +796,13 @@ void nrf24l01_retransmit_last(nrf24l01_conf_t* dev)
 
 void nrf24l01_wait_for_transmit(nrf24l01_conf_t* dev)
 {
-    while(!nrf24l01_tx_is_empty(dev) || (nrf24l01_get_status(dev) & NRF24L01_MAX_RT))
+    while(!nrf24l01_tx_is_empty(dev) || (nrf24l01_get_status(dev) & (NRF24L01_MAX_RT | NRF24L01_TX_DS)))
     {
         set_high(*dev->ce_port, dev->ce_pin);
-        tu_delay_us(15);
+        tu_delay_ms(15);
+        set_low(*dev->ce_port, dev->ce_pin);
     }
     
-    set_low(*dev->ce_port, dev->ce_pin);
 }
 
 uint8_t nrf24l01_read_payload(nrf24l01_conf_t* dev, byte* buffer, uint8_t length)
@@ -833,6 +835,7 @@ uint8_t nrf24l01_read_payload(nrf24l01_conf_t* dev, byte* buffer, uint8_t length
 
 uint8_t nrf24l01_prepare_for_read(nrf24l01_conf_t* dev, uint8_t pipe)
 {
+    nrf24l01_flush_tx(dev);
     nrf24l01_set_address_width(dev, dev->pipe_addr_len);
     nrf24l01_write_pipe_rx_address(dev, pipe);
     nrf24l01_up(dev); // go to Standby-I mode
@@ -900,6 +903,11 @@ uint8_t nrf24l01_write_payload(nrf24l01_conf_t* dev, byte* data, uint8_t length,
     }
 
     set_low(*dev->ss_port, dev->ss_pin);
+    set_high(*dev->ce_port, dev->ce_pin); // Goto TX settling mode
+    tu_delay_us(20);
+    set_low(*dev->ce_port, dev->ce_pin); // Goto TX settling mode
+    
+    nrf24l01_print_status(dev);
     return length - blank;
 }
 
@@ -936,7 +944,6 @@ byte nrf24l01_prepare_for_write_to_addr(nrf24l01_conf_t* dev, byte* address, uin
     }
     nrf24l01_write_pipe_tx_address(dev, address, dev->pipe_addr_len);
     nrf24l01_set_payload_size(dev, 0, payload_length);
-    set_high(*dev->ce_port, dev->ce_pin); // Goto TX settling mode
     return nrf24l01_get_status(dev);
 }
 
