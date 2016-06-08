@@ -38,10 +38,18 @@
 	is compared to the OCRn register, when a compare match
 	occurs the TOVn bit is set in the TIFR register.
 */
-#define TIMER0_CTC_MODE 2
 
-#define TIMER1_CTC_1_MODE 4
-#define TIMER1_CTC_2_MODE 12
+
+#define TIMER0_PWM_PHASE_CORRECTED_0XFF 1
+#define TIMER0_CTC_MODE 2
+#define TIMER0_PWM_FAST_PWM_0xFF 3
+#define TIMER0_PHASE_CORRECTED 5
+#define TIMER0_FAST_PWM 7
+
+#define TIMER1_CTC_OCR1A_MODE 4
+#define TIMER1_CTC_ICR1_MODE 12
+
+#define TIMER2_CTC_MODE 2
 
 
 #endif // F_TIMERS

@@ -24,7 +24,18 @@
 
 void timer_0_cb(void* vect)
 {
-	usart_write_string_line("Tick!");
+	usart_write_string_line("Tick0!");
+}
+
+void timer_1_cb(void* vect)
+{
+	usart_write_string_line("Tick1!");
+}
+
+
+void timer_2_cb(void* vect)
+{
+	usart_write_string_line("Tick2!");
 }
 
 int main()
@@ -33,14 +44,7 @@ int main()
 	usart_init(9600UL);
 	
 	usart_write_string("Starting....\n\0");
-	timers_start_0(200, TIMER0_CTC_MODE, TIMER_PRESCALE_1024, &timer_0_cb);
-
-
+	timers_start_2_ctc(200, TIMER_PRESCALE_256, &timer_2_cb);
 	while(1) {
-		char buff[256];
-		memset(buff, '\0', 255);
-		buff[255] = '\0';
-		usart_read_str(buff, 255);
-		usart_write_string(buff);
 	}
 }

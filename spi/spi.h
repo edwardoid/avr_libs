@@ -64,7 +64,7 @@
 	@param mode connectin mode. @see spi_set_mode()
 	@return 0 if SPI was successfully initialized. uint8_t(-1) if failed.
 */
-uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, volatile ddr_ptr_t ss_ddr, uint8_t clk, uint8_t mode);
+uint8_t	spi_init_as_master_ex(uint8_t* ss_pins, uint8_t count, ddr_ptr_t ss_ddr, uint8_t clk, uint8_t mode);
 
 /**
 	Initialize SPI on AVR with 1 slave connected to the DDRB and PB2 @see spi_init_as_master_ex()
