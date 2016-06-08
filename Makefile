@@ -12,6 +12,7 @@ MKDIR := mkdir
 OBJ_DUMP := avr-objdump
 SIZE := avr-size
 DU := du
+MAKE=make
 
 SOURCES_SUBDIRS = timers
 SOURCES_SUBDIRS += usart
@@ -25,8 +26,10 @@ SOURCES_SUBDIRS += nrf24l01
 SOURCES_SUBDIRS += rc522
 
 
+
+
 OBJECTS = $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/*.c))
-OBJECTS += $(patsubst %.c, %.o, $(wildcard $(SOURCES_SUBDIRS)/*.c))
+OBJECTS += $(foreach dir,$(SOURCES_SUBDIRS), $(patsubst %.c, %.o, $(wildcard $(dir)/*.c)))
 
 OBJECT_DIRS = $(addprefix $(OUT_DIR),$(SOURCES_SUBDIRS))
 OBJECT_FILES += $(addprefix $(OUT_DIR),$(OBJECTS))
@@ -41,8 +44,8 @@ CFLAGS += -fpack-struct -fshort-enums -ffunction-sections -fdata-sections
 CFLAGS += -Wall
 
 %.o: %.c $(HEADERS) prepare
-	@ echo $<
-	@ $(CC) $(CFLAGS) -mmcu=$(MCU) -c $< -o $(OUT_DIR)/$@
+	echo $<
+	$(CC) $(CFLAGS) -mmcu=$(MCU) -c $< -o $(OUT_DIR)/$@
 
 
 all: prepare libs
@@ -60,11 +63,11 @@ prepare:
 
 examples: libs
 	@echo "Examples"
-	@ cd $(SRC_DIR)/examples && make all
+	@ cd $(SRC_DIR)/examples && $(MAKE) all
 
 clean: prepare
 	@ $(RM) -f $(OUT_DIR)$(LIB_NAME).a
 	@ $(RM) -f $(OBJECT_FILES)
-	@ cd $(SRC_DIR)/examples && make clean
+	@ cd $(SRC_DIR)/examples && $(MAKE) clean
 
 .PHONY: all libs clean prepare examples socket_controller
