@@ -23,8 +23,10 @@
 
 #ifdef F_ADC
 
+#include <my_stdlib.h>
 #include <avr/io.h>
 #include "bitman.h"
+#include "my_types.h"
 #include <stdint.h>
 
 #define ADC_SRC_AREF	0
@@ -52,7 +54,7 @@
 #define ADC7 (_BV(MUX2) | _BV(MUX1) | _BV(MUX0))
 
 
-FORCE void adc_divide_by(div)
+FORCE void adc_divide_by(byte div)
 {
 	(ADCSRA = (ADCSRA & ~0x7) | div);
 }
@@ -62,8 +64,9 @@ FORCE void adc_select_reference(uint8_t source)
 	ADMUX = (ADMUX & ~(_BV(REFS1) | _BV(REFS0))) | source;
 }
 
-FORCE void adc_select(utint8_t pin)
+FORCE void adc_select(uint8_t pin)
 {
+	ADMUX &= 0xf0;
 	ADMUX = (ADMUX & ~ADC7) | pin;
 }
 

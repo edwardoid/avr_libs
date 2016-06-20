@@ -22,16 +22,14 @@
 	
 uint16_t  adc_read(uint8_t adc)
 {
-	adc_select(adc);
-	set_bit(ADCSRA, ADEN);
-	clear_bit(ADMUX, ADLAR);
-	set_bit(ADCSRA, ADSC);
-	
-	while(test_bit(ADCSRA, ADIF));
+   adc_select(adc);
+   ADCSRA |= _BV(ADEN);
 
-	uint16_t v  = ADC;
-	clear_bit(ADCSRA, ADIF);
-	return v;
+   set_mask(ADCSRA, _BV(ADEN) | _BV(ADSC));  // Start conversion
+   while(!bit_is_set(ADCSRA,ADIF));    // Loop until conversion is complete
+   set_bit(ADCSRA, ADIF);
+ 
+   return(ADC);
 }
 
 #endif // F_ADC
