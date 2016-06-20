@@ -30,103 +30,30 @@
 
 static volatile uint8_t current_pwm_mode = 0; // Disabled
 
+
+#define PWM_T1_WGM11_WGM10_MASK (_BV(WGM11) | _BV(WGM10))
+#define PWM_T1_WGM13_WGM12_MASK (_BV(WGM13) | _BV(WGM12))
+
+
 void pwm_t1_start(uint8_t mode, uint16_t top, uint8_t prescale)
 {
-	
 	pwm_t1_stop();
 
 	if(mode == PWM_T1_DISABLED)
 	{
 		return;
 	}
-	switch(mode)
-	{
-		case PWM_T1_PHASE_CORRECTED_8BIT: /* TOP = 0x00FF */
-		{
-			set_bit(TCCR1A, WGM10);
-			break;
-		}
-		case PWM_T1_PHASE_CORRECTED_9BIT:/* TOP = 0x01FF */
-		{
-			set_bit(TCCR1A, WGM11);
-			break;
-		}
-		case PWM_T1_PHASE_CORRECTED_10BIT: /* TOP = 0x03FF */
-		{
-			set_mask(TCCR1A, _BV(WGM11) | _BV(WGM10));
-			break;
-		}
 
-		case PWM_T1_FAST_8BIT: /* top = 0xFF */
-		{
-			set_bit(TCCR1B, WGM12);
-			set_bit(TCCR1A, WGM10);
-			break;
-		}
-		case PWM_T1_FAST_9BIT: /* top = 0xFF */
-		{
-			set_bit(TCCR1B, WGM12);
-			set_bit(TCCR1A, WGM11);
-			break;
-		}
-		case PWM_T1_FAST_10BIT: /* top = 0xFF */
-		{
-			set_bit(TCCR1B, WGM12);
-			set_mask(TCCR1A, _BV(WGM11) | _BV(WGM12));
-			break;
-		}
-		case PWM_T1_PHASE_FREQ_CORRECTED_ICR1: /* TOP = ICR1 */
-		{
-			set_bit(TCCR1B, WGM13);
-			ICR1 = top;
-			break;
-		}
-
-		case PWM_T1_PHASE_FREQ_CORRECTED_OCR1A: /* TOP = OCR1A */
-		{
-			set_bit(TCCR1B, WGM13);
-			set_bit(TCCR1A, WGM10);
-			OCR1A = top;
-			break;
-		}
-
-		case PWM_T1_PHASE_CORRECTED_ICR1: /* TOP = ICR1 */
-		{
-			set_bit(TCCR1B, WGM13);
-			set_bit(TCCR1A, WGM11);
-			ICR1 = top;
-			break;
-		}
-		case PWM_T1_PHASE_CORRECTED_OCR1A: /* TOP = OC1A */
-		{
-			set_bit(TCCR1B, WGM13);
-			set_mask(TCCR1A, _BV(WGM10) | _BV(WGM11));
-			OCR1A = top;
-			break;
-		}
-		case PWM_T1_FAST_ICR1: /* top = ICR1 */
-		{
-			set_mask(TCCR1B, _BV(WGM13) | _BV(WGM12));
-			set_bit(TCCR1A, _BV(WGM10));
-			ICR1 = top;
-			break;
-		}
-		case PWM_T1_FAST_OCR1A: /* top = OCR1A */
-		{
-			set_mask(TCCR1B, _BV(WGM13) | _BV(WGM12));
-			set_mask(TCCR1A, _BV(WGM10) | _BV(WGM11));
-			OCR1A = top;
-			break;
-		}
-	}
+	set_mask(TCCR1A, PWM_T1_WGM11_WGM10_MASK & mode);
+	set_mask(TCCR1B, PWM_T1_WGM13_WGM12_MASK & mode);
 
 	timers_set_prescaler_1(prescale);
 }
 
 void pwm_t1_stop()
 {
-	clear_mask(TCCR1B, _BV(WGM13) | _BV(WGM12));
-	clear_mask(TCCR1A, _BV(WGM10) | _BV(WGM11));
+	clear_mask(TCCR1A, PWM_T1_WGM11_WGM10_MASK);
+	clear_mask(TCCR1B, PWM_T1_WGM13_WGM12_MASK);
 }
 
 void pwm_t1_set_invert_mode(uint8_t invert)

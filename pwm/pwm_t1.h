@@ -26,18 +26,18 @@
 
 #include "my_types.h"
 
-#define PWM_T1_PHASE_CORRECTED_8BIT 1 /* TOP = 0x00FF */
-#define PWM_T1_PHASE_CORRECTED_9BIT 2 /* TOP = 0x01FF */
-#define PWM_T1_PHASE_CORRECTED_10BIT 3 /* TOP = 0x03FF */
-#define PWM_T1_FAST_8BIT 5 /* top = 0xFF */
-#define PWM_T1_FAST_9BIT 6 /* top = 0xFF */
-#define PWM_T1_FAST_10BIT 7 /* top = 0xFF */
-#define PWM_T1_PHASE_FREQ_CORRECTED_ICR1 8 /* TOP = ICR1 */
-#define PWM_T1_PHASE_FREQ_CORRECTED_OCR1A 9 /* TOP = OCR1A */
-#define PWM_T1_PHASE_CORRECTED_ICR1 10 /* TOP = ICR1 */
-#define PWM_T1_PHASE_CORRECTED_OCR1A 11 /* TOP = OCR1A */
-#define PWM_T1_FAST_ICR1 14 /* top = ICR1 */
-#define PWM_T1_FAST_OCR1A 15 /* top = OCR1A */
+#define PWM_T1_PHASE_CORRECTED_8BIT				(_BV(WGM10))										/* TOP = 0x00FF */
+#define PWM_T1_PHASE_CORRECTED_9BIT 			(_BV(WGM11))										/* TOP = 0x01FF */
+#define PWM_T1_PHASE_CORRECTED_10BIT 			(_BV(WGM11)) | (_BV(WGM10)))						/* TOP = 0x03FF */
+#define PWM_T1_FAST_8BIT 						(_BV(WGM12) | _BV(WGM10) )							/* top = 0xFF */
+#define PWM_T1_FAST_9BIT						(_BV(WGM12) | _BV(WGM11))							/* top = 0xFF */
+#define PWM_T1_FAST_10BIT						(_BV(WGM12) | _BV(WGM11) | _BV(WGM10))				/* top = 0xFF */
+#define PWM_T1_PHASE_FREQ_CORRECTED_ICR1		(_BV(WGM13))										/* TOP = ICR1 */
+#define PWM_T1_PHASE_FREQ_CORRECTED_OCR1A		(_BV(WGM13) | _BV(WGM10))							/* TOP = OCR1A */
+#define PWM_T1_PHASE_CORRECTED_ICR1 			(_BV(WGM13) | _BV(WGM11))							/* TOP = ICR1 */
+#define PWM_T1_PHASE_CORRECTED_OCR1A 			(_BV(WGM13) | _BV(WGM11) | _BV(WGM10))				/* TOP = OCR1A */
+#define PWM_T1_FAST_ICR1 						(_BV(WGM13) | _BV(WGM12) | _BV(WGM10))				/* top = ICR1 */
+#define PWM_T1_FAST_OCR1A 						(_BV(WGM13) | _BV(WGM12) | _BV(WGM11) | _BV(WGM10))	/* top = OCR1A */
 
 
 #define PWM_T1_NON_INVERTED_OC1A (_BV(COM1A1)) 
