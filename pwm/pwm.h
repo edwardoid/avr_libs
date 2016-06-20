@@ -23,8 +23,12 @@
 
 #ifdef F_PWM
 
+#define PWM_INVERTED 1
+#define PWM_NON_INVERTED 0
+
 #include "pwm_t2.h"
 #include "pwm_t1.h"
+#include "pwm_t0.h"
 
 #endif // F_PWM
 

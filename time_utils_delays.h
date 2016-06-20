@@ -26,17 +26,17 @@
 #include <my_stdlib.h>
 #include <inttypes.h>
 
-FORCE void tu_delay_cycles(uint16_t cycles)
+FORCE void tu_delay_cycles(unsigned long cycles)
 {
 	while(--cycles) asm volatile("nop");
 }
 
-FORCE void tu_delay_us(uint16_t us)
+FORCE void tu_delay_us(unsigned long us)
 {
 	tu_delay_cycles((us) / ( 8 * ( 1 / (F_CPU / 1000000.))));
 }
 
-FORCE void tu_delay_ms(uint16_t ms)
+FORCE void tu_delay_ms(unsigned long ms)
 {
 	tu_delay_cycles((ms) / ( 8 * ( 1 / (F_CPU / 1000.   ))));
 }

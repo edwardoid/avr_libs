@@ -34,14 +34,14 @@
 
 #if defined(F_TIMERS_ENABLE_CALLBACKS)
 void timers_start_0_normal(uint16_t prescale, callback_t cb); // Normal Mode upto 0xFF
-void timers_start_0_ctc(uint8_t cycle, uint16_t prescale, callback_t cb); // CRC mode, up to OCR0A 
+void timers_start_0_ctc(uint8_t cycle, uint16_t prescale, callback_t cb); // CTC mode, up to OCR0A 
 
 
 void timers_start_1_normal(uint16_t prescale, callback_t cb);
 void timers_start_1(uint16_t cycle, uint8_t mode, uint16_t prescale, callback_t cb);
 
 void timers_start_2_normal(uint16_t prescale, callback_t cb); // Normal Mode upto 0xFF
-void timers_start_2_ctc(uint8_t cycle, uint16_t prescale, callback_t cb); // CRC mode, up to OCR0A 
+void timers_start_2_ctc(uint8_t cycle, uint16_t prescale, callback_t cb); // CTC mode, up to OCR0A 
 
 #else
 void timers_start_0_normal(uint16_t prescale);
