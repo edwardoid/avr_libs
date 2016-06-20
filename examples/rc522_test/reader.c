@@ -21,6 +21,9 @@
 #include <avr/interrupt.h>
 #include <usart/usart.h>
 #include <timers/timers.h>
+#include <pwm/pwm.h>
+#include <time_utils_delays.h>
+#include <adc/adc.h>
 
 void timer_0_cb(void* vect)
 {
@@ -40,11 +43,43 @@ void timer_2_cb(void* vect)
 
 int main()
 {
-	
+	DDRD |= (1 << DDD6);
 	usart_init(9600UL);
+	usart_write_string_line("Starting...");
 	
-	usart_write_string("Starting....\n\0");
-	timers_start_2_ctc(200, TIMER_PRESCALE_256, &timer_2_cb);
-	while(1) {
-	}
+    OCR0A = 1;
+    // set PWM for 50% duty cycle
+
+
+    TCCR0A |= (1 << COM0A1);
+    // set none-inverting mode
+
+    TCCR0A |= (1 << WGM01) | (1 << WGM00);
+    // set fast PWM Mode
+
+    TCCR0B |= (1 << CS00 ) | (1 << CS01);
+    // set prescaler to 8 and starts PWM
+
+
+    uint8_t duty = 1;
+    usart_write_num(duty);
+	usart_write_byte('\n');
+	adc_select_reference(ADC_SRC_INT);
+	adc_divide_by(ADC_DIV_128);
+	uint16_t prev = 0;
+	usart_write_num(prev);
+    while (1)
+    {
+    	uint16_t v = adc_read(ADC0);
+
+    	if(v == prev)
+    	{
+    		continue;
+    	}
+    	usart_write_num(v);
+    	usart_write_byte('\n');
+    	prev = v;
+    	OCR0A = 5;
+        // we have a working Fast PWM
+    }
 }

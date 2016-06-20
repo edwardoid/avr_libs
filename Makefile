@@ -10,7 +10,7 @@ AR := avr-ar
 RN := rm
 MKDIR := mkdir
 OBJ_DUMP := avr-objdump
-SIZE := avr-size
+SIZE := avr-size	
 DU := du
 MAKE=make
 
@@ -57,7 +57,7 @@ libs: $(OBJECTS) $(SUBLIBS)
 #	$(SIZE) --format=avr --mcu=$(MCU) $(OUT_DIR)/$(LIB_NAME).a
 #	@ $(DU) -h $(OUT_DIR)/$(LIB_NAME).a
 
-prepare:
+prepare:	
 	$(MKDIR) -p $(OBJECT_DIRS)
 
 
