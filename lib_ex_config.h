@@ -29,7 +29,7 @@
 #define F_TIMERS
 #define F_TIMERS_ENABLE_CALLBACKS
 //#define F_1WIRE
-//#define F_ADC
+#define F_ADC
 #define F_PWM
 //#define F_PCD8544
 //#define F_SD
