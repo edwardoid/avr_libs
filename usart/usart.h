@@ -41,7 +41,9 @@ void	usart_write_byte(char data);
 
 void	usart_write_string(const char* s);
 
-void	usart_write_num(int32_t num);
+void	usart_write_num(int num);
+
+int	usart_read_num();
 
 void	usart_write_string_line(const char* s);
 

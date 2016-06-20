@@ -76,14 +76,30 @@ void	usart_write_string(const char* s)
 {
 	while (*s)
 		usart_write_byte(*s++);
+
+	usart_write_byte('\0');
 }
 
-void	usart_write_num(int32_t num)
+void	usart_write_num(int num)
 {
 	char str[10];
 	memset(str, '\0', 10);
-	itoa(num, str);
+	sprintf(str, "%d", num);
 	usart_write_string(str);
+}
+
+
+int	usart_read_num()
+{
+	char str[10];
+	memset(str, '\0', 10);
+	if(0 == usart_read_str(str, 10))
+	{
+		return 0;
+	}
+	int res = 0;
+	sscanf(str, "%d", &res);
+	return res;
 }
 
 void	usart_write_string_line(const char* s)
