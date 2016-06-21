@@ -1,8 +1,8 @@
-.PHONY: all socket_controller rc522 adc servo
+.PHONY: all socket_controller rc522 adc timers servo
 
 MAKE=make
 
-all: servo
+all: timers
 
 socket_controller:
 	$(MAKE) -C socket_controller all
@@ -16,6 +16,9 @@ rc522:
 
 adc:
 	cd adc && $(MAKE) all
+
+timers:
+	cd timers && $(MAKE) all
 
 servo:
 	cd servo && $(MAKE) all

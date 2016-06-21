@@ -42,7 +42,7 @@ int main()
     // set none-inverting mode
 
     //pwm_t0_start(PWM_T0_FAST, 230, TIMER_PRESCALE_64);
-    pwm_t1_start(PWM_T1_FAST_OCR1A, 60, TIMER_PRESCALE_8);
+    pwm_t1_start(PWM_T1_FAST_OCR1A, 60, TIMER1_PRESCALE_8);
     pwm_t1_set_invert_mode(PWM_T1_NON_INVERTED_OC1A);
     //OCR0A = 60;
     OCR1A = 1024;

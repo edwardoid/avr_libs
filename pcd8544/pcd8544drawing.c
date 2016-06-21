@@ -18,7 +18,7 @@
 
 #include "pcd8544drawing.h"
 #include "my_stdlib.h"
-#include "utils.h"
+//#include "utils.h"
 #include "bitman.h"
 #include <avr/pgmspace.h>
 

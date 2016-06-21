@@ -85,10 +85,10 @@ void timer0_set_cycle(byte comparator, uint8_t cycle)
 	sei();
 }
 
-void timer0_set_timeout_ms(uint32_t ms)
+void timer0_set_timeout_us(uint32_t ms)
 {
 	uint32_t freq = F_CPU / (uint32_t) timer0_get_prescaler();
-	uint16_t cycle = ms * freq / 1000;
+	uint16_t cycle = ms * freq;
 	timer1_set_cycle(cycle);
 }
 

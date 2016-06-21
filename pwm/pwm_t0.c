@@ -57,7 +57,7 @@ void pwm_t0_start(uint8_t mode, uint8_t top, uint8_t prescale)
 	}
 	set_bit(TCCR0A, COM0A1);
 	pwm_t0_set_top(top);
-	timers_set_prescaler_0(prescale);
+	timer0_set_prescaler(prescale);
 }
 
 void pwm_t0_set_invert_mode(uint8_t invert)

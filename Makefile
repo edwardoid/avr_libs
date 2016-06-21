@@ -26,8 +26,6 @@ SOURCES_SUBDIRS += nrf24l01
 SOURCES_SUBDIRS += rc522
 
 
-
-
 OBJECTS = $(patsubst %.c, %.o, $(wildcard $(SRC_DIR)/*.c))
 OBJECTS += $(foreach dir,$(SOURCES_SUBDIRS), $(patsubst %.c, %.o, $(wildcard $(dir)/*.c)))
 
@@ -45,14 +43,14 @@ CFLAGS += -Wall
 
 %.o: %.c $(HEADERS) prepare
 	echo $<
-	$(CC) $(CFLAGS) -mmcu=$(MCU) -c $< -o $(OUT_DIR)/$@
+	@ $(CC) $(CFLAGS) -mmcu=$(MCU) -c $< -o $(OUT_DIR)/$@
 
 
 all: prepare libs
 
 
 libs: $(OBJECTS) $(SUBLIBS)
-	@ $(AR) -r $(OUT_DIR)$(LIB_NAME).a $(addprefix $(OUT_DIR),$(OBJECTS))
+	@ $(AR) -r $(OUT_DIR)$(LIB_NAME).a $(addpreбfix $(OUT_DIR),$(OBJECTS))
 #	$(OBJ_DUMP) -h -S $(OUT_DIR)/$(LIB_NAME).a
 #	$(SIZE) --format=avr --mcu=$(MCU) $(OUT_DIR)/$(LIB_NAME).a
 #	@ $(DU) -h $(OUT_DIR)/$(LIB_NAME).a
