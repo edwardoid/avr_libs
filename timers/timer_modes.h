@@ -39,13 +39,21 @@
 	occurs the TOVn bit is set in the TIFR register.
 */
 
-#define TIMER0_NORMAL 0      /* Top 0xFF */
+// Timer/Counter0 [
+#define TIMER0_NORMAL 0x0    /* Top 0xFF */
 #define TIMER0_CTC _BV(WGM01)/* Top OCR0A */
+// ] Timer/Counter0
 
-#define TIMER1_CTC_OCR1A_MODE	(_BV(WGM12))				/* Top OCR1A */
-#define TIMER1_CTC_ICR1_MODE	(_BV(WGM13) | _BV(WGM12))	/* Top ICR1 */
+// Timer/Counter1 [
+#define TIMER1_NORMAL 0x0									/* Top 0xFFFF */
+#define TIMER1_CTC_OCR1A	(_BV(WGM12))				/* Top OCR1A */
+#define TIMER1_CTC_ICR1		(_BV(WGM13) | _BV(WGM12))	/* Top ICR1 */
+// ] Timer/Counter1
 
-#define TIMER2_CTC_MODE 2
+// Timer/Counter2 [
+#define TIMER2_NORMAL	0x00			/* Top 0xFF */
+#define TIMER2_CTC		(_BV(WGM21))	/* Top OCR2 */
+// ] Timer/Counter2
 
 
 #endif // F_TIMERS

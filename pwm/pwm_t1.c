@@ -21,7 +21,7 @@
 #if defined(F_PWM)
 
 #include "pwm_t1.h"
-#include "bitmaN.h"
+#include "bitman.h"
 #include <avr/io.h>
 #include <my_types.h>
 #include "timers/timers.h"

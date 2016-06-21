@@ -16,9 +16,9 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "timer.h"
+#include "timers.h"
 
-#if defined(F_timer)
+#if defined(F_TIMERS)
 
 #include <bitman.h>
 #include <avr/io.h>
@@ -28,99 +28,47 @@
 
 #define DISABLE_POWER_CONSUPTION_MINIMISING set_bit(PRR, PRTIM0)
 
+/*
 static callback_t cb_0 = NULL;
 static callback_t cb_1 = NULL;
 static callback_t cb_2 = NULL;
-
-FORCE void start_1(uint8_t mode, uint16_t prescale)
-{
-	clear_mask(TCCR1A, _BV(WGM11) | _BV(WGM10)); // Normal
-	clear_mask(TCCR1B, _BV(WGM12) | _BV(WGM13)); // Normal
-	switch(mode)
-	{
-		case TIMER1_CTC_OCR1A_MODE:
-		{
-			set_bit(TCCR1B, WGM12);
-			break;
-		}
-		case TIMER1_CTC_ICR1_MODE:
-		{
-			set_mask(TCCR1B, _BV(WGM12) | _BV(WGM13));
-			break;
-		}
-		case TIMER_NORMAL_MODE:
-		{
-			clear_mask(TCCR1A, _BV(WGM11) | _BV(WGM10)); // Normal
-			clear_mask(TCCR1B, _BV(WGM12) | _BV(WGM13));
-			break;
-		}
-		default:
-		{}
-	}
-
-	timer_set_prescaler_1(prescale);
-}
-
-FORCE void start_2(uint8_t mode, uint16_t prescale)
-{
-	clear_mask(TCCR2A, _BV(WGM21) | _BV(WGM20));
-
-	switch(mode)
-	{
-		case TIMER0_CTC_MODE:
-		{
-			set_bit(TCCR2A, WGM21);
-			break;
-		}
-		case TIMER_NORMAL_MODE:
-		{
-			clear_mask(TCCR2A, _BV(WGM21) | _BV(WGM20)); // Normal
-			break;
-		}
-		default:
-		{}
-	}
-
-	clear_mask(TCCR2B, _BV(CS22) | _BV(CS21) | _BV(CS20));
-	timer_set_prescaler_2(prescale);
-}
-
+*/
 
 // [ Start of Timer/Counter0
 
-FORCE void start_0(uint8_t mode, uint16_t prescale)
+void timer0_start(uint8_t mode, uint8_t prescale)
 {
  	cli();
-	clear_mask(TCCR0A, _BV(WGM01) | _BV(WGM00))
-	set_mask(TCC0A, mode);
+	clear_mask(TCCR0A, (_BV(WGM01) | _BV(WGM00)));
+	set_mask(TCCR0A, mode);
  	sei();
-	timer_set_prescaler_0(prescale);
+	timer0_set_prescaler(prescale);
 }
 
 
-void timer0_start_normal(uint16_t prescale)
+void timer0_start_normal(uint8_t prescale)
 {
-	start_0(TIMER_NORMAL_MODE, prescale);
+	timer0_start(TIMER0_NORMAL, prescale);
 }
 
-void timer0_start_ctc(uint16_t prescale)
+void timer0_start_ctc(uint8_t prescale)
 {
-	start_0(TIMER0_CTC_MODE, prescale);
+	timer0_start(TIMER0_CTC, prescale);
 }
 
 #define TIMER0_PRESCALE_MASK (_BV(CS02) | _BV(CS01) | _BV(CS00))  
 
-void timer0_set_prescaler(uint16_t prescale)
+void timer0_set_prescaler(uint8_t prescale)
 {
   cli();
 	clear_mask(TCCR0B, TIMER0_PRESCALE_MASK);
 	set_mask(TCCR0B, TIMER0_PRESCALE_MASK & prescale);
   sei();
-}
+}	
 
-void timer0_get_prescale()
+uint8_t timer0_get_prescale()
 {
-	(TCCR0B & TIMER0_PRESCALE_MASK )
+	return (TCCR0B & TIMER0_PRESCALE_MASK);
 }
 
 void timer0_set_cycle(byte comparator, uint8_t cycle)
@@ -137,15 +85,22 @@ void timer0_set_cycle(byte comparator, uint8_t cycle)
 	sei();
 }
 
+void timer0_set_timeout_ms(uint32_t ms)
+{
+	uint32_t freq = F_CPU / (uint32_t) timer0_get_prescaler();
+	uint16_t cycle = ms * freq / 1000;
+	timer1_set_cycle(cycle);
+}
+
 void timer0_set_enable_OCIE0x_interrupt(uint8_t OCIE0x, bool_t enable)
 {
-	if(enable === TRUE)
+	if(enable == TRUE)
 	{
-		set_bit(TIMSK0, OCIE0x)
+		set_bit(TIMSK0, OCIE0x);
 	}
 	else
 	{
-		clear_bit(TIMSK0, OCIE0x)
+		clear_bit(TIMSK0, OCIE0x);
 	}
 	sei();
 }
@@ -155,130 +110,129 @@ void timer0_set_enable_OCIE0x_interrupt(uint8_t OCIE0x, bool_t enable)
 // [ Timer/Counter1
 
 
-#define TIMER1_PRESCALE_MASK (_BV(CS12) | _BV(CS11) | _BV(CS10)
 
-void timer1_set_prescaler(uint16_t prescale)
+#define TIMER1_MODE_MASK_11_10 (_BV(WGM11) | _BV(WGM10))
+#define TIMER1_MODE_MASK_13_12 (_BV(WGM13) | _BV(WGM12))
+
+void timer1_start(uint8_t mode, uint8_t prescale)
 {
-  cli();
-  clear_mask(TCCR1B, TIMER1_PRESCALE_MASK);
-  set_mask(TCCR1B, TIMER1_PRESCALE_MASK & prescale);
+	cli();
+	timer1_set_prescaler(prescale);
+
+	clear_mask(TCCR1A, TIMER1_MODE_MASK_11_10);
+	set_mask(TCCR1A, prescale & TIMER1_MODE_MASK_11_10);
+
+	clear_mask(TCCR1B, _BV(WGM13) | _BV(WGM12));
+	set_mask(TCCR1B, prescale & TIMER1_MODE_MASK_13_12);
+
 	sei();
 }
 
-void timer1_start_normal(uint16_t prescale)
+void timer1_start_normal(uint8_t prescale)
 {
-	start_1(TIMER_NORMAL_MODE, prescale);
+	timer1_start(TIMER1_NORMAL, prescale);
+}
 
-	clear_mask(TIMSK1, _BV(TOIE1) | _BV(OCF1A));
-	set_bit(TIMSK1, TOIE1);
+uint8_t timer1_get_mode()
+{
+	return (TCCR1A & TIMER1_MODE_MASK_11_10) | (TCCR1B & TIMER1_MODE_MASK_13_12);
+}
+
+#define TIMER1_PRESCALE_MASK (_BV(CS12) | _BV(CS11) | _BV(CS10))
+
+void timer1_set_prescaler(uint8_t prescale)
+{
+	cli();
+	clear_mask(TCCR1B, TIMER1_PRESCALE_MASK);
+	set_mask(TCCR1B, prescale & TIMER1_PRESCALE_MASK);
 	sei();
 }
 
-
-void timer1_start_1(uint16_t cycle, uint8_t mode, uint16_t prescale)
+uint8_t timer1_get_prescaler()
 {
-	start_1(mode, prescale);
+	return (TCCR1B & TIMER1_PRESCALE_MASK);
+}
 
-	clear_mask(TIMSK1, _BV(TOIE1) | _BV(ICIE1) | _BV(OCF1A));
-
-	if(mode == TIMER1_CTC_OCR1A_MODE)
+void timer1_set_cycle(uint16_t cycle)
+{
+	uint8_t mode = timer1_get_mode();
+	if(mode == TIMER1_CTC_OCR1A)
 	{
 		OCR1A = cycle;
-		set_bit(TIMSK1, OCF1A);
 	}
-	else if(mode == TIMER1_CTC_ICR1_MODE)
+	else if(mode == TIMER1_CTC_ICR1)
 	{
-		set_mask(TIMSK1, _BV(ICIE1) | _BV(TOIE1));
 		ICR1 = cycle;
 	}
+}
+
+void timer1_set_timeout_ms(uint32_t ms)
+{
+	uint32_t freq = F_CPU / (uint32_t) timer1_get_prescaler();
+	uint16_t cycle = ms * freq / 1000;
+	timer1_set_cycle(cycle);
+}
+
+// ] Timer/Counter1
+
+
+
+// [ Timer/Counter2
+
+#define TIMER2_MODE_MASK_21_20 	(_BV(WGM21) | _BV(WGM20))
+#define TIMER2_MODE_MASK_22		(_BV(WGM22))
+#define TIMER1_MODE_MASK (TIMER2_MODE_MASK_22 | TIMER2_MODE_MASK_21_20)
+
+void timer2_start(uint8_t mode, uint8_t prescale)
+{
+	cli();
+	clear_mask(TCCR2A, TIMER2_MODE_MASK_21_20);
+	clear_mask(TCCR2B, TIMER2_MODE_MASK_22);
+	set_mask(TCCR2A, mode & TIMER2_MODE_MASK_21_20);
+	set_mask(TCCR2B, mode & TIMER2_MODE_MASK_22);
+	timer2_set_prescaler(prescale);
 	sei();
 }
-#endif
 
-#define timer_get_prescaler_1() (TCCR1B & TIMER1_PRESCALE_MASK)
-
-void timer_set_prescaler_2(uint16_t prescale)
+void timer2_start_normal(uint8_t prescale)
 {
-	return TCCR0B & TIMER0_PRESCALE_MASK;
+	timer2_start(TIMER2_NORMAL, prescale);
 }
 
-uint16_t timer_get_prescaler_2()
+void timer2_start_ctc(uint8_t prescale)
 {
-	if(test_mask(TCCR2B, _BV(CS21) | _BV(CS20)))
-	{
-		return TIMER_PRESCALE_64;
-	}
-
-	if(test_mask(TCCR2B, _BV(CS21)))
-	{
-		return TIMER_PRESCALE_8;
-	}
-
-	if(test_mask(TCCR2B, _BV(CS22) | _BV(CS20)))
-	{
-		return TIMER_PRESCALE_1024;
-	}
-
-	if(test_mask(TCCR2B, _BV(CS22)))
-	{
-		return TIMER_PRESCALE_256;
-	}
-
-	if(test_mask(TCCR2B , _BV(CS20)))
-	{
-		return TIMER_PRESCALE_0;
-	}
-
-	return -1;
+	timer2_start(TIMER2_CTC, prescale);
 }
 
-void timer_set_cycle_1(uint16_t cycle)
+#define TIMER2_PRESCALE_MASK (_BV(CS22) | _BV(CS21) | _BV(CS20))
+
+void timer2_set_prescaler(uint8_t prescale)
 {
-	uint16_t p = timer_get_prescaler_1();
-	clear_mask(TCCR1B, _BV(CS12) | _BV(CS11) | _BV(CS10));
-	if(test_bit(TCCR1B, WGM13))
-	{
-		ICR1 = cycle;
-		set_mask(TIMSK1, _BV(ICIE1) | _BV(TOIE1));
-	}
-	else
-	{
-		OCR1A = cycle;
-		set_bit(TIMSK1, OCF1A);
-	}
-	timer_set_prescaler_1(p);
+	cli();
+	clear_mask(TCCR2B, TIMER2_PRESCALE_MASK);
+	set_mask(TCCR2B, TIMER2_PRESCALE_MASK & prescale);
+	sei();
 }
 
-void timer_set_cycle_2(uint8_t cycle)
+uint8_t timer2_get_prescaler()
 {
-	uint16_t p = timer_get_prescaler_2();
-	clear_mask(TCCR2B, _BV(CS22) | _BV(CS21) | _BV(CS20));
+	return TCCR2B & TIMER2_PRESCALE_MASK;
+}
+
+void timer2_set_cycle(uint16_t cycle)
+{
 	OCR2A = cycle;
-	timer_set_prescaler_2(p);
 }
 
-void timer_set_timeout_ms_0(uint32_t ms)
+void timer2_set_timeout_ms(uint32_t ms)
 {
-	uint32_t freq = F_CPU / (uint32_t) timer_get_prescaler_0();
+	uint32_t freq = F_CPU / (uint32_t) timer2_get_prescaler();
 	uint16_t cycle = ms * freq / 1000;
-	timer_set_cycle_1(cycle);
+	timer2_set_cycle(cycle);
 }
 
-void timer_set_timeout_ms_1(uint32_t ms)
-{
-	uint32_t freq = F_CPU / (uint32_t) timer_get_prescaler_1();
-	uint16_t cycle = ms * freq / 1000;
-	timer_set_cycle_1(cycle);
-}
-
-void timer_set_timeout_ms_2(uint32_t ms)
-{
-	uint32_t freq = F_CPU / (uint32_t) timer_get_prescaler_2();
-	uint16_t cycle = ms * freq / 1000;
-	timer_set_cycle_2(cycle);
-}
-
-#if defined(F_timer_ENABLE_CALLBACKS)
+// ] Timer/Counter2
+/*
 
 ISR (TIMER0_COMPA_vect)
 {
@@ -349,8 +303,7 @@ ISR (TIMER2_OVF_vect)
 	{
 		(*cb_2)(&TIMER2_OVF_vect);
 	}
-}
+}*/
 
-#endif // F_timer_ENABLE_CALLBACKS
+#endif // F_TIMERS
 
-#endif // F_timer
