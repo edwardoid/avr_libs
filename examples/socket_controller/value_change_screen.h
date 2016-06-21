@@ -16,29 +16,35 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
+#ifndef VALUE_CHANGE_SCREEN
+#define VALUE_CHANGE_SCREEN
 
-#ifndef NULL
-#define NULL 0
-#endif
+#include <lib_ex_config.h>
 
-#include <stdint.h>
+#ifdef F_EXAMPLES
 
-typedef char    byte;
-typedef volatile uint8_t* ddr_ptr_t;
-typedef volatile uint8_t* port_ptr_t;
-typedef volatile uint8_t* pin_ptr_t;
-typedef volatile uint8_t* register_ptr_t;
-typedef volatile uint8_t pin_num_t;
+#include "screen.h"
+/*
+void draw_value_change_screen();
+void value_change_screen_events_handler(struct event_t* e);
 
-typedef struct
+typedef void (*apply_function_ptr)(float);
+
+struct value_change_screen_t
 {
-	ddr_ptr_t	ddr;
-	port_ptr_t	port;
-	pin_num_t	pin;
-} pin_cfg_t;
+	struct screen_t	screen;
+	const	char*	parameter_name;
+	float			current_value;
+	float			min;
+	float			max;
+	float			step;
+	float			difference;
+	apply_function_ptr	apply;
+};
 
-typedef void (*callback_t) (void*);
+extern struct value_change_screen_t value_change_screen;
+*/
 
-#endif // MY_TYPES_H
+#endif // F_EXAMPLES
+
+#endif // VALUE_CHANGE_SCREEN

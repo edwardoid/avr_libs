@@ -16,29 +16,26 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
+#ifndef PCD8544_PROGRESS_H
+#define PCD8544_PROGRESS_H
 
-#ifndef NULL
-#define NULL 0
-#endif
+#include <lib_ex_config.h>
+#include "my_types.h"
+#include <avr/pgmspace.h>
 
-#include <stdint.h>
+#ifdef F_PCD8544
 
-typedef char    byte;
-typedef volatile uint8_t* ddr_ptr_t;
-typedef volatile uint8_t* port_ptr_t;
-typedef volatile uint8_t* pin_ptr_t;
-typedef volatile uint8_t* register_ptr_t;
-typedef volatile uint8_t pin_num_t;
+static const byte pcd8544_progress[6] PROGMEM = {
+	0x3C, 0x7E, // start
+	0x18,		// line
+	0x7E,		// value
+	0x7E, 0x3C	// end
+};
 
-typedef struct
-{
-	ddr_ptr_t	ddr;
-	port_ptr_t	port;
-	pin_num_t	pin;
-} pin_cfg_t;
+void pcd8544_draw_progress(uint8_t x, uint8_t y, uint8_t width, uint8_t value, uint8_t draw_value, uint8_t color);
 
-typedef void (*callback_t) (void*);
+#endif // F_PCD8544
 
-#endif // MY_TYPES_H
+
+
+#endif /* PCD8544_PROGRESS_H_ */

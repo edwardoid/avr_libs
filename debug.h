@@ -19,14 +19,13 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include "usart.h"
-#include "time_utils_counters.h"
+#include <usart/usart.h>
 
 #define ENABLE_USART_DEBUGGING 1
 
 #ifdef ENABLE_USART_DEBUGGING
-#define DBG_VALUE_NNL(desc, num) usart_write_string(desc); usart_write_num((int32_t) (num));
-#define DBG_VALUE(desc, num) usart_write_string(desc); usart_write_num((int32_t) (num)); usart_write_byte('\n');
+#define DBG_VALUE_NNL(desc, num) usart_write_string(desc); usart_write_num((int) (num));
+#define DBG_VALUE(desc, num) usart_write_string(desc); usart_write_num((int) (num)); usart_write_byte('\n');
 #endif
 
 #endif // DEBUG_H

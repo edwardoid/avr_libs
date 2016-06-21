@@ -9,7 +9,7 @@
 #ifndef MY_STDLIB_H
 #define MY_STDLIB_H
 
-#include "config.h"
+#include <lib_ex_config.h>
 #include <stdint.h>
 
 #define my_abs(v) ((v > 0) ? (v) : -(v))
@@ -31,5 +31,8 @@ void	itoa(int32_t val, char * str);
 #endif // USE_STDLIB
 
 void	ftoa(float	val, uint8_t precision, char*	str);
+
+
+#define FORCE inline __attribute__((always_inline))
 
 #endif /* MY_STDLIB_H_ */

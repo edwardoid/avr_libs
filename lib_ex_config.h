@@ -16,29 +16,42 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TIME_UTILS_H
+#ifndef AVR_LIBS_CONFIG_H
+#define AVR_LIBS_CONFIG_H
+#include "debug.h"
+//#define USE_STD_LIB /* enable using <stdlib.h>
 
-#define TIME_UTILS_H
-#include <util/delay.h>
 
-#define LOOP_CYCLES 8 				//Number of cycles that the loop takes
+#ifndef F_CPU // change line below according to MCU fuses.
+#define F_CPU 20000000UL
+#endif // F_CPU
 
-#include <my_stdlib.h>
-#include <inttypes.h>
+#define F_TIMERS
+#define F_TIMERS_ENABLE_CALLBACKS
+//#define F_1WIRE
+#define F_ADC
+#define F_PWM
+//#define F_PCD8544
+//#define F_SD
+#define F_SPI
+#define F_USART
+#define F_RC522
 
-FORCE void tu_delay_cycles(unsigned long cycles)
-{
-	while(--cycles) asm volatile("nop");
-}
+#ifdef F_ENABLE_ALL
+//#define F_EXAMPLES
 
-FORCE void tu_delay_us(unsigned long us)
-{
-	tu_delay_cycles((us) / ( 8 * ( 1 / (F_CPU / 1000000.))));
-}
+//#define F_1WIRE
+//#define F_ADC
+#define F_PWM
+//#define F_SD
+#define F_SPI
+#define F_USART
+//#define F_PCD8544
+#define F_RC522
+#endif // F_ENABLE_ALL
 
-FORCE void tu_delay_ms(unsigned long ms)
-{
-	tu_delay_cycles((ms) / ( 8 * ( 1 / (F_CPU / 1000.   ))));
-}
+#ifndef F_EXAMPLES
+#define F_EXAMPLES
+#endif
 
-#endif // TIME_UTILS_H
+#endif // AVR_LIBS_CONFIG_H

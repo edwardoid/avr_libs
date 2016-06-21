@@ -16,29 +16,37 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
+#ifndef USART_H
+#define USART_H
 
-#ifndef NULL
-#define NULL 0
-#endif
+#include <lib_ex_config.h>
+#if defined(F_USART)
 
+#include "bitman.h"
+#include "my_types.h"
 #include <stdint.h>
 
-typedef char    byte;
-typedef volatile uint8_t* ddr_ptr_t;
-typedef volatile uint8_t* port_ptr_t;
-typedef volatile uint8_t* pin_ptr_t;
-typedef volatile uint8_t* register_ptr_t;
-typedef volatile uint8_t pin_num_t;
+#define CALC_BRR(rate) (((F_CPU >> 4) / rate) - 1)
 
-typedef struct
-{
-	ddr_ptr_t	ddr;
-	port_ptr_t	port;
-	pin_num_t	pin;
-} pin_cfg_t;
+#define BAUD_RATE_H(rate) (uint8_t)((CALC_BRR(rate) >> 8) & 0xFF)
+#define BAUD_RATE_L(rate) (uint8_t)(CALC_BRR(rate) & 0xFF)
 
-typedef void (*callback_t) (void*);
+void	usart_init (uint32_t baud_rate);
 
-#endif // MY_TYPES_H
+char	usart_read_byte();
+
+uint16_t	usart_read_str(char* buff, uint16_t sz);
+	
+void	usart_write_byte(char data);
+
+void	usart_write_string(const char* s);
+
+void	usart_write_num(int num);
+
+int	usart_read_num();
+
+void	usart_write_string_line(const char* s);
+
+#endif // F_USART
+
+#endif // USART_H

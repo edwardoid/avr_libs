@@ -16,29 +16,25 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
+#ifndef RC522_COMMANDS_H
 
-#ifndef NULL
-#define NULL 0
-#endif
+#include <lib_ex_config.h>
 
-#include <stdint.h>
+#if defined(F_RC522)
 
-typedef char    byte;
-typedef volatile uint8_t* ddr_ptr_t;
-typedef volatile uint8_t* port_ptr_t;
-typedef volatile uint8_t* pin_ptr_t;
-typedef volatile uint8_t* register_ptr_t;
-typedef volatile uint8_t pin_num_t;
+#include <bytes_manip.h>
 
-typedef struct
-{
-	ddr_ptr_t	ddr;
-	port_ptr_t	port;
-	pin_num_t	pin;
-} pin_cfg_t;
+#define RC522_CMD_Idle			b0000
+#define RC522_CMD_Mem			b0001
+#define RC522_CMD_GenRndId		b0010
+#define RC522_CMD_CalcCRC		b0011
+#define RC522_CMD_Transmit		b0100
+#define RC522_CMD_NoCmdChange 	b0111
+#define RC522_CMD_Receive		b1000
+#define RC522_CMD_Transceive	b1100
+#define RC522_CMD_MFAuthent		b1110
+#define RC522_CMD_SoftReset		b1111
 
-typedef void (*callback_t) (void*);
+#endif // F_RC522
 
-#endif // MY_TYPES_H
+#endif // RC522_COMMANDS_H

@@ -16,29 +16,21 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
+#ifndef QUESTION_H
+#define QUESTION_H
 
-#ifndef NULL
-#define NULL 0
-#endif
+#include <lib_ex_config.h>
 
-#include <stdint.h>
+#ifdef F_EXAMPLES
 
-typedef char    byte;
-typedef volatile uint8_t* ddr_ptr_t;
-typedef volatile uint8_t* port_ptr_t;
-typedef volatile uint8_t* pin_ptr_t;
-typedef volatile uint8_t* register_ptr_t;
-typedef volatile uint8_t pin_num_t;
+#define QUESTION_RESULT_NOT_ANSWERED	0
+#define QUESTION_RESULT_YES				3
+#define QUESTION_RESULT_NO				2
 
-typedef struct
-{
-	ddr_ptr_t	ddr;
-	port_ptr_t	port;
-	pin_num_t	pin;
-} pin_cfg_t;
+#include <inttypes.h>
+/*
+uint8_t question(const char* str);
+*/
+#endif // F_EXAMPLES
 
-typedef void (*callback_t) (void*);
-
-#endif // MY_TYPES_H
+#endif // QUESTION_H

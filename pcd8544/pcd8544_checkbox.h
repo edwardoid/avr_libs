@@ -16,29 +16,17 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
+#ifndef PCD8544_CHECKBOX_H
+#define PCD8544_CHECKBOX_H
 
-#ifndef NULL
-#define NULL 0
-#endif
+#include "pcd8544.h"
 
-#include <stdint.h>
+#ifdef F_PCD8544
 
-typedef char    byte;
-typedef volatile uint8_t* ddr_ptr_t;
-typedef volatile uint8_t* port_ptr_t;
-typedef volatile uint8_t* pin_ptr_t;
-typedef volatile uint8_t* register_ptr_t;
-typedef volatile uint8_t pin_num_t;
+#include <inttypes.h>
 
-typedef struct
-{
-	ddr_ptr_t	ddr;
-	port_ptr_t	port;
-	pin_num_t	pin;
-} pin_cfg_t;
+void pcd8544_draw_checkbox(uint8_t x, uint8_t y, const char* string,  uint8_t checked);
 
-typedef void (*callback_t) (void*);
+#endif // F_PCD8544
 
-#endif // MY_TYPES_H
+#endif /* PCD8544_CHECKBOX_H */

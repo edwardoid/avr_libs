@@ -16,29 +16,38 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
+#ifndef SD_H
+#define SD_H
 
-#ifndef NULL
-#define NULL 0
-#endif
+#include <lib_ex_config.h>
 
-#include <stdint.h>
+#ifdef F_SD
 
-typedef char    byte;
-typedef volatile uint8_t* ddr_ptr_t;
-typedef volatile uint8_t* port_ptr_t;
-typedef volatile uint8_t* pin_ptr_t;
-typedef volatile uint8_t* register_ptr_t;
-typedef volatile uint8_t pin_num_t;
+#include "my_types.h"
+#include <spi/spi.h>
+#include "debug.h"
+#include "sd_cmd.h"
 
-typedef struct
-{
-	ddr_ptr_t	ddr;
-	port_ptr_t	port;
-	pin_num_t	pin;
-} pin_cfg_t;
+#define TOKEN_WAIT_MAX_TIMEOUT 1000
+#define SD_CMD_RESP_MAX_TIMEOUT 3000
+#define SD_IDLE_WAIT_MAX_TIMEOUT 3000
 
-typedef void (*callback_t) (void*);
+#define SD_R1	1
+#define SD_R1B	2
+#define SD_R2	3
+#define SD_R3	4
 
-#endif // MY_TYPES_H
+#define SD_CRC 0x95
+
+#define SD_UNKNOWN_TYPE 0
+#define SD_MMC	(1 << 0)
+#define SD_SD	(1 << 2)
+#define SD_SDHC (1 << 3)
+
+int8_t	sd_init(ddr_ptr_t ddr, port_ptr_t port, uint8_t pin);
+
+int8_t sd_send_command(uint8_t cmd, uint32_t args,port_ptr_t port, uint8_t pin, char* resp);
+
+#endif // F_SD
+
+#endif // SD_H

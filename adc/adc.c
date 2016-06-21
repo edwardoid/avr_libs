@@ -16,29 +16,20 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
 
-#ifndef NULL
-#define NULL 0
-#endif
-
-#include <stdint.h>
-
-typedef char    byte;
-typedef volatile uint8_t* ddr_ptr_t;
-typedef volatile uint8_t* port_ptr_t;
-typedef volatile uint8_t* pin_ptr_t;
-typedef volatile uint8_t* register_ptr_t;
-typedef volatile uint8_t pin_num_t;
-
-typedef struct
+#include "adc.h"
+#ifdef F_ADC
+	
+uint16_t  adc_read(uint8_t adc)
 {
-	ddr_ptr_t	ddr;
-	port_ptr_t	port;
-	pin_num_t	pin;
-} pin_cfg_t;
+   adc_select(adc);
+   ADCSRA |= _BV(ADEN);
 
-typedef void (*callback_t) (void*);
+   set_mask(ADCSRA, _BV(ADEN) | _BV(ADSC));  // Start conversion
+   while(!bit_is_set(ADCSRA,ADIF));    // Loop until conversion is complete
+   set_bit(ADCSRA, ADIF);
+ 
+   return(ADC);
+}
 
-#endif // MY_TYPES_H
+#endif // F_ADC

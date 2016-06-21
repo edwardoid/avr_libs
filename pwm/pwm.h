@@ -16,29 +16,20 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
+#ifndef PWM_H
+#define PWM_H
 
-#ifndef NULL
-#define NULL 0
-#endif
+#include <lib_ex_config.h>
 
-#include <stdint.h>
+#ifdef F_PWM
 
-typedef char    byte;
-typedef volatile uint8_t* ddr_ptr_t;
-typedef volatile uint8_t* port_ptr_t;
-typedef volatile uint8_t* pin_ptr_t;
-typedef volatile uint8_t* register_ptr_t;
-typedef volatile uint8_t pin_num_t;
+#define PWM_INVERTED 1
+#define PWM_NON_INVERTED 0
 
-typedef struct
-{
-	ddr_ptr_t	ddr;
-	port_ptr_t	port;
-	pin_num_t	pin;
-} pin_cfg_t;
+#include "pwm_t2.h"
+#include "pwm_t1.h"
+#include "pwm_t0.h"
 
-typedef void (*callback_t) (void*);
+#endif // F_PWM
 
-#endif // MY_TYPES_H
+#endif // PWM_H

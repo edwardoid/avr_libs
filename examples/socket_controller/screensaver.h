@@ -16,29 +16,31 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
+#ifndef SCREENSAVER_H
+#define SCREENSAVER_H
 
-#ifndef NULL
-#define NULL 0
-#endif
+#include <lib_ex_config.h>
+	
 
-#include <stdint.h>
+#if defined(F_EXAMPLES) && defined(F_SPI) && defined(F_1WIRE) && defined(F_ADC) && defined(F_PCD8544)
 
-typedef char    byte;
-typedef volatile uint8_t* ddr_ptr_t;
-typedef volatile uint8_t* port_ptr_t;
-typedef volatile uint8_t* pin_ptr_t;
-typedef volatile uint8_t* register_ptr_t;
-typedef volatile uint8_t pin_num_t;
+#include "screen.h"
+#include "events.h"
+#include <pcd8544/pcd8544_font.h>
+#include <avr/pgmspace.h>
 
-typedef struct
+void draw_screensaver();
+void screensaver_events_handler(struct event_t* e);
+
+struct screensaver_t
 {
-	ddr_ptr_t	ddr;
-	port_ptr_t	port;
-	pin_num_t	pin;
-} pin_cfg_t;
+	uint16_t			last_timer_tick;
+	struct screen_t*	prev_screen;
+	struct screen_t		saver;	
+};
 
-typedef void (*callback_t) (void*);
+extern struct screensaver_t screensaver;
 
-#endif // MY_TYPES_H
+#endif // F_EXAMPLES
+
+#endif /* SCREENSAVER_H */

@@ -16,29 +16,19 @@
 	along with avr_libs.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MY_TYPES_H
-#define MY_TYPES_H
+#ifndef RC522_CONF_H
+#define RC522_CONF_H
 
-#ifndef NULL
-#define NULL 0
-#endif
+#if defined(F_RC522) && defined(F_SPI)
 
-#include <stdint.h>
-
-typedef char    byte;
-typedef volatile uint8_t* ddr_ptr_t;
-typedef volatile uint8_t* port_ptr_t;
-typedef volatile uint8_t* pin_ptr_t;
-typedef volatile uint8_t* register_ptr_t;
-typedef volatile uint8_t pin_num_t;
+#include <my_types.h>
 
 typedef struct
 {
-	ddr_ptr_t	ddr;
-	port_ptr_t	port;
-	pin_num_t	pin;
-} pin_cfg_t;
+	pin_cfg_t ss;
+} rc522_cfg_t;
 
-typedef void (*callback_t) (void*);
 
-#endif // MY_TYPES_H
+#endif // F_RC522 && F_SPI
+
+#endif // RC522_CONF_H
