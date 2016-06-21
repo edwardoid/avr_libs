@@ -39,12 +39,8 @@
 	occurs the TOVn bit is set in the TIFR register.
 */
 
-
-#define TIMER0_PWM_PHASE_CORRECTED_0XFF 1
-#define TIMER0_CTC_MODE 2
-#define TIMER0_PWM_FAST_PWM_0xFF 3
-#define TIMER0_PHASE_CORRECTED 5
-#define TIMER0_FAST_PWM 7
+#define TIMER0_NORMAL 0      /* Top 0xFF */
+#define TIMER0_CTC _BV(WGM01)/* Top OCR0A */
 
 #define TIMER1_CTC_OCR1A_MODE 4
 #define TIMER1_CTC_ICR1_MODE 12

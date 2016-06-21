@@ -26,6 +26,7 @@
 #include <stdint.h>
 
 typedef char    byte;
+typedef uint8_t bool_t;
 typedef volatile uint8_t* ddr_ptr_t;
 typedef volatile uint8_t* port_ptr_t;
 typedef volatile uint8_t* pin_ptr_t;
@@ -40,5 +41,8 @@ typedef struct
 } pin_cfg_t;
 
 typedef void (*callback_t) (void*);
+
+#define TRUE 1
+#define FALSE 0
 
 #endif // MY_TYPES_H
