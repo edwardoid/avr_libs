@@ -24,6 +24,8 @@
 
 #if defined(F_timer)
 
+#define TIMER0_COMPARATOR_A	   OCR0A
+#define TIMER0_COMPARATOR_B	   OCR0B
 #define TIMER0_PRESCALE_0      (_BV(CS00))
 #define TIMER0_PRESCALE_8      (_BV(CS01)
 #define TIMER0_PRESCALE_64     (_BV(CS01) | _BV(CS00))
@@ -40,14 +42,17 @@
 
 // Timer/Counter0 [
 void timer0_start_normal(uint16_t prescale);
-void timer0_start_ctc(uint8_t cycle, uint16_t prescale);
+/**
+	@warning Do not forget to set cycle value by calling timer0_set_cycle
+*/
+void timer0_start_ctc(uint16_t prescale);
 
 void timer0_set_prescaler(uint16_t prescale);
 uint16_t timer0_get_prescaler();
 
-void timer0_set_enable_pin(pin_num_t pin, bool_t enable);
+void timer0_set_enable_OCIE0x_interrupt(uint8_t OCIE0x, bool_t enable);
 
-void timer0_set_cycle(uint8_t cycle);
+void timer0_set_cycle(byte comparator /* PB5 or PB6 */, uint8_t cycle);
 void timer0_set_timeout_ms(uint32_t ms);
 
 // ] Timer/Counter0

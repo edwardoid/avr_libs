@@ -26,6 +26,7 @@
 #define set_low(dst, bit) clear_bit((dst), (bit))
 
 
+#define check_mask(src, mask) ((mask) == ((src) & (mask) ))
 #define set_mask(dst, mask) ((dst) |= (mask))
 #define clear_mask(dst, mask) (dst &= ~(mask))
 

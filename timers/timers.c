@@ -103,10 +103,9 @@ void timer0_start_normal(uint16_t prescale)
 	start_0(TIMER_NORMAL_MODE, prescale);
 }
 
-void timer0_start_ctc(uint8_t cycle, uint16_t prescale)
+void timer0_start_ctc(uint16_t prescale)
 {
 	start_0(TIMER0_CTC_MODE, prescale);
-	OCR0A = cycle;
 }
 
 #define TIMER0_PRESCALE_MASK (_BV(CS02) | _BV(CS01) | _BV(CS00))  
@@ -124,37 +123,29 @@ void timer0_get_prescale()
 	(TCCR0B & TIMER0_PRESCALE_MASK )
 }
 
-void timer0_set_cycle(uint8_t cycle)
+void timer0_set_cycle(byte comparator, uint8_t cycle)
 {
 	cli();
-	OCR0A = cycle;
+	if(comparator == TIMER0_COMPARATOR_A)
+	{
+		OCR0A = cycle;
+	}
+	else if(comparator == TIMER0_COMPARATOR_B)
+	{
+		OCR0B = cycle;
+	}
 	sei();
 }
 
-void timer0_set_enable_pin(pin_num_t pin, bool_t enable)
+void timer0_set_enable_OCIE0x_interrupt(uint8_t OCIE0x, bool_t enable)
 {
-	cli();
-	if(pin == PB5)
+	if(enable === TRUE)
 	{
-		if(enable === TRUE)
-		{
-			set_bit(TIMSK0, OCIE0B)
-		}
-		else
-		{
-			clear_bit(TIMSK0, OCIE0B)
-		}
+		set_bit(TIMSK0, OCIE0x)
 	}
-	else if(pin == PB6)
+	else
 	{
-		if(enable === TRUE)
-		{
-			set_bit(TIMSK0, OCIE0A)
-		}
-		else
-		{
-			clear_bit(TIMSK0, OCIE0A)
-		}
+		clear_bit(TIMSK0, OCIE0x)
 	}
 	sei();
 }

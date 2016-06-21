@@ -42,8 +42,8 @@
 #define TIMER0_NORMAL 0      /* Top 0xFF */
 #define TIMER0_CTC _BV(WGM01)/* Top OCR0A */
 
-#define TIMER1_CTC_OCR1A_MODE 4
-#define TIMER1_CTC_ICR1_MODE 12
+#define TIMER1_CTC_OCR1A_MODE	(_BV(WGM12))				/* Top OCR1A */
+#define TIMER1_CTC_ICR1_MODE	(_BV(WGM13) | _BV(WGM12))	/* Top ICR1 */
 
 #define TIMER2_CTC_MODE 2
 
