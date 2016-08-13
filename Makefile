@@ -1,9 +1,12 @@
 LIB_NAME := libex
 SRC_DIR := .
 OUT_DIR :=./out/
-MCU := atmega328
-MCU_DEF :=-D__AVR_ATmega328P__
-CLOCK :=20000000UL
+#MCU=atmega328p
+#MCU_DEF = -D__AVR_ATmega328P__
+#CLOCK :=20000000UL
+MCU=atmega8
+MCU_DEF = -D__AVR_ATmega8A__
+CLOCK :=16000000UL
 TOOLCHAIN := E:\Programs\avr-toolchain\avr8-gnu-toolchain\avr
 CC := avr-gcc
 AR := avr-ar
@@ -42,7 +45,7 @@ CFLAGS += -fpack-struct -fshort-enums -ffunction-sections -fdata-sections
 CFLAGS += -Wall
 
 %.o: %.c $(HEADERS) prepare
-	echo $<
+	@ echo $<
 	@ $(CC) $(CFLAGS) -mmcu=$(MCU) -c $< -o $(OUT_DIR)/$@
 
 
@@ -50,7 +53,7 @@ all: prepare libs
 
 
 libs: $(OBJECTS) $(SUBLIBS)
-	@ $(AR) -r $(OUT_DIR)$(LIB_NAME).a $(addpreбfix $(OUT_DIR),$(OBJECTS))
+	@ $(AR) -r $(OUT_DIR)$(LIB_NAME).a  $(addprefix $(OUT_DIR),$(OBJECTS))
 #	$(OBJ_DUMP) -h -S $(OUT_DIR)/$(LIB_NAME).a
 #	$(SIZE) --format=avr --mcu=$(MCU) $(OUT_DIR)/$(LIB_NAME).a
 #	@ $(DU) -h $(OUT_DIR)/$(LIB_NAME).a

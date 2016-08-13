@@ -24,8 +24,6 @@
 
 #if defined(F_TIMERS)
 
-#define TIMER0_COMPARATOR_A	   OCR0A
-#define TIMER0_COMPARATOR_B	   OCR0B
 #define TIMER0_PRESCALE_0      (_BV(CS00))
 #define TIMER0_PRESCALE_8      (_BV(CS01))
 #define TIMER0_PRESCALE_64     (_BV(CS01) | _BV(CS00))
@@ -53,15 +51,29 @@
 #define timer_matches_in_sec(top) (F_CPU / ((top) + 1UL))
 
 // Timer/Counter0 [
+void timer0_start(uint8_t prescale);
+
+
+void timer0_set_prescaler(uint8_t prescale);
+uint8_t timer0_get_prescaler();
+
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
+
+
+#define TIMER0_COMPARATOR_A	   OCR0A
+#define TIMER0_COMPARATOR_B	   OCR0B
+
 void timer0_start(uint8_t mode, uint8_t prescale);
 void timer0_start_normal(uint8_t prescale);
 void timer0_start_ctc(uint8_t prescale);
-void timer0_set_prescaler(uint8_t prescale);
-uint8_t timer0_get_prescaler();
 void timer0_set_enable_OCIE0x_interrupt(uint8_t OCIE0x, bool_t enable);
 
 void timer0_set_cycle(byte comparator /* PB5 or PB6 */, uint8_t cycle);
+
 void timer0_set_timeout_us(uint32_t ms);
+
+#endif // 328p specific code
+
 
 // ] Timer/Counter0
 

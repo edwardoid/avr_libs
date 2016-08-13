@@ -47,7 +47,7 @@ void pwm_t1_start(uint8_t mode, uint16_t top, uint8_t prescale)
 	set_mask(TCCR1A, PWM_T1_WGM11_WGM10_MASK & mode);
 	set_mask(TCCR1B, PWM_T1_WGM13_WGM12_MASK & mode);
 
-	timers_set_prescaler_1(prescale);
+	timer1_set_prescaler(prescale);
 }
 
 void pwm_t1_stop()

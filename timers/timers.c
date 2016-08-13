@@ -36,11 +36,45 @@ static callback_t cb_2 = NULL;
 
 // [ Start of Timer/Counter0
 
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8A__)
+
+#define TIMER0_TCCR0A TCCR0
+#define TIMER0_TCCR0B TCCR0
+
+#define TIMER2_TCCR2A TCCR2
+#define TIMER2_TCCR2B TCCR2 
+
+#define TIMER2_OCR2A OCR2
+
+#elif defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
+
+#define TIMER0_TCCR0A TCCR0A
+#define TIMER0_TCCR0A TCCR0B
+
+#define TIMER2_TCCR0A TCCR2A
+#define TIMER2_TCCR0A TCCR2B
+
+#define TIMER2_OCR2A OCR2A
+
+#endif // MCUS
+
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8A__)
+
+void timer0_start(uint8_t prescale)
+{
+ 	cli();
+	set_mask(TIMER0_TCCR0A, TIMER0_NORMAL);
+ 	sei();
+	timer0_set_prescaler(prescale);
+}
+
+#elif defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
+
 void timer0_start(uint8_t mode, uint8_t prescale)
 {
  	cli();
-	clear_mask(TCCR0A, (_BV(WGM01) | _BV(WGM00)));
-	set_mask(TCCR0A, mode);
+	clear_mask(TIMER0_TCCR0A, (_BV(WGM01) | _BV(WGM00)));
+	set_mask(TIMER0_TCCR0A, mode);
  	sei();
 	timer0_set_prescaler(prescale);
 }
@@ -51,25 +85,31 @@ void timer0_start_normal(uint8_t prescale)
 	timer0_start(TIMER0_NORMAL, prescale);
 }
 
+
 void timer0_start_ctc(uint8_t prescale)
 {
 	timer0_start(TIMER0_CTC, prescale);
 }
+
+#endif // 328p specific code	
 
 #define TIMER0_PRESCALE_MASK (_BV(CS02) | _BV(CS01) | _BV(CS00))  
 
 void timer0_set_prescaler(uint8_t prescale)
 {
   cli();
-	clear_mask(TCCR0B, TIMER0_PRESCALE_MASK);
-	set_mask(TCCR0B, TIMER0_PRESCALE_MASK & prescale);
+	clear_mask(TIMER0_TCCR0B, TIMER0_PRESCALE_MASK);
+	set_mask(TIMER0_TCCR0B, TIMER0_PRESCALE_MASK & prescale);
   sei();
 }	
 
 uint8_t timer0_get_prescale()
 {
-	return (TCCR0B & TIMER0_PRESCALE_MASK);
+	return (TIMER0_TCCR0B & TIMER0_PRESCALE_MASK);
 }
+
+
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
 
 void timer0_set_cycle(byte comparator, uint8_t cycle)
 {
@@ -105,11 +145,11 @@ void timer0_set_enable_OCIE0x_interrupt(uint8_t OCIE0x, bool_t enable)
 	sei();
 }
 
+#endif // MCUS
+
 // ] End of Timer/Counter0
 
 // [ Timer/Counter1
-
-
 
 #define TIMER1_MODE_MASK_11_10 (_BV(WGM11) | _BV(WGM10))
 #define TIMER1_MODE_MASK_13_12 (_BV(WGM13) | _BV(WGM12))
@@ -180,16 +220,28 @@ void timer1_set_timeout_ms(uint32_t ms)
 // [ Timer/Counter2
 
 #define TIMER2_MODE_MASK_21_20 	(_BV(WGM21) | _BV(WGM20))
-#define TIMER2_MODE_MASK_22		(_BV(WGM22))
-#define TIMER1_MODE_MASK (TIMER2_MODE_MASK_22 | TIMER2_MODE_MASK_21_20)
+
+#define TIMER2_MODE_MASK (TIMER2_MODE_MASK_22 | TIMER2_MODE_MASK_21_20)
 
 void timer2_start(uint8_t mode, uint8_t prescale)
 {
 	cli();
-	clear_mask(TCCR2A, TIMER2_MODE_MASK_21_20);
-	clear_mask(TCCR2B, TIMER2_MODE_MASK_22);
-	set_mask(TCCR2A, mode & TIMER2_MODE_MASK_21_20);
-	set_mask(TCCR2B, mode & TIMER2_MODE_MASK_22);
+	clear_mask(TIMER2_TCCR2A, TIMER2_MODE_MASK_21_20);
+
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
+	
+	clear_bit(TIMER2_TCCR2B, WGM22);
+	
+#endif // MCUS
+
+	set_mask(TIMER2_TCCR2A, mode & TIMER2_MODE_MASK_21_20);
+
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
+	
+	set_bit(TIMER2_TCCR2B, WGM22);
+	
+#endif // MCUS
+
 	timer2_set_prescaler(prescale);
 	sei();
 }
@@ -209,19 +261,19 @@ void timer2_start_ctc(uint8_t prescale)
 void timer2_set_prescaler(uint8_t prescale)
 {
 	cli();
-	clear_mask(TCCR2B, TIMER2_PRESCALE_MASK);
-	set_mask(TCCR2B, TIMER2_PRESCALE_MASK & prescale);
+	clear_mask(TIMER2_TCCR2B, TIMER2_PRESCALE_MASK);
+	set_mask(TIMER2_TCCR2B, TIMER2_PRESCALE_MASK & prescale);
 	sei();
 }
 
 uint8_t timer2_get_prescaler()
 {
-	return TCCR2B & TIMER2_PRESCALE_MASK;
+	return TIMER2_TCCR2B & TIMER2_PRESCALE_MASK;
 }
 
 void timer2_set_cycle(uint16_t cycle)
 {
-	OCR2A = cycle;
+	TIMER2_OCR2A = cycle;
 }
 
 void timer2_set_timeout_ms(uint32_t ms)

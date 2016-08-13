@@ -1,4 +1,4 @@
-EXAMPLE_NAME = servo
+EXAMPLE_NAME = nrf24l01
 SRC_DIR = .
 OUT_DIR = ./out
 #MCU=atmega328p

@@ -28,7 +28,10 @@
 
 #include "pwm_t2.h"
 #include "pwm_t1.h"
+
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
 #include "pwm_t0.h"
+#endif // 328p specific
 
 #endif // F_PWM
 

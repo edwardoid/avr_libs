@@ -41,7 +41,13 @@
 
 // Timer/Counter0 [
 #define TIMER0_NORMAL 0x0    /* Top 0xFF */
+
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
+
 #define TIMER0_CTC _BV(WGM01)/* Top OCR0A */
+
+#endif // 328p specific code
+	
 // ] Timer/Counter0
 
 // Timer/Counter1 [

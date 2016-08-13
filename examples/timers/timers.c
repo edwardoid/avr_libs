@@ -44,13 +44,19 @@ void reset()
 
 void test_timer0_with(uint64_t ps_num, uint8_t mode, uint8_t ps, uint64_t top_val)
 {
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
+
 	timer0_set_enable_OCIE0x_interrupt(OCIE0A, FALSE);
+#endif
 	reset();
 	usart_write_string("\n\tPrescale ");
 	usart_write_num((int)ps_num);
 	usart_write_byte('\n');
 	prescale = ps_num;
 	//top = top_val;
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8A__)
+	timer0_start(prescale);
+#elif defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
 	timer0_start(mode, ps);
 	if(mode != TIMER0_NORMAL)
 	{
@@ -59,8 +65,23 @@ void test_timer0_with(uint64_t ps_num, uint8_t mode, uint8_t ps, uint64_t top_va
 	timer0_set_enable_OCIE0x_interrupt(OCIE0A, TRUE);
 	while(elapsed != SINGLE_TEST_SEC);
 	timer0_set_enable_OCIE0x_interrupt(OCIE0A, FALSE);
+#endif
 }
 
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8A__)
+
+void test_timer0_normal()
+{
+	usart_write_string("Timer/Counter0 normal mode: ");
+	test_timer0_with(1UL, TIMER0_NORMAL, TIMER0_PRESCALE_0, 0xFFUL);
+	test_timer0_with(8UL, TIMER0_NORMAL, TIMER0_PRESCALE_8, 0xFFUL);
+	test_timer0_with(64UL, TIMER0_NORMAL, TIMER0_PRESCALE_64, 0xFFUL);
+	test_timer0_with(256UL, TIMER0_NORMAL, TIMER0_PRESCALE_256, 0xFFUL);
+	test_timer0_with(1024UL, TIMER0_NORMAL, TIMER0_PRESCALE_1024, 0xFFUL);
+	usart_write_string_line("Done");	
+}
+
+#elif defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
 
 void test_timer0_normal()
 {
@@ -74,6 +95,7 @@ void test_timer0_normal()
 	usart_write_string_line("Done");	
 }
 
+
 void test_timer0_ctc()
 {
 	timer0_set_enable_OCIE0x_interrupt(OCIE0A, FALSE);
@@ -85,6 +107,9 @@ void test_timer0_ctc()
 	test_timer0_with(1024UL, TIMER0_CTC, TIMER0_PRESCALE_1024, 0x0FUL);
 	usart_write_string_line("Done");
 }
+
+#endif // MCUS
+
 
 void test_timer0()
 {
@@ -104,6 +129,20 @@ int main()
 	}
 }
 
+#if defined(__AVR_ATmega8__) || defined(__AVR_ATmega8A__)
+
+ISR (TIMER0_OVF_vect)  // timer0 overflow interrupt
+{
+	++counter;
+	if(counter == (F_CPU / top))
+    {
+    	usart_write_byte('.');
+    	counter = 0;
+    	++elapsed;
+    	toggle_bit(PORTB, PB0);
+    }
+}
+#elif defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
 
 ISR (TIMER0_COMPA_vect)  // timer0 overflow interrupt
 {
@@ -116,5 +155,8 @@ ISR (TIMER0_COMPA_vect)  // timer0 overflow interrupt
     	toggle_bit(PORTB, PB0);
     }
 }
+#endif // MCUS
+
+
 
 #endif

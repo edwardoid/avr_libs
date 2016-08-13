@@ -1,9 +1,12 @@
 EXAMPLE_NAME := recover
 SRC_DIR :=.
 OUT_DIR :=./out
-MCU := atmega8
-MCU_DEF :=
-CLOCK :=1000000UL
+#MCU=atmega328p
+#MCU_DEF = -D__AVR_ATmega328P__
+#CLOCK :=20000000UL
+MCU=atmega8
+MCU_DEF = -D__AVR_ATmega8A__
+CLOCK :=16000000UL
 TOOLCHAIN := D:\Programs\WinAvr\avr
 CC := avr-gcc
 RM := rm

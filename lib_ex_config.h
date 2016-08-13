@@ -23,7 +23,8 @@
 
 
 #ifndef F_CPU // change line below according to MCU fuses.
-#define F_CPU 20000000UL
+//#define F_CPU 20000000UL
+#define F_CPU 16000000UL
 #endif // F_CPU
 
 #define F_TIMERS

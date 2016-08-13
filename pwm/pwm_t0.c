@@ -20,6 +20,9 @@
 
 #if defined(F_PWM)
 
+
+#if defined(__AVR_ATmega328__) || defined(__AVR_ATmega328P__)
+
 #include <avr/io.h>
 #include <pwm/pwm.h>
 #include <pwm/pwm_t0.h>
@@ -76,5 +79,7 @@ void pwm_t0_set_top(uint8_t top)
 {
 	OCR0A = top;
 }
+
+#endif // 328p specific
 
 #endif // F_PWM
