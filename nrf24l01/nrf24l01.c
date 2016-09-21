@@ -56,7 +56,8 @@ void nrf24l01_print_addresses(nrf24l01_conf_t* dev)
    
      
     usart_write_string("PIPE0 ");
-    uint8_t i = dev->pipe_addr_len;
+    uint8_t i = dev->pipe_addr_len > 5 ? 5 : dev->pipe_addr_len;
+    dev->pipe_addr_len = i;
     char hex[6];
     while(i--)
     {
@@ -123,8 +124,12 @@ byte nrf24l01_send(nrf24l01_conf_t* dev, byte command, byte data)
 void nrf24l01_read_address(nrf24l01_conf_t* dev, byte reg, byte* buffer, uint8_t len)
 {
     set_low(*dev->ss_port, dev->ss_pin);
-    uint8_t status;
-    spi_write_byte_ss(NRF24L01_R_REGISTER | (NRF24L01_REGISTER_MASK & reg), dev->ss_pin, dev->ss_port);
+    //set_low(*dev->ss_port, dev->ss_pin);
+
+    //// spi_set_master_bit_first(1);
+
+    spi_write_byte_ss(NRF24L01_R_REGISTER | (reg), dev->ss_pin, dev->ss_port);
+        
     while(len--)
     {
         *buffer++ = spi_write_byte_ss(0xFF, dev->ss_pin, dev->ss_port);
@@ -135,48 +140,40 @@ void nrf24l01_read_address(nrf24l01_conf_t* dev, byte reg, byte* buffer, uint8_t
 void nrf24l01_write_pipe_rx_address(nrf24l01_conf_t* dev, uint8_t pipe)
 {
     set_low(*dev->ss_port, dev->ss_pin);
-    spi_set_master_bit_first(1);
     if (pipe == 0)
     {
         spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P0), dev->ss_pin, dev->ss_port);
-        spi_set_master_bit_first(0);
         spi_write_ss(dev->pipe_0_addr, dev->pipe_addr_len, dev->ss_pin, dev->ss_port);
     }
     else if(pipe == 1)
     {
         spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P1), dev->ss_pin, dev->ss_port);
-        spi_set_master_bit_first(0);
         spi_write_ss(dev->pipe_1_addr, dev->pipe_addr_len, dev->ss_pin, dev->ss_port);
     }
     else if (pipe == 2)
     {
         spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P2), dev->ss_pin, dev->ss_port);
-        spi_set_master_bit_first(0);
         spi_write_ss(dev->pipe_1_addr, dev->pipe_addr_len - 1, dev->ss_pin, dev->ss_port);
         spi_write_byte_ss(dev->pipe_addrs[0], dev->ss_pin, dev->ss_port);
     }
     else if (pipe == 3)
     {
         spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P3), dev->ss_pin, dev->ss_port);
-        spi_set_master_bit_first(0);
         spi_write_ss(dev->pipe_1_addr, dev->pipe_addr_len - 1, dev->ss_pin, dev->ss_port);
         spi_write_byte_ss(dev->pipe_addrs[1], dev->ss_pin, dev->ss_port);
     }
     else if (pipe == 4)
     {
         spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P4), dev->ss_pin, dev->ss_port);
-        spi_set_master_bit_first(0);
         spi_write_ss(dev->pipe_1_addr, dev->pipe_addr_len - 1, dev->ss_pin, dev->ss_port);
         spi_write_byte_ss(dev->pipe_addrs[2], dev->ss_pin, dev->ss_port);
     }
     else if (pipe == 5)
     {
         spi_write_byte_ss(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & NRF24L01_RX_ADDR_P5), dev->ss_pin, dev->ss_port);
-        spi_set_master_bit_first(0);
         spi_write_ss(dev->pipe_1_addr, dev->pipe_addr_len - 1, dev->ss_pin, dev->ss_port);
         spi_write_byte_ss(dev->pipe_addrs[3], dev->ss_pin, dev->ss_port);
     }
-    spi_set_master_bit_first(1);
     set_high(*dev->ss_port, dev->ss_pin);
 }
 
@@ -200,22 +197,19 @@ void nrf24l01_write_pipe_tx_address(nrf24l01_conf_t* dev, byte* addr, uint8_t le
 byte nrf24l01_read_register(nrf24l01_conf_t* dev, byte reg)
 {
     //return nrf24l01_send(dev, NRF24L01_R_REGISTER | (NRF24L01_REGISTER_MASK & reg), NRF24L01_NOP);
-    spi_set_master_bit_first(1);
+    set_low(*dev->ss_port, dev->ss_pin);
     spi_write_byte(NRF24L01_R_REGISTER | (NRF24L01_REGISTER_MASK & reg));
-    spi_set_master_bit_first(0);
     byte r = spi_write_byte(NRF24L01_NOP);
-    spi_set_master_bit_first(1);
+    set_high(*dev->ss_port, dev->ss_pin);
     return r;
 }
 
 byte nrf24l01_write_register(nrf24l01_conf_t* dev, byte reg, byte value)
 {
-    spi_set_master_bit_first(1);
+    set_low(*dev->ss_port, dev->ss_pin);
     spi_write_byte(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & reg));
-    spi_set_master_bit_first(0);
     byte r = spi_write_byte(value);
-    spi_set_master_bit_first(1);
-    //return nrf24l01_send(dev, NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & reg), value );
+    set_high(*dev->ss_port, dev->ss_pin);
     return r;
 }
 
@@ -266,6 +260,7 @@ byte nrf24l01_init(nrf24l01_conf_t* dev, ddr_ptr_t ce, ddr_ptr_t ss)
     
     spi_init_as_master(SPI_DIV_CLK_128, SPI_MODE_0);
     spi_set_master_bit_first(0);
+
     set_as_output(*ss, dev->ss_pin);
     set_low(*dev->ce_port, dev->ce_pin);
     
@@ -286,6 +281,8 @@ byte nrf24l01_init(nrf24l01_conf_t* dev, ddr_ptr_t ce, ddr_ptr_t ss)
         }
     }
     
+
+
     nrf24l01_set_speed(dev, NRF24L01_1MBPS);
     nrf24l01_write_register(dev, NRF24L01_DYNPD, 0);
     nrf24l01_write_register(dev, NRF24L01_FEATURE, 0);
@@ -303,6 +300,7 @@ byte nrf24l01_init(nrf24l01_conf_t* dev, ddr_ptr_t ce, ddr_ptr_t ss)
     nrf24l01_read_address(dev, NRF24L01_RX_ADDR_P3, & dev->pipe_addrs[1], 1);
     nrf24l01_read_address(dev, NRF24L01_RX_ADDR_P4, & dev->pipe_addrs[2], 1);
     nrf24l01_read_address(dev, NRF24L01_RX_ADDR_P5, & dev->pipe_addrs[3], 1);
+    
     set_low(*dev->ss_port, dev->ss_pin);
     spi_write_byte_ss(NRF24L01_ACTIVATE, dev->ss_pin, dev->ss_port);
     spi_write_byte_ss(0x73, dev->ss_pin, dev->ss_port);
@@ -874,7 +872,7 @@ uint8_t nrf24l01_read_payload(nrf24l01_conf_t* dev, byte* buffer, uint8_t length
     {
         *buffer++ = spi_write_byte_ss(0xFF, dev->ss_pin, dev->ss_port); 
     }
-    spi_set_master_bit_first(1);
+    // spi_set_master_bit_first(1);
     nrf24l01_wait_for_transmit(dev);
     nrf24l01_write_register(dev, NRF24L01_NRF_STATUS, NRF24L01_TX_DS | NRF24L01_RX_DR | NRF24L01_MAX_RT);
     return length;
@@ -957,7 +955,7 @@ uint8_t nrf24l01_write_payload(nrf24l01_conf_t* dev, byte* data, uint8_t length,
     {
         spi_write_byte_ss(0x00, dev->ss_pin, dev->ss_port);
     }
-    spi_set_master_bit_first(1);
+    // spi_set_master_bit_first(1);
     set_high(*dev->ce_port, dev->ce_pin); // start transmission
 
     nrf24l01_print_status(dev);
