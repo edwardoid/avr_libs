@@ -37,17 +37,19 @@
 
 #define NRF24L01_RF_PWR      _BV(6)
 
+// Status
 #define NRF24L01_RX_DR       _BV(6)
 #define NRF24L01_TX_DS       _BV(5)
 #define NRF24L01_MAX_RT      _BV(4)
-#define NRF24L01_RX_P_NO     _BV(1)
-#define NRF24L01_TX_FULL     _BV(0)
+#define NRF24L01_RX_P_NO     (_BV(1) | _BV(2) | _BV(3))
+#define NRF24L01_TX_FULL_ST  _BV(0)
 
 #define NRF24L01_PLOS_CNT    _BV(4)
 #define NRF24L01_ARC_CNT     _BV(0)
 
+// Fifo0
 #define NRF24L01_TX_REUSE    _BV(6)
-#define NRF24L01_FIFO_FULL   _BV(5)
+#define NRF24L01_TX_FULL_FF  _BV(5)
 #define NRF24L01_TX_EMPTY    _BV(4)
 #define NRF24L01_RX_FULL     _BV(1)
 #define NRF24L01_RX_EMPTY    _BV(0)
