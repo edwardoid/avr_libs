@@ -20,9 +20,9 @@
 
 #if defined(F_RC522) && defined(F_SPI)
 
+#include <spi/spi.h>
 #include "rc522_registers.h"
 #include "rc522_commands.h"
-#include <spi/spi.h>
 #include <my_types.h>
 #include <bytes_manip.h>
 #include <bitman.h>
@@ -65,7 +65,7 @@ void rc522_reset_bits(uint8_t reg, uint8_t mask, rc522_cfg_t* cfg)
 
 void rc522_init(rc522_cfg_t* cfg)
 {
-	spi_init_as_master_ex(&(cfg->ss.pin), 1, cfg->ss.ddr, SPI_DIV_CLK_16, SPI_MODE_0);
+	spi_init_as_master_ex((uint8_t*)&(cfg->ss.pin), 1, cfg->ss.ddr, SPI_DIV_CLK_16, SPI_MODE_0);
 	rc522_send(RC522_CommandReg, RC522_CMD_SoftReset, cfg);
 	rc522_send(RC522_TModeReg, RC522_TAuto | RC522_PrescalerHi, cfg);
 	rc522_send(RC522_TPrescalerReg, RC522_PrescalerLo, cfg);

@@ -110,4 +110,112 @@ void	usart_write_string_line(const char* s)
 	usart_write_byte('\0');
 }
 
+/*
+	%d -- int
+	
+	%8d -- int8_t
+	%8u -- uint8_t
+	
+	%16d -- int16_t
+	%16u -- uint16_t
+
+	%32d -- int32
+	%32u -- uint32_t
+
+	%l -- long
+	%lu -- unsigned long
+
+	%x -- hex int
+	%8x -- hex uint8_t
+	%16x -- hex uint16_t
+	%32x -- hex uint32_t
+
+	%f -- float
+*/
+
+#define SZ_INT sizeof(int)
+#define SZ_LONG sizeof(long)
+#define SZ_FLOAT sizeof(float)
+
+#include <stdarg.h>
+
+void usart_printf_d(va_list ap, uint8_t len, int base)
+{
+	int v = 0;
+	switch(len)
+	{
+		case 0:
+		case 8: { v = va_arg(ap, int); break; }
+		case 16: { v = va_arg(ap, int16_t); break; }
+		case 32: { v = va_arg(ap, int32_t); break; }
+		default: { return; }
+	}
+
+	if(base == 16) { usart_write_byte('0'); usart_write_byte('x'); }
+	
+	if (v == 0) { usart_write_byte('0'); }
+	else
+	{
+		char b[32] = {	0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0 };
+		char* pos = &b[31];
+		
+		if(v < 0) { usart_write_byte('-'); }
+		while(v != 0)
+		{
+			uint8_t n = v % base;
+			if(n < 10) { *pos = '0' + n; }
+			else { *pos = 'A' - (n - 10); }
+			--pos;
+			v /= base;
+		}
+
+		while(pos <= &b[31] )
+		{
+			usart_write_byte(*pos ++);
+		}
+	}
+}
+
+void usart_printf_u(va_list ap, uint8_t len, int base)
+{
+	unsigned int v = 0;
+	switch(len)
+	{
+		case 0:
+		case 8: { v = va_arg(ap, unsigned int); break; }
+		case 16: { v = va_arg(ap, uint16_t); break; }
+		case 32: { v = va_arg(ap, int32_t); break; }
+		default: { return; }
+	}
+
+	if(base == 16) { usart_write_byte('0'); usart_write_byte('x'); }
+	
+	if (v == 0) { usart_write_byte('0'); }
+	else
+	{
+		char b[32] = {	0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0,
+						0, 0, 0, 0, 0, 0, 0, 0 };
+		char* pos = &b[31];
+		
+		while(v != 0)
+		{
+			uint8_t n = v % base;
+			if(n < 10) { *pos = '0' + n; }
+			else { *pos = 'A' - (n - 10); }
+			--pos;
+			v /= base;
+		}
+
+		while(pos <= &b[31] )
+		{
+			usart_write_byte(*pos ++);
+		}
+	}
+}
+
 #endif // F_USART

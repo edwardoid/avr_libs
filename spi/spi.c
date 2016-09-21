@@ -30,10 +30,10 @@
 #include <avr/interrupt.h>
 #include "time_utils_delays.h"
 
-volatile char spi_buffer[SPI_BUFFER_LEN];
+volatile byte spi_buffer[SPI_BUFFER_LEN];
 volatile uint8_t spi_bytes_available = 0;
-volatile char* spi_read_cursor = NULL;
-volatile char* spi_write_cursor = NULL;
+volatile byte* spi_read_cursor = NULL;
+volatile byte* spi_write_cursor = NULL;
 
 #define spi_incr_cursor(cur)									\
 	if(cur != NULL || cur + 1 == spi_buffer + SPI_BUFFER_LEN)	\
@@ -233,7 +233,7 @@ uint8_t	spi_init_as_slave(uint8_t clk, uint8_t mode)
 	return 0;
 }
 
-char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port)
+byte spi_write_byte_ss(byte data, uint8_t ss_pin, port_ptr_t ss_port)
 {
 	int is_master = test_bit(SPCR, MSTR);
 	
@@ -267,7 +267,7 @@ char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port)
 	return data;
 }
 
-byte spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port)
+byte spi_write_ss(byte* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port)
 {
 	uint8_t i = 0;
 	byte res = 0;
@@ -281,7 +281,7 @@ byte spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port)
 
 #ifdef SPI_USE_BUFFER
 
-char spi_read()
+byte spi_read()
 {
 	toggle_bit(PORTD, PD7);
 	while(spi_read_cursor == NULL || spi_write_cursor == NULL || spi_bytes_available == 0)
@@ -297,7 +297,7 @@ char spi_read()
 
 #else
 
-char spi_read()
+byte spi_read()
 {
 	while(!(SPSR & (1<<SPIF))) {}   // wait until all data is received
     

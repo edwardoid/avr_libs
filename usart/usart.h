@@ -20,6 +20,7 @@
 #define USART_H
 
 #include <lib_ex_config.h>
+
 #if defined(F_USART)
 
 #include "bitman.h"
@@ -31,21 +32,21 @@
 #define BAUD_RATE_H(rate) (uint8_t)((CALC_BRR(rate) >> 8) & 0xFF)
 #define BAUD_RATE_L(rate) (uint8_t)(CALC_BRR(rate) & 0xFF)
 
-void	usart_init (uint32_t baud_rate);
+extern void	usart_init (uint32_t baud_rate);
 
-char	usart_read_byte();
+extern char	usart_read_byte();
 
-uint16_t	usart_read_str(char* buff, uint16_t sz);
+extern uint16_t	usart_read_str(char* buff, uint16_t sz);
 	
-void	usart_write_byte(char data);
+extern void	usart_write_byte(char data);
 
-void	usart_write_string(const char* s);
+extern void	usart_write_string(const char* s);
 
-void	usart_write_num(int num);
+extern void	usart_write_num(int num);
 
-int	usart_read_num();
+extern int	usart_read_num();
 
-void	usart_write_string_line(const char* s);
+extern void	usart_write_string_line(const char* s);
 
 #endif // F_USART
 

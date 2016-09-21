@@ -19,7 +19,7 @@
 #ifndef AVR_LIBS_CONFIG_H
 #define AVR_LIBS_CONFIG_H
 #include "debug.h"
-//#define USE_STD_LIB /* enable using <stdlib.h>
+#define USE_STD_LIB /* enable using <stdlib.h> */
 
 
 #ifndef F_CPU // change line below according to MCU fuses.
@@ -37,6 +37,7 @@
 #define F_SPI
 #define F_USART
 #define F_RC522
+#define F_NRF24L01
 
 #ifdef F_ENABLE_ALL
 //#define F_EXAMPLES

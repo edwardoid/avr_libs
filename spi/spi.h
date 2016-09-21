@@ -23,6 +23,8 @@
 
 #if defined(F_SPI)
 
+#include <avr/io.h>
+
 #include <stdint.h>
 #include <avr/io.h>
 #include <my_types.h>
@@ -51,7 +53,7 @@
 #define SPI_MODE_2	2
 #define SPI_MODE_3	3
 
-#define SPI_USE_BUFFER
+//#define SPI_USE_BUFFER
 #define SPI_BUFFER_LEN	256
 
 
@@ -86,21 +88,21 @@ uint8_t spi_set_clock(uint8_t clk);
 
 uint8_t	spi_init_as_slave(uint8_t clk, uint8_t mode);
 
-char spi_write_byte_ss(char data, uint8_t ss_pin, port_ptr_t ss_port);
+char spi_write_byte_ss(byte data, uint8_t ss_pin, port_ptr_t ss_port);
 
-FORCE char spi_write_byte(char data)
+FORCE char spi_write_byte(byte data)
 {
 	return spi_write_byte_ss( (data), SPI_SS, & SPI_PORT);
 }
 
-byte spi_write_ss(char* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port);
+byte spi_write_ss(byte* buff, uint8_t sz, uint8_t ss_pin, port_ptr_t ss_port);
 
-FORCE byte spi_write(char* buff, uint8_t sz)
+FORCE byte spi_write(byte* buff, uint8_t sz)
 {
 	return spi_write_ss( buff, sz, SPI_SS, & SPI_PORT);
 }
 
-char spi_read();
+byte spi_read();
 
 FORCE uint8_t spi_enabeld()
 {
